@@ -14,4 +14,4 @@ To make this toolbox possible, Parrot SA provided a compiler toolchain and a cus
 
 #Getting Started ...
 To get familiar with the workflow and hit the ground running,
-please read "/media/GettingStartedEducationalDroneToolbox.pdf"
+please read "/media/GettingStarted.pdf"
