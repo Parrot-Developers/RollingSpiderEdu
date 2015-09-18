@@ -1,0 +1,1 @@
+PackEmbeddedCode.d: ../PackEmbeddedCode.c

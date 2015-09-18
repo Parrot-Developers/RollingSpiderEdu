@@ -6,7 +6,7 @@ The first release of this toolbox was developed by Fabian Riether and Prof. Sert
 http://karaman.mit.edu/1630/
 
 
-Please keep in mind that this toolbox is for educational purpose and is therefore rather tuned to be easily understood than to meet software engineering standards. We encourage you to make use of GitHub's issue tracker to submit issues and contribute with your own cool stuff!
+Please keep in mind that this toolbox is for educational purpose and is therefore rather tuned to be easily understood than to meet software engineering standards and amazing flight performance. The first version is mainly designed for experimenting with hover flight. We encourage you to make use of GitHub's issue tracker to submit issues and contribute with your own cool stuff!
 
 The drone's dynamics are simulated using code of Peter Corke's Robotics Toolbox http://www.petercorke.com/Robotics_Toolbox.html.
 
