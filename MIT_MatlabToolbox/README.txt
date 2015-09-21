@@ -1,4 +1,4 @@
-ROSMAT: ROlling Spider MAtlab Toolbox
+# ROSMAT: ROlling Spider MAtlab Toolbox
 
 This toolbox provides an environment to enhance the learning experience of design, simulation and testing of estimation and control modules for a small palm-sized drone, the Parrot Rolling Spider. A MATLAB/Simulink model allows to design and simulate the algorithms, the automatic generation of c-code directly from Simulink makes it easy to push the designed estimation- and control-algorithms onto the drone and test its behavior in real-life.
 
@@ -12,6 +12,6 @@ The drone's dynamics are simulated using code of Peter Corke's Robotics Toolbox 
 
 To make this toolbox possible, Parrot SA provided a compiler toolchain and a custom firmware that opens up three interfaces to insert custom controls code, image processing code and optical flow handling.
 
-#Getting Started ...
-To get familiar with the workflow and hit the ground running,
-please read "/media/GettingStarted.pdf"
+# Installing and Getting Started ...
+To install the toolbox, get familiar with the work flow and hit the ground running,
+please read https://github.com/Parrot-Developers/RollingSpiderEdu/blob/master/MIT_MatlabToolbox/media/GettingStarted.pdf
