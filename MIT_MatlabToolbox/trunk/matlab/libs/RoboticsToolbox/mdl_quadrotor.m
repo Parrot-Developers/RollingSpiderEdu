@@ -86,7 +86,7 @@ quad.muv = 1.5e-5;               %   muv     Viscosity of air                   
 quad.M = 0.068; %4or             %   M       Mass                                1x1
 
 % Ixx,yy,zz in RTBframe       Flyer rotational inertia matrix     3x3
-quad.J = [cos(pi/4) -sin(pi/4) 0; sin(pi/4) cos(pi/4) 0; 0 0 1]*diag([0.0686e-3 0.092e-3 0.1366e-3]);
+quad.J = [cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]*diag([0.0686e-3 0.092e-3 0.1366e-3])*[cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]';
 
 quad.h = -(6.5+9.376)/1000;     %   h       Height of rotors above CoG          1x1
 quad.d = 0.0624;  %TODO is this really the vertical d CoGtoRotor?                %   d       Length of flyer arms                1x1
