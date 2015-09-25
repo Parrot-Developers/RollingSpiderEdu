@@ -24,16 +24,26 @@ symsvector  = [Pxw; Pyw; Pzw ;yaw ;pitch ;roll ;dpx ;dpy ;dpz ;p ;q ;r ;T ;tauy 
 J           = ([cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]'*quad.J*[cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]);
 
 %Define Rotation matrices
-Body2Global = ...
-    [[ cos(pitch)*cos(yaw), cos(yaw)*sin(pitch)*sin(roll) - cos(roll)*sin(yaw), sin(roll)*sin(yaw) + cos(roll)*cos(yaw)*sin(pitch)];
-    [ cos(pitch)*sin(yaw), cos(roll)*cos(yaw) + sin(pitch)*sin(roll)*sin(yaw), cos(roll)*sin(pitch)*sin(yaw) - cos(yaw)*sin(roll)];
-    [         -sin(pitch),                               cos(pitch)*sin(roll),                               cos(pitch)*cos(roll)]];
+Ryaw = [
+	[ cos(yaw), -sin(yaw), 0],
+	[ sin(yaw),  cos(yaw), 0],
+	[        0,         0, 1]
+];
 
-Global2Body = ...
-    [cos(yaw)*cos(pitch), cos(pitch)*sin(yaw),  -sin(pitch);
-    cos(yaw)*sin(roll)*sin(pitch)-cos(roll)*sin(yaw), cos(yaw)*cos(roll)+sin(yaw)*sin(pitch), cos(pitch)*sin(roll);
-    sin(yaw)*sin(roll)+cos(yaw)*cos(roll)*sin(pitch), cos(roll)*sin(yaw)*sin(pitch)-cos(yaw)*sin(roll), cos(roll)*cos(pitch)];
+Rpitch = [
+	[  cos(pitch), 0, sin(pitch)],
+	[           0, 1,          0],
+	[ -sin(pitch), 0, cos(pitch)]
+];
 
+Rroll = [
+	[ 1,         0,          0],
+	[ 0, cos(roll), -sin(roll)],
+	[ 0, sin(roll),  cos(roll)]
+];
+
+Body2Global = Ryaw*Rpitch*Rroll;
+Global2Body = simplify(Body2Global^-1);
 
 %inverted Wronskian to transform body rates p-q-r to euler rates yaw pitch roll
 iW = ...
