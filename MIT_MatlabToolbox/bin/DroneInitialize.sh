@@ -4,7 +4,7 @@
 cd `dirname $0`
 
 # 2. Findout this computer's IP
-myip="$(ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://')"
+myip="$(ifconfig eth1 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://')"
 echo "> Drone: This computer's IP is: $myip."
 
 # 3. Telnet into drone, and set IP variable in param file

@@ -2,6 +2,7 @@
 
 # 1. change folder to where this script is
 cd `dirname $0`
+SCRIPTPATH=$(pwd)
 
 # 1.2 Exit the script if a command fails
 set -e
@@ -14,8 +15,7 @@ cd ..
 # 3. Build code
 cd ../trunk/embcode/build_arm
 make
-cd `dirname $0`
-
+cd $SCRIPTPATH
 # 4. ftp into the drone and upload the shared library
 echo "> Drone: FTP into the drone"
-/usr/bin/expect -c 'set timeout -1; spawn ftp 192.168.1.1; expect "(192.168.1.1:student):"; send "\r"; expect "ftp>"; send "put ../DroneExchange/librsedu.so librsedu.so\r"; expect "ftp>"; send "exit\r"; expect eof'
+/usr/bin/expect -c 'set timeout -1; spawn ftp 192.168.1.1; expect "(192.168.1.1:'"$USER"'):"; send "\r"; expect "ftp>"; send "put ../DroneExchange/librsedu.so librsedu.so\r"; expect "ftp>"; send "exit\r"; expect eof'
