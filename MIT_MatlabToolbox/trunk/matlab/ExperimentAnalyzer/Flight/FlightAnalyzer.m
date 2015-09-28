@@ -118,7 +118,7 @@ figure('Name','Altitude');
 
     
 % altitude from pressure (for comparison only)
-altPrs = (RSrun_sensordataRS(:,9) - mean(RSrun_sensordataRS(:,9)))/(quadEDT.altToPrs_Gain);    
+altPrs = (RSrun_sensordataRS(:,9) - RSrun_sensorBiasRS(1,7))/(quadEDT.altToPrs_Gain);    
 hold off;
 plot(rt_tout, altPrs); hold all;    
 % altitude from sonar
