@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2539
+ * Model version                  : 1.2549
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Fri Sep 11 23:18:41 2015
+ * C/C++ source code generated on : Fri Sep 25 17:32:39 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -27,16 +27,16 @@
 #include "rtwtypes.h"
 #include "builtin_typeid_types.h"
 #include "multiword_types.h"
-#ifndef _DEFINED_TYPEDEF_FOR_struct_pP0yJPvqYhejK9gHgcbWI_
-#define _DEFINED_TYPEDEF_FOR_struct_pP0yJPvqYhejK9gHgcbWI_
+#ifndef _DEFINED_TYPEDEF_FOR_struct_EpDNELbsTUS3tDtzeOGHWD_
+#define _DEFINED_TYPEDEF_FOR_struct_EpDNELbsTUS3tDtzeOGHWD_
 
 typedef struct {
+  real_T J[9];
   real_T nrotors;
   real_T g;
   real_T rho;
   real_T muv;
   real_T M;
-  real_T J[9];
   real_T h;
   real_T d;
   real_T nb;
@@ -64,7 +64,7 @@ typedef struct {
   real_T b;
   real_T k;
   boolean_T verbose;
-} struct_pP0yJPvqYhejK9gHgcbWI;
+} struct_EpDNELbsTUS3tDtzeOGHWD;
 
 #endif
 

@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2539
+ * Model version                  : 1.2549
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Fri Sep 11 23:18:41 2015
+ * C/C++ source code generated on : Fri Sep 25 17:32:39 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -174,26 +174,6 @@ typedef struct {
   struct {
     void *LoggedData;
   } SCOPEenableKFdxupdate_PWORK;       /* '<S65>/SCOPEenableKFdxupdate' */
-
-  struct {
-    void *LoggedData;
-  } Scope_PWORK;                       /* '<S69>/Scope' */
-
-  struct {
-    void *LoggedData;
-  } Scope1_PWORK;                      /* '<S69>/Scope1' */
-
-  struct {
-    void *LoggedData;
-  } Scope2_PWORK;                      /* '<S69>/Scope2' */
-
-  struct {
-    void *LoggedData;
-  } Scope3_PWORK;                      /* '<S69>/Scope3' */
-
-  struct {
-    void *LoggedData;
-  } Scope4_PWORK;                      /* '<S69>/Scope4' */
 
   int32_T FIRaccelero_circBuf;         /* '<S10>/FIRaccelero' */
   int8_T SimplyIntegrateVelocity_PrevRes;/* '<S66>/SimplyIntegrateVelocity' */
@@ -493,7 +473,7 @@ struct P_DroneRS_Compensator_T_ {
                                          *   '<S65>/opticalFlowToVelocity_Gain'
                                          *   '<S63>/Constant'
                                          */
-  struct_pP0yJPvqYhejK9gHgcbWI quad;   /* Variable: quad
+  struct_EpDNELbsTUS3tDtzeOGHWD quad;  /* Variable: quad
                                         * Referenced by: '<S2>/w0'
                                         */
   struct_eTOByJ6BrrCe8gZfBpKFUD altEstim;/* Variable: altEstim

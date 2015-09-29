@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2539
+ * Model version                  : 1.2549
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Fri Sep 11 23:18:41 2015
+ * C/C++ source code generated on : Fri Sep 25 17:32:39 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -44,9 +44,9 @@ extern void DroneRS_C_ControllerPID2W_Start(RT_MODEL_DroneRS_Compensator_T *
   const DroneRS_Compensator_M, DW_ControllerPID2W_DroneRS_Co_T *localDW);
 extern void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const
   real_T rtu_att_ref[3], boolean_T rtu_controlModePosVatt_flagin, const real_T
-  rtu_states_estim[3], const real_T rtu_states_estim_f[3], real_T
-  rtu_states_estim_k, real_T rtu_states_estim_e, const real_T
-  rtu_states_estim_n[2], const real_T rtu_states_estim_i[2],
+  rtu_states_estim[3], const real_T rtu_states_estim_h[3], real_T
+  rtu_states_estim_hi, real_T rtu_states_estim_j, const real_T
+  rtu_states_estim_n[2], const real_T rtu_states_estim_o[2],
   B_ControllerPID2W_DroneRS_Com_T *localB, DW_ControllerPID2W_DroneRS_Co_T
   *localDW, P_ControllerPID2W_DroneRS_Com_T *localP, P_DroneRS_Compensator_T
   *DroneRS_Compensator_P);
