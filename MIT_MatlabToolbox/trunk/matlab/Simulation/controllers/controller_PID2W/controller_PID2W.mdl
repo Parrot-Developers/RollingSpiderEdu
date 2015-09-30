@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.1967"
+    ComputedModelVersion    "1.1969"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -30,7 +30,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [55.0, 24.0, 1873.0, 1176.0]
+      Location		      [158.0, 215.0, 1873.0, 1176.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -45,7 +45,7 @@ Model {
 	$PropName		"ExplorerBarInfo"
 	$ObjectID		4
 	$ClassName		"Simulink.ExplorerBarInfo"
-	Visible			[1]
+	Visible			[0]
       }
       Object {
 	$PropName		"EditorsInfo"
@@ -54,7 +54,7 @@ Model {
 	IsActive		[1]
 	ViewObjType		"SimulinkTopLevel"
 	LoadSaveID		"0"
-	Extents			[1817.0, 985.0]
+	Extents			[1817.0, 1018.0]
 	ZoomFactor		[1.0]
 	Offset			[0.0, 0.0]
       }
@@ -64,11 +64,11 @@ Model {
   Creator		  "corkep"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "student"
+  LastModifiedBy	  "ra"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Sep 11 22:04:14 2015"
-  RTWModifiedTimeStamp	  363909852
-  ModelVersionFormat	  "1.%<AutoIncrement:1967>"
+  LastModifiedDate	  "Wed Sep 30 18:35:15 2015"
+  RTWModifiedTimeStamp	  365538914
+  ModelVersionFormat	  "1.%<AutoIncrement:1969>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -1808,7 +1808,7 @@ Model {
   }
   System {
     Name		    "controller_PID2W"
-    Location		    [55, 24, 1928, 1200]
+    Location		    [158, 215, 2031, 1391]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -1822,21 +1822,21 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "5403"
+    SIDHighWatermark	    "5567"
     Block {
       BlockType		      SubSystem
       Name		      "ControllerPID2W"
-      SID		      "5322"
+      SID		      "5486"
       Ports		      [4, 2]
-      Position		      [625, 368, 975, 522]
-      ZOrder		      1207
+      Position		      [800, 408, 1150, 562]
+      ZOrder		      1215
       BackgroundColor	      "green"
       TreatAsAtomicUnit	      on
       RTWSystemCode	      "Reusable function"
       RequestExecContextInheritance off
       System {
 	Name			"ControllerPID2W"
-	Location		[55, 24, 1928, 1200]
+	Location		[65, 52, 1920, 1200]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -1848,11 +1848,11 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"85"
+	ZoomFactor		"100"
 	Block {
 	  BlockType		  Inport
 	  Name			  "pos_ref"
-	  SID			  "5323"
+	  SID			  "5487"
 	  Position		  [615, 783, 645, 797]
 	  ZOrder		  1049
 	  IconDisplay		  "Port number"
@@ -1860,7 +1860,7 @@ Model {
 	Block {
 	  BlockType		  Inport
 	  Name			  "att_ref"
-	  SID			  "5324"
+	  SID			  "5488"
 	  Position		  [850, 1053, 880, 1067]
 	  ZOrder		  1059
 	  Port			  "2"
@@ -1869,7 +1869,7 @@ Model {
 	Block {
 	  BlockType		  Inport
 	  Name			  "controlModePosVatt_flagin"
-	  SID			  "5325"
+	  SID			  "5489"
 	  Position		  [1390, 933, 1420, 947]
 	  ZOrder		  1060
 	  Port			  "3"
@@ -1878,7 +1878,7 @@ Model {
 	Block {
 	  BlockType		  Inport
 	  Name			  "states_estim"
-	  SID			  "5326"
+	  SID			  "5490"
 	  Position		  [715, 1088, 745, 1102]
 	  ZOrder		  1050
 	  NamePlacement		  "alternate"
@@ -1888,7 +1888,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Add"
-	  SID			  "5327"
+	  SID			  "5491"
 	  Ports			  [2, 1]
 	  Position		  [1825, 1122, 1855, 1153]
 	  ZOrder		  1090
@@ -1901,7 +1901,7 @@ Model {
 	Block {
 	  BlockType		  BusSelector
 	  Name			  "Bus\nSelector1"
-	  SID			  "5328"
+	  SID			  "5492"
 	  Ports			  [1, 1]
 	  Position		  [1055, 831, 1060, 869]
 	  ZOrder		  1048
@@ -1911,7 +1911,7 @@ Model {
 	  OutputAsBus		  on
 	  Port {
 	    PortNumber		    1
-	    Name		    "xy"
+	    Name		    "XY"
 	    RTWStorageClass	    "Auto"
 	    DataLoggingNameMode	    "SignalName"
 	  }
@@ -1919,7 +1919,7 @@ Model {
 	Block {
 	  BlockType		  BusSelector
 	  Name			  "Bus\nSelector2"
-	  SID			  "5329"
+	  SID			  "5493"
 	  Ports			  [1, 1]
 	  Position		  [1055, 881, 1060, 919]
 	  ZOrder		  1047
@@ -1937,7 +1937,7 @@ Model {
 	Block {
 	  BlockType		  BusSelector
 	  Name			  "Bus\nSelector3"
-	  SID			  "5330"
+	  SID			  "5494"
 	  Ports			  [1, 1]
 	  Position		  [1635, 1076, 1640, 1114]
 	  ZOrder		  1046
@@ -1955,7 +1955,7 @@ Model {
 	Block {
 	  BlockType		  BusSelector
 	  Name			  "Bus\nSelector4"
-	  SID			  "5331"
+	  SID			  "5495"
 	  Ports			  [1, 1]
 	  Position		  [1635, 1201, 1640, 1239]
 	  ZOrder		  1045
@@ -1973,7 +1973,7 @@ Model {
 	Block {
 	  BlockType		  BusSelector
 	  Name			  "Bus\nSelector5"
-	  SID			  "5332"
+	  SID			  "5496"
 	  Ports			  [1, 2]
 	  Position		  [1000, 1323, 1005, 1392]
 	  ZOrder		  1044
@@ -1996,7 +1996,7 @@ Model {
 	Block {
 	  BlockType		  BusSelector
 	  Name			  "Bus\nSelector6"
-	  SID			  "5333"
+	  SID			  "5497"
 	  Ports			  [1, 2]
 	  Position		  [1005, 1638, 1010, 1707]
 	  ZOrder		  1043
@@ -2019,7 +2019,7 @@ Model {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "Control ControlMixerRS"
-	  SID			  "5334"
+	  SID			  "5498"
 	  Ports			  [4, 1]
 	  Position		  [2275, 1042, 2390, 1353]
 	  ZOrder		  1042
@@ -2044,7 +2044,7 @@ Model {
 	    Block {
 	      BlockType		      Inport
 	      Name		      "act_pitch"
-	      SID		      "5335"
+	      SID		      "5499"
 	      Position		      [25, 108, 55, 122]
 	      ZOrder		      -1
 	      IconDisplay	      "Port number"
@@ -2052,7 +2052,7 @@ Model {
 	    Block {
 	      BlockType		      Inport
 	      Name		      "act_roll"
-	      SID		      "5336"
+	      SID		      "5500"
 	      Position		      [25, 153, 55, 167]
 	      ZOrder		      -2
 	      Port		      "2"
@@ -2061,7 +2061,7 @@ Model {
 	    Block {
 	      BlockType		      Inport
 	      Name		      "act_yaw"
-	      SID		      "5337"
+	      SID		      "5501"
 	      Position		      [25, 198, 55, 212]
 	      ZOrder		      -3
 	      Port		      "3"
@@ -2070,7 +2070,7 @@ Model {
 	    Block {
 	      BlockType		      Inport
 	      Name		      "w_totThrust"
-	      SID		      "5338"
+	      SID		      "5502"
 	      Position		      [25, 243, 55, 257]
 	      ZOrder		      -4
 	      Port		      "4"
@@ -2079,7 +2079,7 @@ Model {
 	    Block {
 	      BlockType		      Constant
 	      Name		      "Action2omega"
-	      SID		      "5339"
+	      SID		      "5503"
 	      Position		      [150, 125, 180, 155]
 	      ZOrder		      33
 	      Value		      "[0.7071, 0.7071, -1.0000, -1.00;   -0.7071,    0.7071,   -1.0000,    1.00;   -0.7071,   -0.7071, "
@@ -2088,7 +2088,7 @@ Model {
 	    Block {
 	      BlockType		      Demux
 	      Name		      "Demux"
-	      SID		      "5340"
+	      SID		      "5504"
 	      Ports		      [1, 4]
 	      Position		      [280, 88, 285, 267]
 	      ZOrder		      34
@@ -2098,7 +2098,7 @@ Model {
 	    Block {
 	      BlockType		      Gain
 	      Name		      "Gain3"
-	      SID		      "5341"
+	      SID		      "5505"
 	      Position		      [330, 140, 360, 170]
 	      ZOrder		      23
 	      ShowName		      off
@@ -2110,7 +2110,7 @@ Model {
 	    Block {
 	      BlockType		      Gain
 	      Name		      "Gain4"
-	      SID		      "5342"
+	      SID		      "5506"
 	      Position		      [455, 140, 485, 170]
 	      ZOrder		      24
 	      ShowName		      off
@@ -2122,7 +2122,7 @@ Model {
 	    Block {
 	      BlockType		      Gain
 	      Name		      "Gain5"
-	      SID		      "5343"
+	      SID		      "5507"
 	      Position		      [330, 230, 360, 260]
 	      ZOrder		      25
 	      ShowName		      off
@@ -2134,7 +2134,7 @@ Model {
 	    Block {
 	      BlockType		      Gain
 	      Name		      "Gain6"
-	      SID		      "5344"
+	      SID		      "5508"
 	      Position		      [455, 230, 485, 260]
 	      ZOrder		      26
 	      ShowName		      off
@@ -2146,7 +2146,7 @@ Model {
 	    Block {
 	      BlockType		      Mux
 	      Name		      "Mux1"
-	      SID		      "5345"
+	      SID		      "5509"
 	      Ports		      [4, 1]
 	      Position		      [520, 86, 525, 269]
 	      ZOrder		      1
@@ -2156,7 +2156,7 @@ Model {
 	    Block {
 	      BlockType		      Mux
 	      Name		      "Mux2"
-	      SID		      "5346"
+	      SID		      "5510"
 	      Ports		      [4, 1]
 	      Position		      [110, 91, 115, 274]
 	      ZOrder		      31
@@ -2166,7 +2166,7 @@ Model {
 	    Block {
 	      BlockType		      Product
 	      Name		      "Product"
-	      SID		      "5347"
+	      SID		      "5511"
 	      Ports		      [2, 1]
 	      Position		      [210, 163, 250, 192]
 	      ZOrder		      32
@@ -2180,7 +2180,7 @@ Model {
 	    Block {
 	      BlockType		      Saturate
 	      Name		      "Saturation1"
-	      SID		      "5348"
+	      SID		      "5512"
 	      Ports		      [1, 1]
 	      Position		      [385, 140, 415, 170]
 	      ZOrder		      -8
@@ -2192,7 +2192,7 @@ Model {
 	    Block {
 	      BlockType		      Saturate
 	      Name		      "Saturation2"
-	      SID		      "5349"
+	      SID		      "5513"
 	      Ports		      [1, 1]
 	      Position		      [385, 95, 415, 125]
 	      ZOrder		      -9
@@ -2204,7 +2204,7 @@ Model {
 	    Block {
 	      BlockType		      Saturate
 	      Name		      "Saturation3"
-	      SID		      "5350"
+	      SID		      "5514"
 	      Ports		      [1, 1]
 	      Position		      [385, 185, 415, 215]
 	      ZOrder		      -10
@@ -2216,7 +2216,7 @@ Model {
 	    Block {
 	      BlockType		      Saturate
 	      Name		      "Saturation4"
-	      SID		      "5351"
+	      SID		      "5515"
 	      Ports		      [1, 1]
 	      Position		      [385, 230, 415, 260]
 	      ZOrder		      -11
@@ -2228,7 +2228,7 @@ Model {
 	    Block {
 	      BlockType		      Outport
 	      Name		      "omega_refout"
-	      SID		      "5352"
+	      SID		      "5516"
 	      Position		      [560, 173, 590, 187]
 	      ZOrder		      -21
 	      IconDisplay	      "Port number"
@@ -2379,7 +2379,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "D_pr"
-	  SID			  "5353"
+	  SID			  "5517"
 	  Position		  [1900, 1205, 1995, 1235]
 	  ZOrder		  1041
 	  ForegroundColor	  "blue"
@@ -2391,11 +2391,11 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "D_xy"
-	  SID			  "5354"
+	  SID			  "5518"
 	  Position		  [1240, 882, 1350, 918]
 	  ZOrder		  1067
 	  ForegroundColor	  "orange"
-	  Gain			  "0.08*[1, -1]"
+	  Gain			  "[0.08, -0.09]"
 	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
 	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
 	  SaturateOnIntegerOverflow off
@@ -2403,7 +2403,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "D_yaw"
-	  SID			  "5355"
+	  SID			  "5519"
 	  Position		  [1095, 1360, 1180, 1390]
 	  ZOrder		  1040
 	  ForegroundColor	  "green"
@@ -2415,7 +2415,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "D_z"
-	  SID			  "5356"
+	  SID			  "5520"
 	  Position		  [1115, 1675, 1175, 1705]
 	  ZOrder		  1039
 	  ForegroundColor	  "red"
@@ -2433,7 +2433,7 @@ Model {
 	Block {
 	  BlockType		  Delay
 	  Name			  "Delay"
-	  SID			  "5357"
+	  SID			  "5521"
 	  Ports			  [1, 1]
 	  Position		  [1875, 1170, 1895, 1190]
 	  ZOrder		  1092
@@ -2446,7 +2446,7 @@ Model {
 	Block {
 	  BlockType		  Demux
 	  Name			  "Demux"
-	  SID			  "5358"
+	  SID			  "5522"
 	  Ports			  [1, 2]
 	  Position		  [2160, 1076, 2165, 1114]
 	  ZOrder		  1038
@@ -2464,7 +2464,7 @@ Model {
 	Block {
 	  BlockType		  Demux
 	  Name			  "Demux1"
-	  SID			  "5359"
+	  SID			  "5523"
 	  Ports			  [1, 3]
 	  Position		  [680, 771, 685, 809]
 	  ZOrder		  1061
@@ -2475,7 +2475,7 @@ Model {
 	Block {
 	  BlockType		  Demux
 	  Name			  "Demux2"
-	  SID			  "5360"
+	  SID			  "5524"
 	  Ports			  [1, 3]
 	  Position		  [910, 1041, 915, 1079]
 	  ZOrder		  1063
@@ -2486,7 +2486,7 @@ Model {
 	Block {
 	  BlockType		  DiscreteIntegrator
 	  Name			  "Discrete-Time\nIntegrator"
-	  SID			  "5361"
+	  SID			  "5525"
 	  Ports			  [1, 1]
 	  Position		  [1875, 1129, 1900, 1151]
 	  ZOrder		  1053
@@ -2500,7 +2500,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "I_pr"
-	  SID			  "5362"
+	  SID			  "5526"
 	  Position		  [1955, 1125, 1985, 1155]
 	  ZOrder		  1052
 	  ForegroundColor	  "blue"
@@ -2512,7 +2512,7 @@ Model {
 	Block {
 	  BlockType		  Mux
 	  Name			  "Mux"
-	  SID			  "5363"
+	  SID			  "5527"
 	  Ports			  [2, 1]
 	  Position		  [715, 773, 720, 797]
 	  ZOrder		  1062
@@ -2529,7 +2529,7 @@ Model {
 	Block {
 	  BlockType		  Mux
 	  Name			  "Mux1"
-	  SID			  "5364"
+	  SID			  "5528"
 	  Ports			  [2, 1]
 	  Position		  [945, 1053, 950, 1077]
 	  ZOrder		  1064
@@ -2540,7 +2540,7 @@ Model {
 	Block {
 	  BlockType		  Mux
 	  Name			  "Mux2"
-	  SID			  "5365"
+	  SID			  "5529"
 	  Ports			  [3, 1]
 	  Position		  [2520, 731, 2525, 769]
 	  ZOrder		  1082
@@ -2551,7 +2551,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "P_pr"
-	  SID			  "5366"
+	  SID			  "5530"
 	  Position		  [1915, 1080, 2000, 1110]
 	  ZOrder		  1074
 	  ForegroundColor	  "blue"
@@ -2563,11 +2563,11 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "P_xy"
-	  SID			  "5367"
+	  SID			  "5531"
 	  Position		  [1245, 830, 1350, 860]
 	  ZOrder		  1066
 	  ForegroundColor	  "orange"
-	  Gain			  "[-0.32,0.32]"
+	  Gain			  "[-0.32,0.29]"
 	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
 	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
 	  SaturateOnIntegerOverflow off
@@ -2575,7 +2575,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "P_yaw"
-	  SID			  "5368"
+	  SID			  "5532"
 	  Position		  [1165, 1325, 1230, 1355]
 	  ZOrder		  1073
 	  ForegroundColor	  "green"
@@ -2587,7 +2587,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "P_z"
-	  SID			  "5369"
+	  SID			  "5533"
 	  Position		  [1120, 1640, 1175, 1670]
 	  ZOrder		  1071
 	  ForegroundColor	  "red"
@@ -2599,7 +2599,7 @@ Model {
 	Block {
 	  BlockType		  Product
 	  Name			  "Product"
-	  SID			  "5370"
+	  SID			  "5534"
 	  Ports			  [2, 1]
 	  Position		  [1175, 829, 1215, 856]
 	  ZOrder		  1037
@@ -2613,7 +2613,7 @@ Model {
 	Block {
 	  BlockType		  Saturate
 	  Name			  "SaturationThrust"
-	  SID			  "5371"
+	  SID			  "5535"
 	  Ports			  [1, 1]
 	  Position		  [1550, 1610, 1580, 1640]
 	  ZOrder		  1072
@@ -2625,7 +2625,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum1"
-	  SID			  "5372"
+	  SID			  "5536"
 	  Ports			  [2, 1]
 	  Position		  [1095, 1330, 1115, 1350]
 	  ZOrder		  1035
@@ -2640,7 +2640,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum15"
-	  SID			  "5373"
+	  SID			  "5537"
 	  Ports			  [2, 1]
 	  Position		  [1210, 1645, 1230, 1665]
 	  ZOrder		  1034
@@ -2655,7 +2655,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum16"
-	  SID			  "5374"
+	  SID			  "5538"
 	  Ports			  [3, 1]
 	  Position		  [2055, 1080, 2085, 1110]
 	  ZOrder		  1033
@@ -2676,7 +2676,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum17"
-	  SID			  "5375"
+	  SID			  "5539"
 	  Ports			  [2, 1]
 	  Position		  [1095, 840, 1115, 860]
 	  ZOrder		  1032
@@ -2689,7 +2689,7 @@ Model {
 	  SaturateOnIntegerOverflow off
 	  Port {
 	    PortNumber		    1
-	    Name		    "xy error"
+	    Name		    "XY error"
 	    RTWStorageClass	    "Auto"
 	    DataLoggingNameMode	    "SignalName"
 	  }
@@ -2697,7 +2697,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum18"
-	  SID			  "5376"
+	  SID			  "5540"
 	  Ports			  [2, 1]
 	  Position		  [1390, 835, 1410, 855]
 	  ZOrder		  1031
@@ -2718,7 +2718,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum19"
-	  SID			  "5377"
+	  SID			  "5541"
 	  Ports			  [2, 1]
 	  Position		  [1725, 1085, 1745, 1105]
 	  ZOrder		  1030
@@ -2739,7 +2739,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum2"
-	  SID			  "5378"
+	  SID			  "5542"
 	  Ports			  [2, 1]
 	  Position		  [1265, 1330, 1285, 1350]
 	  ZOrder		  1029
@@ -2754,7 +2754,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum3"
-	  SID			  "5379"
+	  SID			  "5543"
 	  Ports			  [2, 1]
 	  Position		  [1065, 1645, 1085, 1665]
 	  ZOrder		  1028
@@ -2775,7 +2775,7 @@ Model {
 	Block {
 	  BlockType		  Sum
 	  Name			  "Sum4"
-	  SID			  "5380"
+	  SID			  "5544"
 	  Ports			  [2, 1]
 	  Position		  [1435, 1615, 1455, 1635]
 	  ZOrder		  1027
@@ -2791,7 +2791,7 @@ Model {
 	Block {
 	  BlockType		  Switch
 	  Name			  "Switch_refAtt"
-	  SID			  "5381"
+	  SID			  "5545"
 	  Position		  [1490, 920, 1540, 960]
 	  ZOrder		  1058
 	  Criteria		  "u2 > Threshold"
@@ -2801,7 +2801,7 @@ Model {
 	Block {
 	  BlockType		  Switch
 	  Name			  "TakeoffOrControl_Switch"
-	  SID			  "5382"
+	  SID			  "5546"
 	  Position		  [1325, 1605, 1375, 1645]
 	  ZOrder		  1057
 	  ForegroundColor	  "red"
@@ -2812,7 +2812,7 @@ Model {
 	Block {
 	  BlockType		  ToWorkspace
 	  Name			  "To Workspace1"
-	  SID			  "5383"
+	  SID			  "5547"
 	  Ports			  [1]
 	  Position		  [1550, 1750, 1610, 1780]
 	  ZOrder		  1026
@@ -2824,7 +2824,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "antiWU_Gain"
-	  SID			  "5384"
+	  SID			  "5548"
 	  Position		  [1825, 1165, 1855, 1195]
 	  ZOrder		  1091
 	  BlockMirror		  on
@@ -2837,7 +2837,7 @@ Model {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "inverse rotation Function"
-	  SID			  "5385"
+	  SID			  "5549"
 	  Ports			  [1, 1]
 	  Position		  [1055, 1154, 1115, 1176]
 	  ZOrder		  1054
@@ -2867,7 +2867,7 @@ Model {
 	    Block {
 	      BlockType		      Inport
 	      Name		      "u"
-	      SID		      "5385::1"
+	      SID		      "5549::1"
 	      Position		      [20, 101, 40, 119]
 	      ZOrder		      -1
 	      IconDisplay	      "Port number"
@@ -2875,7 +2875,7 @@ Model {
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
-	      SID		      "5385::20"
+	      SID		      "5549::20"
 	      Ports		      [1, 1]
 	      Position		      [270, 230, 320, 270]
 	      ZOrder		      11
@@ -2884,7 +2884,7 @@ Model {
 	    Block {
 	      BlockType		      S-Function
 	      Name		      " SFunction "
-	      SID		      "5385::19"
+	      SID		      "5549::19"
 	      Tag		      "Stateflow S-Function controller_PID2W 2"
 	      Ports		      [1, 2]
 	      Position		      [180, 100, 230, 160]
@@ -2902,14 +2902,14 @@ Model {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      SID		      "5385::21"
+	      SID		      "5549::21"
 	      Position		      [460, 241, 480, 259]
 	      ZOrder		      12
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "y"
-	      SID		      "5385::5"
+	      SID		      "5549::5"
 	      Position		      [460, 101, 480, 119]
 	      ZOrder		      -5
 	      IconDisplay	      "Port number"
@@ -2949,7 +2949,7 @@ Model {
 	Block {
 	  BlockType		  Gain
 	  Name			  "takeoff_Gain"
-	  SID			  "5386"
+	  SID			  "5550"
 	  Position		  [1285, 1550, 1325, 1580]
 	  ZOrder		  1056
 	  BlockRotation		  270
@@ -2964,7 +2964,7 @@ Model {
 	Block {
 	  BlockType		  Scope
 	  Name			  "thrustw"
-	  SID			  "5387"
+	  SID			  "5551"
 	  Ports			  [1]
 	  Position		  [1550, 1694, 1580, 1726]
 	  ZOrder		  1055
@@ -2995,7 +2995,7 @@ Model {
 	Block {
 	  BlockType		  Constant
 	  Name			  "w0"
-	  SID			  "5388"
+	  SID			  "5552"
 	  Position		  [1250, 1512, 1295, 1528]
 	  ZOrder		  1025
 	  ForegroundColor	  "red"
@@ -3006,7 +3006,7 @@ Model {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "wToMotors"
-	  SID			  "5389"
+	  SID			  "5553"
 	  Ports			  [1, 1]
 	  Position		  [2460, 1175, 2625, 1225]
 	  ZOrder		  1080
@@ -3030,7 +3030,7 @@ Model {
 	    Block {
 	      BlockType		      Inport
 	      Name		      "omega_refin"
-	      SID		      "5390"
+	      SID		      "5554"
 	      Position		      [20, 28, 50, 42]
 	      ZOrder		      1080
 	      IconDisplay	      "Port number"
@@ -3038,7 +3038,7 @@ Model {
 	    Block {
 	      BlockType		      Math
 	      Name		      "Math\nFunction"
-	      SID		      "5391"
+	      SID		      "5555"
 	      Ports		      [1, 1]
 	      Position		      [215, 20, 245, 50]
 	      ZOrder		      1077
@@ -3047,7 +3047,7 @@ Model {
 	    Block {
 	      BlockType		      Product
 	      Name		      "Product1"
-	      SID		      "5392"
+	      SID		      "5556"
 	      Ports		      [2, 1]
 	      Position		      [285, 27, 315, 58]
 	      ZOrder		      1078
@@ -3059,14 +3059,14 @@ Model {
 	    Block {
 	      BlockType		      Signum
 	      Name		      "Sign"
-	      SID		      "5393"
+	      SID		      "5557"
 	      Position		      [215, 85, 245, 115]
 	      ZOrder		      1079
 	    }
 	    Block {
 	      BlockType		      Gain
 	      Name		      "w2MotorsQF_Gain"
-	      SID		      "5394"
+	      SID		      "5558"
 	      Position		      [110, 20, 155, 50]
 	      ZOrder		      1075
 	      Gain		      "0.0085"
@@ -3077,7 +3077,7 @@ Model {
 	    Block {
 	      BlockType		      Outport
 	      Name		      "motors_cmdout"
-	      SID		      "5395"
+	      SID		      "5559"
 	      Position		      [405, 38, 435, 52]
 	      ZOrder		      1081
 	      IconDisplay	      "Port number"
@@ -3133,7 +3133,7 @@ Model {
 	Block {
 	  BlockType		  Outport
 	  Name			  "motorsRS_cmdout"
-	  SID			  "5396"
+	  SID			  "5560"
 	  Position		  [2670, 1193, 2700, 1207]
 	  ZOrder		  1051
 	  IconDisplay		  "Port number"
@@ -3141,7 +3141,7 @@ Model {
 	Block {
 	  BlockType		  Outport
 	  Name			  "pose_refout"
-	  SID			  "5397"
+	  SID			  "5561"
 	  Position		  [2570, 743, 2600, 757]
 	  ZOrder		  1083
 	  Port			  "2"
@@ -3327,7 +3327,7 @@ Model {
 	  DstPort		  1
 	}
 	Line {
-	  Name			  "xy error"
+	  Name			  "XY error"
 	  ZOrder		  26
 	  Labels		  [0, 0]
 	  SrcBlock		  "Sum17"
@@ -3546,7 +3546,7 @@ Model {
 	  DstPort		  2
 	}
 	Line {
-	  Name			  "xy"
+	  Name			  "XY"
 	  ZOrder		  57
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector1"
@@ -3719,7 +3719,7 @@ Model {
 	  DstPort		  1
 	}
 	Annotation {
-	  SID			  "5403"
+	  SID			  "5567"
 	  Name			  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html"
 	  "><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</styl"
 	  "e></head><body style=\" font-family:'Helvetica'; font-size:10px; font-weight:400; font-style:normal;\">\n<p style=\""
@@ -3735,7 +3735,7 @@ Model {
 	  ZOrder		  -1
 	}
 	Annotation {
-	  SID			  "5402"
+	  SID			  "5566"
 	  Name			  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html"
 	  "><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</styl"
 	  "e></head><body style=\" font-family:'Helvetica'; font-size:10px; font-weight:400; font-style:normal;\">\n<p style=\""
@@ -3751,7 +3751,7 @@ Model {
 	  ZOrder		  -2
 	}
 	Annotation {
-	  SID			  "5401"
+	  SID			  "5565"
 	  Name			  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html"
 	  "><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</styl"
 	  "e></head><body style=\" font-family:'Helvetica'; font-size:10px; font-weight:400; font-style:normal;\">\n<p style=\""
@@ -3767,7 +3767,7 @@ Model {
 	  ZOrder		  -3
 	}
 	Annotation {
-	  SID			  "5400"
+	  SID			  "5564"
 	  Name			  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html"
 	  "><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</styl"
 	  "e></head><body style=\" font-family:'Helvetica'; font-size:10px; font-weight:400; font-style:normal;\">\n<p style=\""
@@ -3783,7 +3783,7 @@ Model {
 	  ZOrder		  -4
 	}
 	Annotation {
-	  SID			  "5399"
+	  SID			  "5563"
 	  Name			  " "
 	  Position		  [1475, 940, 1479, 955]
 	  InternalMargins	  [0, 0, 0, 0]
@@ -3792,7 +3792,7 @@ Model {
 	  ZOrder		  -5
 	}
 	Annotation {
-	  SID			  "5398"
+	  SID			  "5562"
 	  Name			  "gravity feedforward"
 	  Position		  [1402, 1510, 1488, 1525]
 	  InternalMargins	  [0, 0, 0, 0]
@@ -3829,6 +3829,8 @@ Stateflow {
     firstJunction	    6
     viewObj		    2
     machine		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    5
     decomposition	    CLUSTER_CHART
     type		    EML_CHART

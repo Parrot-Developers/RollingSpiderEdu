@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2549
+ * Model version                  : 1.2574
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Fri Sep 25 17:32:39 2015
+ * C/C++ source code generated on : Wed Sep 30 17:36:52 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -118,6 +118,7 @@ typedef struct {
   real_T Reshapexhat[2];               /* '<S11>/Reshapexhat' */
   real_T Reshapexhat_o[2];             /* '<S68>/Reshapexhat' */
   real_T UseIPPosSwitch[2];            /* '<S66>/UseIPPosSwitch' */
+  real_T batteryStatus_datin[2];       /* '<S1>/batteryStatus_datin' */
   real_T att_estimout[3];              /* '<S3>/EstimatorAttitude' */
   real_T datt_estimout[3];             /* '<S3>/EstimatorAttitude' */
   real_T acc_RS[3];                    /* '<S7>/WorldToRSinacc' */
@@ -204,10 +205,10 @@ struct P_ControllerPID2W_DroneRS_Com_T_ {
   real_T takeoff_Gain_Gain;            /* Expression: 0.05
                                         * Referenced by: '<S2>/takeoff_Gain'
                                         */
-  real_T D_xy_Gain[2];                 /* Expression: 0.08*[1, -1]
+  real_T D_xy_Gain[2];                 /* Expression: [0.08, -0.09]
                                         * Referenced by: '<S2>/D_xy'
                                         */
-  real_T P_xy_Gain[2];                 /* Expression: [-0.32,0.32]
+  real_T P_xy_Gain[2];                 /* Expression: [-0.32,0.29]
                                         * Referenced by: '<S2>/P_xy'
                                         */
   real_T TakeoffOrControl_Switch_Thresho;/* Expression: 0
@@ -473,7 +474,7 @@ struct P_DroneRS_Compensator_T_ {
                                          *   '<S65>/opticalFlowToVelocity_Gain'
                                          *   '<S63>/Constant'
                                          */
-  struct_EpDNELbsTUS3tDtzeOGHWD quad;  /* Variable: quad
+  struct_pP0yJPvqYhejK9gHgcbWI quad;   /* Variable: quad
                                         * Referenced by: '<S2>/w0'
                                         */
   struct_eTOByJ6BrrCe8gZfBpKFUD altEstim;/* Variable: altEstim
@@ -557,6 +558,7 @@ extern void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_U_sensordatabiasRS_datin[7], real_T
   DroneRS_Compensator_U_posVIS_datin[4], real_T
   *DroneRS_Compensator_U_usePosVIS_flagin, real_T
+  DroneRS_Compensator_U_batteryStatus_datin[2], real_T
   DroneRS_Compensator_Y_motorsRS_cmdout[4], real_T *DroneRS_Compensator_Y_X,
   real_T *DroneRS_Compensator_Y_Y, real_T *DroneRS_Compensator_Y_Z, real_T
   *DroneRS_Compensator_Y_yaw, real_T *DroneRS_Compensator_Y_pitch, real_T
@@ -573,7 +575,8 @@ extern void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_Y_opticalFlowRS_datout[3], real_T
   DroneRS_Compensator_Y_sensordatabiasRS_datout[7], real_T
   DroneRS_Compensator_Y_posVIS_datout[4], real_T
-  *DroneRS_Compensator_Y_usePosVIS_flagout);
+  *DroneRS_Compensator_Y_usePosVIS_flagout, real_T
+  DroneRS_Compensator_Y_batteryStatus_datout[2]);
 extern void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_M, boolean_T
   DroneRS_Compensator_U_controlModePosVSAtt_flagin, real_T
@@ -586,6 +589,7 @@ extern void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_U_sensordatabiasRS_datin[7], real_T
   DroneRS_Compensator_U_posVIS_datin[4], real_T
   DroneRS_Compensator_U_usePosVIS_flagin, real_T
+  DroneRS_Compensator_U_batteryStatus_datin[2], real_T
   DroneRS_Compensator_Y_motorsRS_cmdout[4], real_T *DroneRS_Compensator_Y_X,
   real_T *DroneRS_Compensator_Y_Y, real_T *DroneRS_Compensator_Y_Z, real_T
   *DroneRS_Compensator_Y_yaw, real_T *DroneRS_Compensator_Y_pitch, real_T
@@ -602,7 +606,8 @@ extern void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_Y_opticalFlowRS_datout[3], real_T
   DroneRS_Compensator_Y_sensordatabiasRS_datout[7], real_T
   DroneRS_Compensator_Y_posVIS_datout[4], real_T
-  *DroneRS_Compensator_Y_usePosVIS_flagout);
+  *DroneRS_Compensator_Y_usePosVIS_flagout, real_T
+  DroneRS_Compensator_Y_batteryStatus_datout[2]);
 
 /*-
  * The generated code includes comments that allow you to trace directly

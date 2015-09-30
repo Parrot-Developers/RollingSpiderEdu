@@ -34,6 +34,10 @@ if ( size(rt_yout.signals,2)>24)
     for i=2:13
         RSrun_states_estim = [RSrun_states_estim rt_yout.signals(i).values];
     end;
+    
+    if (size(rt_yout.signals,2)==28)
+        RSrun_batteryStatus = [rt_yout.time,rt_yout.signals(28).values];   
+    end;
 
 %--old recordings-file-version
 elseif (size(rt_yout.signals(2).values,2)==1)
@@ -134,7 +138,7 @@ plot(RSrun_pos_ref(:,1),RSrun_pos_ref(:,4),'g','LineWidth',2);
 visUpdatesAvlble = (RSrun_posVIS(:,2)~=-99);
 plot(RSrun_posVIS(visUpdatesAvlble,1),-RSrun_posVIS(visUpdatesAvlble,4),'o','LineWidth',3);
 
-legend({'Pressure'  'Sonar' 'Kalman' 'reference' 'Vision' });
+legend({'Pressure'  'Sonar' 'Kalman-estimate $\hat z$' 'reference $z_{desired}$' 'Vision' },'Interpreter','latex');
 ylim([-3.5 1]);
 xlabel 't [s]'
 ylabel 'altitude [m]'
@@ -203,3 +207,14 @@ title 'Optical flow and velocity'
 legend({'optical flow$_x$' 'optical flow$_y$' '$\dot x$' '$\dot y$'},'Interpreter', 'latex');
 xlabel 't [s]'
 ylabel '[m/s]'
+
+%% Battery statys
+figure;
+
+plot(RSrun_batteryStatus(:,1),RSrun_batteryStatus(:,3));
+
+title 'Battery voltage'
+legend('Battery voltage');
+xlabel 't [s]'
+ylabel '%'
+

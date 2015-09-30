@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2549
+ * Model version                  : 1.2574
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Fri Sep 25 17:32:39 2015
+ * C/C++ source code generated on : Wed Sep 30 17:36:52 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -78,9 +78,9 @@ void DroneRS_C_ControllerPID2W_Start(RT_MODEL_DroneRS_Compensator_T * const
 /* Output and update for atomic system: '<S1>/ControllerPID2W' */
 void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
   rtu_att_ref[3], boolean_T rtu_controlModePosVatt_flagin, const real_T
-  rtu_states_estim[3], const real_T rtu_states_estim_h[3], real_T
-  rtu_states_estim_hi, real_T rtu_states_estim_j, const real_T
-  rtu_states_estim_n[2], const real_T rtu_states_estim_o[2],
+  rtu_states_estim[3], const real_T rtu_states_estim_g[3], real_T
+  rtu_states_estim_f, real_T rtu_states_estim_m, const real_T
+  rtu_states_estim_gi[2], const real_T rtu_states_estim_o[2],
   B_ControllerPID2W_DroneRS_Com_T *localB, DW_ControllerPID2W_DroneRS_Co_T
   *localDW, P_ControllerPID2W_DroneRS_Com_T *localP, P_DroneRS_Compensator_T
   *DroneRS_Compensator_P)
@@ -116,8 +116,8 @@ void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
                       DroneRS_Compensator_P->quad.g / 4.0 /
                       DroneRS_Compensator_P->quad.b) * localP->takeoff_Gain_Gain;
   } else {
-    rtb_Gain6 = (localB->pos_ref[2] - rtu_states_estim_j) * localP->P_z_Gain -
-      localP->D_z_Gain * rtu_states_estim_hi;
+    rtb_Gain6 = (localB->pos_ref[2] - rtu_states_estim_m) * localP->P_z_Gain -
+      localP->D_z_Gain * rtu_states_estim_f;
   }
 
   /* End of Switch: '<S2>/TakeoffOrControl_Switch' */
@@ -156,10 +156,10 @@ void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
     tmp_1 = localB->pos_ref[1] - rtu_states_estim_o[1];
     localB->Switch_refAtt[0] = (cos(rtu_states_estim[0]) * tmp_0 + sin
       (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[0] + localP->D_xy_Gain
-      [0] * rtu_states_estim_n[0];
+      [0] * rtu_states_estim_gi[0];
     localB->Switch_refAtt[1] = (-sin(rtu_states_estim[0]) * tmp_0 + cos
       (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[1] + localP->D_xy_Gain
-      [1] * rtu_states_estim_n[1];
+      [1] * rtu_states_estim_gi[1];
   } else {
     localB->Switch_refAtt[0] = localB->att_ref[1];
     localB->Switch_refAtt[1] = localB->att_ref[2];
@@ -201,12 +201,12 @@ void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
    */
   tmp_0 = (localP->P_pr_Gain[0] * rtb_pitchrollerror_idx_0 + localP->I_pr_Gain *
            localDW->DiscreteTimeIntegrator_DSTATE[0]) - localP->D_pr_Gain[0] *
-    rtu_states_estim_h[1];
+    rtu_states_estim_g[1];
   tmp_1 = (localP->P_pr_Gain[1] * rtb_pitchrollerror_idx_1 + localP->I_pr_Gain *
            localDW->DiscreteTimeIntegrator_DSTATE[1]) - localP->D_pr_Gain[1] *
-    rtu_states_estim_h[0];
+    rtu_states_estim_g[0];
   tmp = (localB->att_ref[0] - rtu_states_estim[0]) * localP->P_yaw_Gain -
-    localP->D_yaw_Gain * rtu_states_estim_h[2];
+    localP->D_yaw_Gain * rtu_states_estim_g[2];
 
   /* Product: '<S4>/Product' incorporates:
    *  Constant: '<S4>/Action2omega'
@@ -656,10 +656,10 @@ void DroneRS_Com_DroneRS_Compensator(boolean_T rtu_controlModePosVSAtt_flagin,
   rtu_sensordataRS_datin_k, real_T rtu_sensordataRS_datin_c, real_T
   rtu_sensordataRS_datin_g, real_T rtu_sensordataRS_datin_gz, const real_T
   rtu_opticalFlowRS_datin[3], const real_T rtu_sensordatabiasRS_datin[7], const
-  real_T rtu_posVIS_datin[4], real_T rtu_usePosVIS_flagin,
-  B_DroneRS_Compensator_DroneRS_T *localB, DW_DroneRS_Compensator_DroneR_T
-  *localDW, P_DroneRS_Compensator_DroneRS_T *localP, P_DroneRS_Compensator_T
-  *DroneRS_Compensator_P)
+  real_T rtu_posVIS_datin[4], real_T rtu_usePosVIS_flagin, const real_T
+  rtu_batteryStatus_datin[2], B_DroneRS_Compensator_DroneRS_T *localB,
+  DW_DroneRS_Compensator_DroneR_T *localDW, P_DroneRS_Compensator_DroneRS_T
+  *localP, P_DroneRS_Compensator_T *DroneRS_Compensator_P)
 {
   /* local block i/o variables */
   real_T rtb_invertzaxisGain;
@@ -1665,6 +1665,10 @@ void DroneRS_Com_DroneRS_Compensator(boolean_T rtu_controlModePosVSAtt_flagin,
 
   /* End of Outputs for SubSystem: '<S149>/MeasurementUpdate' */
 
+  /* Inport: '<S1>/batteryStatus_datin' */
+  localB->batteryStatus_datin[0] = rtu_batteryStatus_datin[0];
+  localB->batteryStatus_datin[1] = rtu_batteryStatus_datin[1];
+
   /* Update for DiscreteFir: '<S10>/FIRaccelero' */
   /* Update circular buffer index */
   localDW->FIRaccelero_circBuf--;
@@ -1840,6 +1844,7 @@ void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_U_sensordatabiasRS_datin[7], real_T
   DroneRS_Compensator_U_posVIS_datin[4], real_T
   DroneRS_Compensator_U_usePosVIS_flagin, real_T
+  DroneRS_Compensator_U_batteryStatus_datin[2], real_T
   DroneRS_Compensator_Y_motorsRS_cmdout[4], real_T *DroneRS_Compensator_Y_X,
   real_T *DroneRS_Compensator_Y_Y, real_T *DroneRS_Compensator_Y_Z, real_T
   *DroneRS_Compensator_Y_yaw, real_T *DroneRS_Compensator_Y_pitch, real_T
@@ -1856,7 +1861,8 @@ void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_Y_opticalFlowRS_datout[3], real_T
   DroneRS_Compensator_Y_sensordatabiasRS_datout[7], real_T
   DroneRS_Compensator_Y_posVIS_datout[4], real_T
-  *DroneRS_Compensator_Y_usePosVIS_flagout)
+  *DroneRS_Compensator_Y_usePosVIS_flagout, real_T
+  DroneRS_Compensator_Y_batteryStatus_datout[2])
 {
   P_DroneRS_Compensator_T *DroneRS_Compensator_P = ((P_DroneRS_Compensator_T *)
     DroneRS_Compensator_M->ModelData.defaultParam);
@@ -1871,6 +1877,7 @@ void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
   /* Inport: '<Root>/controlModePosVSAtt_flagin' incorporates:
    *  Inport: '<Root>/altitude_sonar'
    *  Inport: '<Root>/attRS_refin'
+   *  Inport: '<Root>/batteryStatus_datin'
    *  Inport: '<Root>/ddx'
    *  Inport: '<Root>/ddy'
    *  Inport: '<Root>/ddz'
@@ -1893,6 +1900,7 @@ void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
      DroneRS_Compensator_U_prs, DroneRS_Compensator_U_opticalFlowRS_datin,
      DroneRS_Compensator_U_sensordatabiasRS_datin,
      DroneRS_Compensator_U_posVIS_datin, DroneRS_Compensator_U_usePosVIS_flagin,
+     DroneRS_Compensator_U_batteryStatus_datin,
      &DroneRS_Compensator_B->DroneRS_Compensator_d,
      &DroneRS_Compensator_DW->DroneRS_Compensator_d,
      (P_DroneRS_Compensator_DroneRS_T *)
@@ -2038,6 +2046,12 @@ void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
   *DroneRS_Compensator_Y_usePosVIS_flagout =
     DroneRS_Compensator_B->DroneRS_Compensator_d.usePosVIS_flagin;
 
+  /* Outport: '<Root>/batteryStatus_datout' */
+  DroneRS_Compensator_Y_batteryStatus_datout[0] =
+    DroneRS_Compensator_B->DroneRS_Compensator_d.batteryStatus_datin[0];
+  DroneRS_Compensator_Y_batteryStatus_datout[1] =
+    DroneRS_Compensator_B->DroneRS_Compensator_d.batteryStatus_datin[1];
+
   /* Matfile logging */
   rt_UpdateTXYLogVars(DroneRS_Compensator_M->rtwLogInfo,
                       (&DroneRS_Compensator_M->Timing.taskTime0));
@@ -2076,6 +2090,7 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_U_sensordatabiasRS_datin[7], real_T
   DroneRS_Compensator_U_posVIS_datin[4], real_T
   *DroneRS_Compensator_U_usePosVIS_flagin, real_T
+  DroneRS_Compensator_U_batteryStatus_datin[2], real_T
   DroneRS_Compensator_Y_motorsRS_cmdout[4], real_T *DroneRS_Compensator_Y_X,
   real_T *DroneRS_Compensator_Y_Y, real_T *DroneRS_Compensator_Y_Z, real_T
   *DroneRS_Compensator_Y_yaw, real_T *DroneRS_Compensator_Y_pitch, real_T
@@ -2092,7 +2107,8 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
   DroneRS_Compensator_Y_opticalFlowRS_datout[3], real_T
   DroneRS_Compensator_Y_sensordatabiasRS_datout[7], real_T
   DroneRS_Compensator_Y_posVIS_datout[4], real_T
-  *DroneRS_Compensator_Y_usePosVIS_flagout)
+  *DroneRS_Compensator_Y_usePosVIS_flagout, real_T
+  DroneRS_Compensator_Y_batteryStatus_datout[2])
 {
   P_DroneRS_Compensator_T *DroneRS_Compensator_P = ((P_DroneRS_Compensator_T *)
     DroneRS_Compensator_M->ModelData.defaultParam);
@@ -2134,7 +2150,7 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
      * Set pointers to the data and signal info for each output
      */
     {
-      static void * rt_LoggedOutputSignalPtrs[27];
+      static void * rt_LoggedOutputSignalPtrs[28];
       rt_LoggedOutputSignalPtrs[0] = &DroneRS_Compensator_Y_motorsRS_cmdout[0];
       rt_LoggedOutputSignalPtrs[1] = &(*DroneRS_Compensator_Y_X);
       rt_LoggedOutputSignalPtrs[2] = &(*DroneRS_Compensator_Y_Y);
@@ -2165,6 +2181,8 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
         &DroneRS_Compensator_Y_sensordatabiasRS_datout[0];
       rt_LoggedOutputSignalPtrs[25] = &DroneRS_Compensator_Y_posVIS_datout[0];
       rt_LoggedOutputSignalPtrs[26] = &(*DroneRS_Compensator_Y_usePosVIS_flagout);
+      rt_LoggedOutputSignalPtrs[27] =
+        &DroneRS_Compensator_Y_batteryStatus_datout[0];
       rtliSetLogYSignalPtrs(DroneRS_Compensator_M->rtwLogInfo,
                             ((LogSignalPtrsType)rt_LoggedOutputSignalPtrs));
     }
@@ -2197,10 +2215,12 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
         3,
         7,
         4,
-        1
+        1,
+        2
       };
 
       static int_T rt_LoggedOutputNumDimensions[] = {
+        1,
         1,
         1,
         1,
@@ -2257,10 +2277,12 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
         3,
         7,
         4,
-        1
+        1,
+        2
       };
 
       static boolean_T rt_LoggedOutputIsVarDims[] = {
+        0,
         0,
         0,
         0,
@@ -2317,10 +2339,12 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
         (NULL),
         (NULL),
         (NULL),
+        (NULL),
         (NULL)
       };
 
       static int_T rt_LoggedCurrentSignalDimensionsSize[] = {
+        4,
         4,
         4,
         4,
@@ -2377,10 +2401,12 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
         SS_DOUBLE,
         SS_DOUBLE,
         SS_DOUBLE,
+        SS_DOUBLE,
         SS_DOUBLE
       };
 
       static int_T rt_LoggedOutputComplexSignals[] = {
+        0,
         0,
         0,
         0,
@@ -2437,6 +2463,7 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
         "",
         "",
         "",
+        "",
         "" };
 
       static const char_T *rt_LoggedOutputBlockNames[] = {
@@ -2466,7 +2493,8 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
         "DroneRS_Compensator/opticalFlowRS_datout",
         "DroneRS_Compensator/sensordatabiasRS_datout",
         "DroneRS_Compensator/posVIS_datout",
-        "DroneRS_Compensator/usePosVIS_flagout" };
+        "DroneRS_Compensator/usePosVIS_flagout",
+        "DroneRS_Compensator/batteryStatus_datout" };
 
       static RTWLogDataTypeConvert rt_RTWLogDataTypeConvert[] = {
         { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 },
@@ -2521,12 +2549,14 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
 
         { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 },
 
+        { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 },
+
         { 0, SS_DOUBLE, SS_DOUBLE, 0, 0, 0, 1.0, 0, 0.0 }
       };
 
       static RTWLogSignalInfo rt_LoggedOutputSignalInfo[] = {
         {
-          27,
+          28,
           rt_LoggedOutputWidths,
           rt_LoggedOutputNumDimensions,
           rt_LoggedOutputDimensions,
@@ -2581,6 +2611,7 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
       rt_LoggedCurrentSignalDimensions[24] = &rt_LoggedOutputWidths[24];
       rt_LoggedCurrentSignalDimensions[25] = &rt_LoggedOutputWidths[25];
       rt_LoggedCurrentSignalDimensions[26] = &rt_LoggedOutputWidths[26];
+      rt_LoggedCurrentSignalDimensions[27] = &rt_LoggedOutputWidths[27];
     }
 
     rtliSetLogY(DroneRS_Compensator_M->rtwLogInfo, "yout");
@@ -2615,6 +2646,8 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
   (void) memset(DroneRS_Compensator_U_posVIS_datin, 0,
                 4U*sizeof(real_T));
   (*DroneRS_Compensator_U_usePosVIS_flagin) = 0.0;
+  (void) memset(DroneRS_Compensator_U_batteryStatus_datin, 0,
+                2U*sizeof(real_T));
 
   /* external outputs */
   (void) memset(&DroneRS_Compensator_Y_motorsRS_cmdout[0], 0,
@@ -2649,6 +2682,8 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
   (void) memset(&DroneRS_Compensator_Y_posVIS_datout[0], 0,
                 4U*sizeof(real_T));
   (*DroneRS_Compensator_Y_usePosVIS_flagout) = 0.0;
+  (void) memset(&DroneRS_Compensator_Y_batteryStatus_datout[0], 0,
+                2U*sizeof(real_T));
 
   /* Matfile logging */
   rt_StartDataLoggingWithStartTime(DroneRS_Compensator_M->rtwLogInfo, 0.0,

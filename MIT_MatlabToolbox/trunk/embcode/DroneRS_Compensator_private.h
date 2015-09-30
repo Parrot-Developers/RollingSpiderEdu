@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2549
+ * Model version                  : 1.2574
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Fri Sep 25 17:32:39 2015
+ * C/C++ source code generated on : Wed Sep 30 17:36:52 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -44,9 +44,9 @@ extern void DroneRS_C_ControllerPID2W_Start(RT_MODEL_DroneRS_Compensator_T *
   const DroneRS_Compensator_M, DW_ControllerPID2W_DroneRS_Co_T *localDW);
 extern void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const
   real_T rtu_att_ref[3], boolean_T rtu_controlModePosVatt_flagin, const real_T
-  rtu_states_estim[3], const real_T rtu_states_estim_h[3], real_T
-  rtu_states_estim_hi, real_T rtu_states_estim_j, const real_T
-  rtu_states_estim_n[2], const real_T rtu_states_estim_o[2],
+  rtu_states_estim[3], const real_T rtu_states_estim_g[3], real_T
+  rtu_states_estim_f, real_T rtu_states_estim_m, const real_T
+  rtu_states_estim_gi[2], const real_T rtu_states_estim_o[2],
   B_ControllerPID2W_DroneRS_Com_T *localB, DW_ControllerPID2W_DroneRS_Co_T
   *localDW, P_ControllerPID2W_DroneRS_Com_T *localP, P_DroneRS_Compensator_T
   *DroneRS_Compensator_P);
@@ -69,9 +69,10 @@ extern void DroneRS_Com_DroneRS_Compensator(boolean_T
   rtu_sensordataRS_datin_c, real_T rtu_sensordataRS_datin_g, real_T
   rtu_sensordataRS_datin_gz, const real_T rtu_opticalFlowRS_datin[3], const
   real_T rtu_sensordatabiasRS_datin[7], const real_T rtu_posVIS_datin[4], real_T
-  rtu_usePosVIS_flagin, B_DroneRS_Compensator_DroneRS_T *localB,
-  DW_DroneRS_Compensator_DroneR_T *localDW, P_DroneRS_Compensator_DroneRS_T
-  *localP, P_DroneRS_Compensator_T *DroneRS_Compensator_P);
+  rtu_usePosVIS_flagin, const real_T rtu_batteryStatus_datin[2],
+  B_DroneRS_Compensator_DroneRS_T *localB, DW_DroneRS_Compensator_DroneR_T
+  *localDW, P_DroneRS_Compensator_DroneRS_T *localP, P_DroneRS_Compensator_T
+  *DroneRS_Compensator_P);
 
 #endif                                 /* RTW_HEADER_DroneRS_Compensator_private_h_ */
 

@@ -130,13 +130,14 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
                                         */
 
   {
-    { 8.0299999999999987e-5, 1.1699999999999996e-5, 0.0, 1.1699999999999995e-5,
-      8.03e-5, 0.0, 0.0, 0.0, 0.0001366 },
     4.0,
     9.81,
     1.184,
     1.5e-5,
     0.068,
+
+    { 8.0299999999999987e-5, 1.1699999999999996e-5, 0.0, 1.1699999999999995e-5,
+      8.03e-5, 0.0, 0.0, 0.0, 0.0001366 },
     -0.015875999999999998,
     0.0624,
     2.0,
@@ -452,15 +453,15 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
                                         * Referenced by: '<S2>/takeoff_Gain'
                                         */
 
-      /*  Expression: 0.08*[1, -1]
+      /*  Expression: [0.08, -0.09]
        * Referenced by: '<S2>/D_xy'
        */
-      { 0.08, -0.08 },
+      { 0.08, -0.09 },
 
-      /*  Expression: [-0.32,0.32]
+      /*  Expression: [-0.32,0.29]
        * Referenced by: '<S2>/P_xy'
        */
-      { -0.32, 0.32 },
+      { -0.32, 0.29 },
       0.0,                             /* Expression: 0
                                         * Referenced by: '<S2>/TakeoffOrControl_Switch'
                                         */
@@ -623,6 +624,9 @@ static real_T DroneRS_Compensator_U_posVIS_datin[4];
 /* '<Root>/usePosVIS_flagin' */
 static real_T DroneRS_Compensator_U_usePosVIS_flagin;
 
+/* '<Root>/batteryStatus_datin' */
+static real_T DroneRS_Compensator_U_batteryStatus_datin[2];
+
 /* '<Root>/motorsRS_cmdout' */
 static real_T DroneRS_Compensator_Y_motorsRS_cmdout[4];
 
@@ -704,6 +708,9 @@ static real_T DroneRS_Compensator_Y_posVIS_datout[4];
 /* '<Root>/usePosVIS_flagout' */
 static real_T DroneRS_Compensator_Y_usePosVIS_flagout;
 
+/* '<Root>/batteryStatus_datout' */
+static real_T DroneRS_Compensator_Y_batteryStatus_datout[2];
+
 //-------------------
 //END OF SIMULINK compensator block "Input/Outputport Declarations" IO(1/3)
 //-------------------
@@ -730,6 +737,7 @@ void rt_OneStep(RT_MODEL_DroneRS_Compensator_T *const DroneRS_Compensator_M)
 
   /* Step the model */
   // (IO(2/3): If input-output-ports of the SIMULINK controller block changed, update these lines with the corresponding lines from ert_main.c)
+  /* Step the model */
   DroneRS_Compensator_step(DroneRS_Compensator_M,
     DroneRS_Compensator_U_controlModePosVSAtt_flagin,
     DroneRS_Compensator_U_pos_refin, DroneRS_Compensator_U_attRS_refin,
@@ -739,6 +747,7 @@ void rt_OneStep(RT_MODEL_DroneRS_Compensator_T *const DroneRS_Compensator_M)
     DroneRS_Compensator_U_prs, DroneRS_Compensator_U_opticalFlowRS_datin,
     DroneRS_Compensator_U_sensordatabiasRS_datin,
     DroneRS_Compensator_U_posVIS_datin, DroneRS_Compensator_U_usePosVIS_flagin,
+    DroneRS_Compensator_U_batteryStatus_datin,
     DroneRS_Compensator_Y_motorsRS_cmdout, &DroneRS_Compensator_Y_X,
     &DroneRS_Compensator_Y_Y, &DroneRS_Compensator_Y_Z,
     &DroneRS_Compensator_Y_yaw, &DroneRS_Compensator_Y_pitch,
@@ -754,10 +763,10 @@ void rt_OneStep(RT_MODEL_DroneRS_Compensator_T *const DroneRS_Compensator_M)
     &DroneRS_Compensator_Y_prsb, DroneRS_Compensator_Y_opticalFlowRS_datout,
     DroneRS_Compensator_Y_sensordatabiasRS_datout,
     DroneRS_Compensator_Y_posVIS_datout,
-    &DroneRS_Compensator_Y_usePosVIS_flagout);
+    &DroneRS_Compensator_Y_usePosVIS_flagout,
+    DroneRS_Compensator_Y_batteryStatus_datout);
   //-------------------
   //-------------------
-
 
 
   /* Get model outputs here */
@@ -791,6 +800,8 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 		static float MAX_ACCELL 	= 6.0;
 		static float MAX_DELTADXY 	= 1.5;
 		static float MAX_RANGE 		= 10.0;
+		static float MIN_BATTTAKEOFF 	= 50.0;
+		static float MIN_BATT		= 30.0;
 		static int MAX_noOF 		= 50; //maximum acceptable numbers of cycles without optical flow
 
 		//user input
@@ -801,7 +812,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 
 		//data handling
 		static double sensorCal[7];
-		//static double batt_level;
+		static double battLevelAvg;
 		float of_data[5];
 		float vis_data[4];
 		float ofDefined;
@@ -878,16 +889,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 
 		if (counter==1)
 		{
-			/*
-			printf("-- \n Battery level \n ---\n");
-			printf(" btlv %"PRIu32" \n",in->HAL_vbat_SI.vbat_percentage);
-			printf(" btlv %f \n",in->HAL_vbat_SI.vbat_V);
-			printf(" BATTERY OUTPUT VOLTAGE : %5.2f percents\n", in->HAL_vbat_SI.vbat_percentage);
-			printf(" BATTERY OUTPUT VOLTAGE : %f percents\n", in->HAL_vbat_SI.vbat_percentage);
-			printf(" btlv %5.2f \n",in->HAL_vbat_SI.vbat_V);
-			printf(" btlv %"PRIu32" \n",in->HAL_vbat_SI.vbat_V);
-			*/
-			printf("\nBATTERY OUTPUT VOLTAGE : %5.2f percents, %"PRIu32", %f \n", in->HAL_vbat_SI.vbat_percentage,in->HAL_vbat_SI.vbat_V,in->HAL_vbat_SI.vbat_percentage);
+			printf("\nBattery output voltage: %5.2f V - %0d percents\n", in->HAL_vbat_SI.vbat_V,(int)in->HAL_vbat_SI.vbat_percentage);
 			printf("used: %d, users: %d, gyrotemp %f, acctemp %f, presstmp %f \n",(int)in->used,(int)in->count_user,in->HAL_gyro_SI.temperature,in->HAL_acc_SI.temperature,in->HAL_pressure_SI.temperature);
 
 
@@ -1047,7 +1049,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 			sensorCal[5] = in->HAL_gyro_SI.z;
 			sensorCal[6] = in->HAL_pressure_SI.pressure;
 
-			//batt_level = in->HAL_vbat_SI.vbat_percentage;
+			battLevelAvg = (double)((int)in->HAL_vbat_SI.vbat_percentage);
 
 			//Activate motors
 			out->command = BLDC_CMD_START;
@@ -1065,7 +1067,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 			sensorCal[5] = sensorCal[5]*(counter-1)/counter + in->HAL_gyro_SI.z/counter;
 			sensorCal[6] = sensorCal[6]*(counter-1)/counter + in->HAL_pressure_SI.pressure/counter;
 
-			//batt_level = batt_level*(counter-1)/counter + in->HAL_vbat_SI.vbat_percentage/counter;
+			battLevelAvg = battLevelAvg*(counter-1)/counter + (double)((int)in->HAL_vbat_SI.vbat_percentage)/counter;
 
 			//keep fifos empty
 			if (FEAT_OF_ACTIVE)  read(of_fifo,(float*)(&of_data),sizeof(of_data));
@@ -1084,7 +1086,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 		//s2: Initialize dynamic model for control
 		else if (counter==calibCycles)
 			{
-			//printf("Batterylevel: %f\n",batt_level);
+			printf("Batterylevel: %f\n",battLevelAvg);
 			printf("Sensorcal: %f :: %f :: %f :: %f :: %f :: %f :: %f \n",sensorCal[0],sensorCal[1],9.81+sensorCal[2],sensorCal[3],sensorCal[4],sensorCal[5],sensorCal[6]);
 
 			//Stop if angled take-off
@@ -1122,6 +1124,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 			    DroneRS_Compensator_U_opticalFlowRS_datin,
 			    DroneRS_Compensator_U_sensordatabiasRS_datin,
 			    DroneRS_Compensator_U_posVIS_datin, &DroneRS_Compensator_U_usePosVIS_flagin,
+			    DroneRS_Compensator_U_batteryStatus_datin,
 			    DroneRS_Compensator_Y_motorsRS_cmdout, &DroneRS_Compensator_Y_X,
 			    &DroneRS_Compensator_Y_Y, &DroneRS_Compensator_Y_Z,
 			    &DroneRS_Compensator_Y_yaw, &DroneRS_Compensator_Y_pitch,
@@ -1137,7 +1140,8 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 			    &DroneRS_Compensator_Y_prsb, DroneRS_Compensator_Y_opticalFlowRS_datout,
 			    DroneRS_Compensator_Y_sensordatabiasRS_datout,
 			    DroneRS_Compensator_Y_posVIS_datout,
-			    &DroneRS_Compensator_Y_usePosVIS_flagout);
+			    &DroneRS_Compensator_Y_usePosVIS_flagout,
+			    DroneRS_Compensator_Y_batteryStatus_datout);
 
 			  //-------------------
 			  //-------------------
@@ -1194,6 +1198,19 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 				{
 				powerGain = powerGain_eparam;
 				DroneRS_Compensator_U_pos_refin[2] = 1; //enables take-off procedure, disables altitude-control
+
+			       //React to possible low battery
+	  			    if ((DroneRS_Compensator_U_batteryStatus_datin[1]<MIN_BATTTAKEOFF) && (DroneRS_Compensator_U_batteryStatus_datin[1]>0.1))
+	  			    {						
+					run_flag = 0;
+					printf("Flight aborted due to low voltage (%f %%): shutting down motors now, charge battery!\n",DroneRS_Compensator_U_batteryStatus_datin[1]);
+					out->motors_speed[0] = 0;
+					out->motors_speed[1] = 0;
+					out->motors_speed[2] = 0;
+					out->motors_speed[3] = 0;
+					out->command = BLDC_CMD_STOP;
+					return;
+	  			    }
 				}
 
 			//3.2 transition to actual flight: enable altitude-control setting
@@ -1282,6 +1299,18 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 					out->command = BLDC_CMD_STOP;
 					return;
 			}
+			//safety abort due to low battery in flight
+			if ((DroneRS_Compensator_U_batteryStatus_datin[1]<MIN_BATT) && (DroneRS_Compensator_U_batteryStatus_datin[1]>1.0))
+			{
+					run_flag = 0;
+					printf("Flight aborted due to low voltage (%f %%): shutting down motors now, charge battery!\n",DroneRS_Compensator_U_batteryStatus_datin[1]);
+					out->motors_speed[0] = 0;
+					out->motors_speed[1] = 0;
+					out->motors_speed[2] = 0;
+					out->motors_speed[3] = 0;
+					out->command = BLDC_CMD_STOP;
+					return;	
+			};
 
 
 			//Input to Model: optical flow computations (setup as zero-order hold: no updates on static var when nothing new in fifo)
@@ -1379,6 +1408,9 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 			DroneRS_Compensator_U_r		= in->HAL_gyro_SI.z;
 			DroneRS_Compensator_U_altitude_sonar	= in->HAL_ultrasound_SI.altitude;
 			DroneRS_Compensator_U_prs 	= in->HAL_pressure_SI.pressure;
+
+			DroneRS_Compensator_U_batteryStatus_datin[0] = in->HAL_vbat_SI.vbat_V;
+			DroneRS_Compensator_U_batteryStatus_datin[1] = (double)((int)in->HAL_vbat_SI.vbat_percentage);
 
 			// compute control commands
 			if (rtmGetErrorStatus(DroneRS_Compensator_M) == (NULL)){

@@ -4,7 +4,6 @@
 
 #define NB_TAB_ECHO  4
 #define MAX_ECHO 30
-//#define C_BLDC_NB_MOTORS_ 4 // FIXME: TBD dynamic allocation or include BLDC.h ???
 
 typedef uint16_t status_t;
 
@@ -241,31 +240,10 @@ typedef struct __attribute__((aligned(8))) _HAL_acquisition_t
     /*Ultrasound data*/
     HAL_ultrasound_SI_t HAL_ultrasound_SI; ///< ultrasound data
 
+    uint8_t padding[52+144];
 
     /*Battery data*/
     HAL_vbat_SI_t HAL_vbat_SI; //Battery voltage value (unit : V)
-
-#if 0
-    /*some etron inputs data buttons / ...*/
-    HAL_etron_gpio_t HAL_etron_gpio; //< etron gpio inputs
-
-	#ifndef DELOS
-    /*GPS data*/
-    HAL_gps_data_t HAL_gps_data;
-	#endif
-
-    /*FIXME: please make a structure */
-    uint8_t rc_channels[4]; // RC channels
-    uint8_t rc_status; // RC status: on/off
-    uint8_t rc_mode; // RC mode: flying/idle
-    uint8_t rc_emergency; // RC emergency signal
-
-    /*FIXME: camif no used should be removed with the code using it*/
-    uint32_t camif_id_field; ///< indicates if camif data is stocked
-    void* result_camif_tab; ///<result camif
-
-    HAL_VBUS_state_t VBUS_state;
-#endif
 
 } HAL_acquisition_t;
 
