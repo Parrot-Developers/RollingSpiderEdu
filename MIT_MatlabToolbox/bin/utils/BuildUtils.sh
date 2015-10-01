@@ -26,4 +26,4 @@ cd ../../trunk/utils/PackEmbeddedCode/Debug/
 make clean
 make
 cd $SCRIPTPATH
-echo "Drone: Trying to build PackEmbeddedCode..."
+echo "Drone: PackEmbeddedCode built!"
