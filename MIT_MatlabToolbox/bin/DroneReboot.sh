@@ -13,7 +13,8 @@ echo "> Drone: Rebooting the drone remotely."
 /usr/bin/expect -c 'set timeout 10; spawn telnet 192.168.1.1; expect "RS.edu] \$ "; send "reboot; exit\r"; expect eof'
 
 # 3. Close all bluetooth connections
-echo "> Drone: Closing the bluetooth connection."
+echo "> Drone: Closing the bluetooth connection..."
 sudo pand --killall
+echo "> Drone: Bluetooth connection closed!"
 
 

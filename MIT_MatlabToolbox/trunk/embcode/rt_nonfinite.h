@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2574
+ * Model version                  : 1.2576
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Sep 30 17:36:52 2015
+ * C/C++ source code generated on : Thu Oct  1 18:12:10 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic

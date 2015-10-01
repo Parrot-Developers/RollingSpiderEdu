@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2574
+ * Model version                  : 1.2576
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Sep 30 17:36:52 2015
+ * C/C++ source code generated on : Thu Oct  1 18:12:10 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -78,9 +78,9 @@ void DroneRS_C_ControllerPID2W_Start(RT_MODEL_DroneRS_Compensator_T * const
 /* Output and update for atomic system: '<S1>/ControllerPID2W' */
 void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
   rtu_att_ref[3], boolean_T rtu_controlModePosVatt_flagin, const real_T
-  rtu_states_estim[3], const real_T rtu_states_estim_g[3], real_T
-  rtu_states_estim_f, real_T rtu_states_estim_m, const real_T
-  rtu_states_estim_gi[2], const real_T rtu_states_estim_o[2],
+  rtu_states_estim[3], const real_T rtu_states_estim_c[3], real_T
+  rtu_states_estim_l, real_T rtu_states_estim_h, const real_T
+  rtu_states_estim_e[2], const real_T rtu_states_estim_d[2],
   B_ControllerPID2W_DroneRS_Com_T *localB, DW_ControllerPID2W_DroneRS_Co_T
   *localDW, P_ControllerPID2W_DroneRS_Com_T *localP, P_DroneRS_Compensator_T
   *DroneRS_Compensator_P)
@@ -116,8 +116,8 @@ void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
                       DroneRS_Compensator_P->quad.g / 4.0 /
                       DroneRS_Compensator_P->quad.b) * localP->takeoff_Gain_Gain;
   } else {
-    rtb_Gain6 = (localB->pos_ref[2] - rtu_states_estim_m) * localP->P_z_Gain -
-      localP->D_z_Gain * rtu_states_estim_f;
+    rtb_Gain6 = (localB->pos_ref[2] - rtu_states_estim_h) * localP->P_z_Gain -
+      localP->D_z_Gain * rtu_states_estim_l;
   }
 
   /* End of Switch: '<S2>/TakeoffOrControl_Switch' */
@@ -152,14 +152,14 @@ void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
     /* Sum: '<S2>/Sum17' incorporates:
      *  Product: '<S2>/Product'
      */
-    tmp_0 = localB->pos_ref[0] - rtu_states_estim_o[0];
-    tmp_1 = localB->pos_ref[1] - rtu_states_estim_o[1];
+    tmp_0 = localB->pos_ref[0] - rtu_states_estim_d[0];
+    tmp_1 = localB->pos_ref[1] - rtu_states_estim_d[1];
     localB->Switch_refAtt[0] = (cos(rtu_states_estim[0]) * tmp_0 + sin
       (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[0] + localP->D_xy_Gain
-      [0] * rtu_states_estim_gi[0];
+      [0] * rtu_states_estim_e[0];
     localB->Switch_refAtt[1] = (-sin(rtu_states_estim[0]) * tmp_0 + cos
       (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[1] + localP->D_xy_Gain
-      [1] * rtu_states_estim_gi[1];
+      [1] * rtu_states_estim_e[1];
   } else {
     localB->Switch_refAtt[0] = localB->att_ref[1];
     localB->Switch_refAtt[1] = localB->att_ref[2];
@@ -201,12 +201,12 @@ void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
    */
   tmp_0 = (localP->P_pr_Gain[0] * rtb_pitchrollerror_idx_0 + localP->I_pr_Gain *
            localDW->DiscreteTimeIntegrator_DSTATE[0]) - localP->D_pr_Gain[0] *
-    rtu_states_estim_g[1];
+    rtu_states_estim_c[1];
   tmp_1 = (localP->P_pr_Gain[1] * rtb_pitchrollerror_idx_1 + localP->I_pr_Gain *
            localDW->DiscreteTimeIntegrator_DSTATE[1]) - localP->D_pr_Gain[1] *
-    rtu_states_estim_g[0];
+    rtu_states_estim_c[0];
   tmp = (localB->att_ref[0] - rtu_states_estim[0]) * localP->P_yaw_Gain -
-    localP->D_yaw_Gain * rtu_states_estim_g[2];
+    localP->D_yaw_Gain * rtu_states_estim_c[2];
 
   /* Product: '<S4>/Product' incorporates:
    *  Constant: '<S4>/Action2omega'

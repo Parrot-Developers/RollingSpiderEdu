@@ -8,9 +8,11 @@ set -e
 cd `dirname $0`
 
 # 3. upload custom firmware files to drone using ftp
+echo "Drone: Trying to upload custom firmware files..."
+
 echo "> Drone: FTP into the drone"
 
 
 /usr/bin/expect -c 'set timeout -1; spawn lftp -e "mirror -R ../../libs/EDUfirmwareFILES/ /" -u anonymous, 192.168.1.1; expect "anonymous@192.168.1.1:/>"; send "exit\r"; expect eof'
 
-echo "Custom firmware files uploaded to drone!"
+echo "Drone: Custom firmware files uploaded to drone!"

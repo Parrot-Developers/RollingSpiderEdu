@@ -14,6 +14,8 @@ if [ ! -d "/media/${USER}/Parrot_RS/" ]; then
 fi
 
 # 3. copy RSdata.mat from drone USB to DroneExchange
+echo "Drone: Trying to download RSdata.mat from drone to DroneExchange!"
+
 cp /media/${USER}/Parrot_RS/RSdata.mat ../DroneExchange 
 
-echo "RSdata.mat downloaded from drone to DroneExchange!"
+echo "Drone: RSdata.mat downloaded from drone to DroneExchange!"

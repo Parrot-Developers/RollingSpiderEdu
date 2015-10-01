@@ -9,3 +9,4 @@ fi
 # 2. Close all bluetooth connections
 sudo pand --killall
 
+echo "Drone: Killed all bluetooth connections!"

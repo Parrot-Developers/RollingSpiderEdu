@@ -14,6 +14,8 @@ if [ ! -d "/media/${USER}/Parrot_RS/" ]; then
 fi
 
 # 3. copy custom firmware to drone
+echo "Drone: Trying to upload custom firmware system file to drone..."
+
 cp ../../libs/EDUfirmwareSYS/rollingspider.edu.plf /media/${USER}/Parrot_RS/
 
-echo "Custom firmware system file uploaded to drone!"
+echo "Drone: Custom firmware system file uploaded to drone!"
