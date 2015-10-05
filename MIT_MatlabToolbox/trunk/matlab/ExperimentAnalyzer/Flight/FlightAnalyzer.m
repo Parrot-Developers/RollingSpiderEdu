@@ -99,7 +99,7 @@ ylim([-1 1])
 h(3)=subplot(4,1,3);
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,5:7),'.-'); hold all;
 plot(RSrun_posVIS(visUpdatesAvlble,1),RSrun_posVIS(visUpdatesAvlble,4),'o');
-plot(RSrun_attRS_ref(:,1),RSrun_attRS_ref);
+plot(RSrun_attRS_ref(:,1),RSrun_attRS_ref(:,2:end);
 ylabel 'attitude estimate (in RS system)'
 legend({'yaw' 'pitch' 'roll' 'yaw_{vis}' 'yaw_{ref}' 'pitch_{ref}' 'roll_{ref}'});
 xlabel 't [s]'
