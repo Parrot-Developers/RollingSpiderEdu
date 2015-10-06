@@ -7,10 +7,10 @@ cd `dirname $0`
 echo "Drone: Trying to download ptimes from drone to DroneExchange..."
 
 echo "> Drone: FTP into the drone"
-/usr/bin/expect -f <<SCRIPT
+/usr/bin/expect <<SCRIPT
 set timeout -1;
 spawn ftp 192.168.1.1;
-expect "(192.168.1.1:'"$USER"'):";
+expect "(192.168.1.1:$USER):";
 send "\r";
 expect "ftp>";
 send "cd ptimes/\r";
@@ -21,7 +21,7 @@ send "mget pt* . \r";
 expect "ftp>";
 send "exit\r";
 expect eof
-SCRIPT;
+SCRIPT
 
 
 # 3. Move the data file to the correct location

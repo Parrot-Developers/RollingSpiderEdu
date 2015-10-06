@@ -10,13 +10,13 @@ cd `dirname $0`
 
 # 2. telnet into the drone and reboot
 echo "> Drone: Rebooting the drone remotely."
-/usr/bin/expect -f <<SCRIPT
+/usr/bin/expect <<SCRIPT
 set timeout 10;
 spawn telnet 192.168.1.1;
 expect "RS.edu] \$ ";
 send "reboot; exit\r";
 expect eof
-SCRIPT;
+SCRIPT
 
 # 3. Close all bluetooth connections
 echo "> Drone: Closing the bluetooth connection..."
