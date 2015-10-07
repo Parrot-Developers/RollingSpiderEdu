@@ -27,7 +27,10 @@ fi
 #3 Run dragon-prog
 dragon-prog
 
-#4 Shut down and clean up     
+#4 Shut down and clean up
+echo " "
+echo "Shut down and clean up"    
+echo "----------------------" 
 test-SIP6_pwm -S 3 0 0 0 0
 gpio 39 -d ho 1
       

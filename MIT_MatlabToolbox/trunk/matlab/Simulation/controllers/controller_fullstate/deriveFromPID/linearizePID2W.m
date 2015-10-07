@@ -12,11 +12,12 @@
 % ==================================
 
 %% 1) Do linearization on your own
+paramsFilters;
 
 %From SIMULINK diagram
 K_PID2act=[...
-            600*0.3 0         0     0       -600     0      600*0.15 0       0    0  -80 0;
-            0       -1300*0.3 0     0       0       -1300   0       -0.15*600    0   -300 0  0;
+            600*0.32 0         0     0       -600     0      600*0.08 0       0    0  -80 0;
+            0       -1300*0.29 0     0       0       -1300   0       -0.09*600    0   -300 0  0;
             0               0 0     -6000   0       0       0       0       0    0   0  -0.3*6000;
             0               0 -600  0       0       0       0       0       -350 0   0  0]; %states to pitch roll yaw Thrustsingle_engine (here not total Thrust!)-action
 
@@ -43,7 +44,8 @@ K_FSFB2motorsthrust_wooffset = 2*k*1880*motorsdirection*  K_FSFB2omegaaction;
 %offset
 %K_FSFB2motorsthrust_wooffset_offsettoadd = -k*1880^2;
 
-K_pid = -controlParams.Ts2Q*K_FSFB2motorsthrust_wooffset
+K_pid = -controlParams.Ts2Q*K_FSFB2motorsthrust_wooffset;
+K_pid(abs(K_pid)<1e-10)=0
 
 %% 2) Have linearization done by SIMULINK
 %use Simulink's ControlDesign/Linear Analysis with linearizeController.slx
@@ -52,4 +54,4 @@ load('linearizedPID2W.mat')
 motorcmd_hover = quad.g*quad.M*1/(quad.Ct*quad.rho*quad.A*quad.r^2)*1/quadEDT.motorsRSToW2_Gain/4;
 K_pid = controlParams.Ts2Q *motorsdirection*(quad.g*quad.M/4)/motorcmd_hover*linearizedPID2W.d;
 K_pid(abs(K_pid)<1e-10)=0;
-K_pid = -K_pid;
+K_pid = -K_pid

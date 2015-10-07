@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2579
+ * Model version                  : 1.2590
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Mon Oct  5 15:46:50 2015
+ * C/C++ source code generated on : Tue Oct  6 21:06:55 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -28,379 +28,196 @@
 /* Forward declaration for local functions */
 static real_T DroneRS_Compensator_genpnorm(const real_T x[3]);
 
-/* Initial conditions for atomic system: '<S1>/ControllerPID2W' */
-void DroneRS_Co_ControllerPID2W_Init(DW_ControllerPID2W_DroneRS_Co_T *localDW,
-  P_ControllerPID2W_DroneRS_Com_T *localP)
-{
-  /* InitializeConditions for Delay: '<S2>/Delay' */
-  localDW->Delay_DSTATE[0] = localP->Delay_InitialCondition;
-  localDW->Delay_DSTATE[1] = localP->Delay_InitialCondition;
-
-  /* InitializeConditions for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
-  localDW->DiscreteTimeIntegrator_DSTATE[0] = localP->DiscreteTimeIntegrator_IC;
-  localDW->DiscreteTimeIntegrator_DSTATE[1] = localP->DiscreteTimeIntegrator_IC;
-}
-
-/* Start for atomic system: '<S1>/ControllerPID2W' */
-void DroneRS_C_ControllerPID2W_Start(RT_MODEL_DroneRS_Compensator_T * const
-  DroneRS_Compensator_M, DW_ControllerPID2W_DroneRS_Co_T *localDW)
-{
-  /* Start for ToWorkspace: '<S2>/To Workspace1' */
-  {
-    int_T dimensions[1] = { 1 };
-
-    localDW->ToWorkspace1_PWORK.LoggedData = rt_CreateLogVar(
-      DroneRS_Compensator_M->rtwLogInfo,
-      0.0,
-      rtmGetTFinal(DroneRS_Compensator_M),
-      DroneRS_Compensator_M->Timing.stepSize0,
-      (&rtmGetErrorStatus(DroneRS_Compensator_M)),
-      "Tw",
-      SS_DOUBLE,
-      0,
-      0,
-      0,
-      1,
-      1,
-      dimensions,
-      NO_LOGVALDIMS,
-      (NULL),
-      (NULL),
-      0,
-      1,
-      0.005,
-      1);
-    if (localDW->ToWorkspace1_PWORK.LoggedData == (NULL))
-      return;
-  }
-}
-
-/* Output and update for atomic system: '<S1>/ControllerPID2W' */
-void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const real_T
-  rtu_att_ref[3], boolean_T rtu_controlModePosVatt_flagin, const real_T
-  rtu_states_estim[3], const real_T rtu_states_estim_f[3], real_T
-  rtu_states_estim_a, real_T rtu_states_estim_j, const real_T
-  rtu_states_estim_m[2], const real_T rtu_states_estim_h[2],
-  B_ControllerPID2W_DroneRS_Com_T *localB, DW_ControllerPID2W_DroneRS_Co_T
-  *localDW, P_ControllerPID2W_DroneRS_Com_T *localP, P_DroneRS_Compensator_T
-  *DroneRS_Compensator_P)
+/* Output and update for atomic system: '<S1>/ControllerFSFB' */
+void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
+  rtu_att_refin[3], boolean_T rtu_controlModePosVSAtt_flagin, const real_T
+  rtu_states_estimin[2], const real_T rtu_states_estimin_c[2], real_T
+  rtu_states_estimin_i, const real_T rtu_states_estimin_f[3], real_T
+  rtu_states_estimin_k, const real_T rtu_states_estimin_h[3],
+  B_ControllerFSFB_DroneRS_Comp_T *localB, P_ControllerFSFB_DroneRS_Comp_T
+  *localP, P_DroneRS_Compensator_T *DroneRS_Compensator_P)
 {
   /* local block i/o variables */
-  real_T rtb_Gain6;
-  real_T rtb_w2MotorsQF_Gain[4];
+  real_T rtb_SaturationThrust;
+  real_T rtb_TmpSignalConversionAtProduc[4];
+  real_T rtu_states_estimin_0[12];
+  real_T tmp[12];
   int32_T i;
-  real_T rtb_w2MotorsQF_Gain_0;
-  real_T tmp;
-  real_T rtb_pitchrollerror_idx_0;
-  real_T rtb_pitchrollerror_idx_1;
-  real_T rtb_antiWU_Gain_idx_0;
-  real_T rtb_antiWU_Gain_idx_1;
-  real_T tmp_0;
+  int32_T i_0;
+  real_T tmp_0[4];
+  real_T u1;
+  real_T u2;
   real_T tmp_1;
 
-  /* Inport: '<S2>/pos_ref' */
-  localB->pos_ref[0] = rtu_pos_ref[0];
-  localB->pos_ref[1] = rtu_pos_ref[1];
-  localB->pos_ref[2] = rtu_pos_ref[2];
+  /* Switch: '<S6>/PosVSAtt_Switch' incorporates:
+   *  Constant: '<S6>/dz_ref'
+   *  Constant: '<S6>/velocitiesPos_ref'
+   *  Constant: '<S6>/velocitiesRot_ref'
+   */
+  if (rtu_controlModePosVSAtt_flagin) {
+    localB->PosVSAtt_Switch[0] = rtu_pos_refin[0];
+    localB->PosVSAtt_Switch[1] = rtu_pos_refin[1];
+  } else {
+    localB->PosVSAtt_Switch[0] = rtu_states_estimin[0];
+    localB->PosVSAtt_Switch[1] = rtu_states_estimin[1];
+  }
+
+  localB->PosVSAtt_Switch[2] = rtu_pos_refin[2];
+  localB->PosVSAtt_Switch[3] = rtu_att_refin[0];
+  localB->PosVSAtt_Switch[4] = rtu_att_refin[1];
+  localB->PosVSAtt_Switch[5] = rtu_att_refin[2];
+  if (rtu_controlModePosVSAtt_flagin) {
+    localB->PosVSAtt_Switch[6] = localP->velocitiesPos_ref_Value[0];
+    localB->PosVSAtt_Switch[7] = localP->velocitiesPos_ref_Value[1];
+    localB->PosVSAtt_Switch[8] = localP->velocitiesPos_ref_Value[2];
+  } else {
+    localB->PosVSAtt_Switch[6] = rtu_states_estimin_c[0];
+    localB->PosVSAtt_Switch[7] = rtu_states_estimin_c[1];
+    localB->PosVSAtt_Switch[8] = localP->dz_ref_Value;
+  }
+
+  localB->PosVSAtt_Switch[9] = localP->velocitiesRot_ref_Value[0];
+  localB->PosVSAtt_Switch[10] = localP->velocitiesRot_ref_Value[1];
+  localB->PosVSAtt_Switch[11] = localP->velocitiesRot_ref_Value[2];
+
+  /* End of Switch: '<S6>/PosVSAtt_Switch' */
+
+  /* Sum: '<S2>/Add' incorporates:
+   *  Product: '<S2>/FullStateFeedback'
+   */
+  rtu_states_estimin_0[0] = rtu_states_estimin[0];
+  rtu_states_estimin_0[1] = rtu_states_estimin[1];
+  rtu_states_estimin_0[2] = rtu_states_estimin_i;
+  rtu_states_estimin_0[3] = rtu_states_estimin_f[0];
+  rtu_states_estimin_0[4] = rtu_states_estimin_f[1];
+  rtu_states_estimin_0[5] = rtu_states_estimin_f[2];
+  rtu_states_estimin_0[6] = rtu_states_estimin_c[0];
+  rtu_states_estimin_0[7] = rtu_states_estimin_c[1];
+  rtu_states_estimin_0[8] = rtu_states_estimin_k;
+  rtu_states_estimin_0[9] = rtu_states_estimin_h[0];
+  rtu_states_estimin_0[10] = rtu_states_estimin_h[1];
+  rtu_states_estimin_0[11] = rtu_states_estimin_h[2];
+  for (i = 0; i < 12; i++) {
+    tmp[i] = localB->PosVSAtt_Switch[i] - rtu_states_estimin_0[i];
+  }
+
+  /* End of Sum: '<S2>/Add' */
+
+  /* Product: '<S2>/FullStateFeedback' incorporates:
+   *  Constant: '<S2>/FSFBMatrix_lqr'
+   */
+  for (i = 0; i < 4; i++) {
+    rtb_TmpSignalConversionAtProduc[i] = 0.0;
+    for (i_0 = 0; i_0 < 12; i_0++) {
+      rtb_TmpSignalConversionAtProduc[i] += DroneRS_Compensator_P->K_lqr[(i_0 <<
+        2) + i] * tmp[i_0];
+    }
+  }
 
   /* Switch: '<S2>/TakeoffOrControl_Switch' incorporates:
-   *  Constant: '<S2>/w0'
-   *  Gain: '<S2>/D_z'
-   *  Gain: '<S2>/P_z'
+   *  Constant: '<S2>/HoverThrustLinearizationPoint'
    *  Gain: '<S2>/takeoff_Gain'
-   *  Sum: '<S2>/Sum15'
-   *  Sum: '<S2>/Sum3'
    */
-  if (localB->pos_ref[2] > localP->TakeoffOrControl_Switch_Thresho) {
-    rtb_Gain6 = -sqrt(DroneRS_Compensator_P->quad.M *
-                      DroneRS_Compensator_P->quad.g / 4.0 /
-                      DroneRS_Compensator_P->quad.b) * localP->takeoff_Gain_Gain;
+  if (rtu_pos_refin[2] > localP->TakeoffOrControl_Switch_Thresho) {
+    rtb_SaturationThrust = -DroneRS_Compensator_P->quad.g *
+      DroneRS_Compensator_P->quad.M * localP->takeoff_Gain_Gain;
   } else {
-    rtb_Gain6 = (localB->pos_ref[2] - rtu_states_estim_j) * localP->P_z_Gain -
-      localP->D_z_Gain * rtu_states_estim_a;
+    rtb_SaturationThrust = rtb_TmpSignalConversionAtProduc[0];
   }
 
   /* End of Switch: '<S2>/TakeoffOrControl_Switch' */
 
-  /* Sum: '<S2>/Sum4' incorporates:
-   *  Constant: '<S2>/w0'
+  /* Sum: '<S2>/Add1' incorporates:
+   *  Constant: '<S2>/HoverThrustLinearizationPoint'
    */
-  rtb_Gain6 += -sqrt(DroneRS_Compensator_P->quad.M *
-                     DroneRS_Compensator_P->quad.g / 4.0 /
-                     DroneRS_Compensator_P->quad.b);
-
-  /* ToWorkspace: '<S2>/To Workspace1' */
-  rt_UpdateLogVar((LogVar *)(LogVar*) (localDW->ToWorkspace1_PWORK.LoggedData),
-                  &rtb_Gain6, 0);
-
-  /* Inport: '<S2>/att_ref' */
-  /* MATLAB Function 'DroneRS_Compensator/ControllerPID2W/inverse rotation Function': '<S5>:1' */
-  /* inverse yaw-rotation */
-  /* '<S5>:1:3' */
-  localB->att_ref[0] = rtu_att_ref[0];
-  localB->att_ref[1] = rtu_att_ref[1];
-  localB->att_ref[2] = rtu_att_ref[2];
-
-  /* Switch: '<S2>/Switch_refAtt' incorporates:
-   *  Gain: '<S2>/D_xy'
-   *  Gain: '<S2>/P_xy'
-   *  MATLAB Function: '<S2>/inverse rotation Function'
-   *  Product: '<S2>/Product'
-   *  Sum: '<S2>/Sum18'
-   */
-  if (rtu_controlModePosVatt_flagin) {
-    /* Sum: '<S2>/Sum17' incorporates:
-     *  Product: '<S2>/Product'
-     */
-    tmp_0 = localB->pos_ref[0] - rtu_states_estim_h[0];
-    tmp_1 = localB->pos_ref[1] - rtu_states_estim_h[1];
-    localB->Switch_refAtt[0] = (cos(rtu_states_estim[0]) * tmp_0 + sin
-      (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[0] + localP->D_xy_Gain
-      [0] * rtu_states_estim_m[0];
-    localB->Switch_refAtt[1] = (-sin(rtu_states_estim[0]) * tmp_0 + cos
-      (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[1] + localP->D_xy_Gain
-      [1] * rtu_states_estim_m[1];
-  } else {
-    localB->Switch_refAtt[0] = localB->att_ref[1];
-    localB->Switch_refAtt[1] = localB->att_ref[2];
-  }
-
-  /* End of Switch: '<S2>/Switch_refAtt' */
-
-  /* Sum: '<S2>/Sum19' */
-  rtb_pitchrollerror_idx_0 = localB->Switch_refAtt[0] - rtu_states_estim[1];
-  rtb_pitchrollerror_idx_1 = localB->Switch_refAtt[1] - rtu_states_estim[2];
-
-  /* Gain: '<S2>/antiWU_Gain' incorporates:
-   *  Delay: '<S2>/Delay'
-   */
-  rtb_antiWU_Gain_idx_0 = localP->antiWU_Gain_Gain * localDW->Delay_DSTATE[0];
-  rtb_antiWU_Gain_idx_1 = localP->antiWU_Gain_Gain * localDW->Delay_DSTATE[1];
+  rtb_SaturationThrust += -DroneRS_Compensator_P->quad.g *
+    DroneRS_Compensator_P->quad.M;
 
   /* Saturate: '<S2>/SaturationThrust' */
-  if (rtb_Gain6 > localP->SaturationThrust_UpperSat) {
-    rtb_Gain6 = localP->SaturationThrust_UpperSat;
+  u1 = -(0.92 * DroneRS_Compensator_P->controlsParams.motorsThrust_i_UpperLimit *
+         4.0);
+  u2 = 0.92 * DroneRS_Compensator_P->controlsParams.motorsThrust_i_UpperLimit *
+    4.0;
+  if (rtb_SaturationThrust > u2) {
+    rtb_SaturationThrust = u2;
   } else {
-    if (rtb_Gain6 < localP->SaturationThrust_LowerSat) {
-      rtb_Gain6 = localP->SaturationThrust_LowerSat;
+    if (rtb_SaturationThrust < u1) {
+      rtb_SaturationThrust = u1;
     }
   }
 
   /* End of Saturate: '<S2>/SaturationThrust' */
 
-  /* SignalConversion: '<S4>/TmpSignal ConversionAtProductInport2' incorporates:
-   *  DiscreteIntegrator: '<S2>/Discrete-Time Integrator'
-   *  Gain: '<S2>/D_pr'
-   *  Gain: '<S2>/D_yaw'
-   *  Gain: '<S2>/I_pr'
-   *  Gain: '<S2>/P_pr'
-   *  Gain: '<S2>/P_yaw'
-   *  Sum: '<S2>/Sum1'
-   *  Sum: '<S2>/Sum16'
-   *  Sum: '<S2>/Sum2'
-   */
-  tmp_0 = (localP->P_pr_Gain[0] * rtb_pitchrollerror_idx_0 + localP->I_pr_Gain *
-           localDW->DiscreteTimeIntegrator_DSTATE[0]) - localP->D_pr_Gain[0] *
-    rtu_states_estim_f[1];
-  tmp_1 = (localP->P_pr_Gain[1] * rtb_pitchrollerror_idx_1 + localP->I_pr_Gain *
-           localDW->DiscreteTimeIntegrator_DSTATE[1]) - localP->D_pr_Gain[1] *
-    rtu_states_estim_f[0];
-  tmp = (localB->att_ref[0] - rtu_states_estim[0]) * localP->P_yaw_Gain -
-    localP->D_yaw_Gain * rtu_states_estim_f[2];
+  /* Gain: '<S5>/ThrustToW2_Gain' */
+  u1 = 1.0 / (DroneRS_Compensator_P->quad.Ct * DroneRS_Compensator_P->quad.rho *
+              DroneRS_Compensator_P->quad.A * 0.0010890000000000001);
+
+  /* Gain: '<S5>/W2ToMotorsCmd_Gain' */
+  u2 = 1.0 / DroneRS_Compensator_P->quadEDT.motorsRSToW2_Gain;
 
   /* Product: '<S4>/Product' incorporates:
-   *  Constant: '<S4>/Action2omega'
+   *  Constant: '<S4>/TorquetotalThrustToThrustperMotor'
+   *  Saturate: '<S4>/Saturation2'
    *  SignalConversion: '<S4>/TmpSignal ConversionAtProductInport2'
    */
   for (i = 0; i < 4; i++) {
-    rtb_w2MotorsQF_Gain_0 = localP->Action2omega_Value[i + 12] * rtb_Gain6 +
-      (localP->Action2omega_Value[i + 8] * tmp + (localP->Action2omega_Value[i +
-        4] * tmp_1 + localP->Action2omega_Value[i] * tmp_0));
-    rtb_w2MotorsQF_Gain[i] = rtb_w2MotorsQF_Gain_0;
+    tmp_1 = localP->TorquetotalThrustToThrustperMot[i + 12] *
+      rtb_TmpSignalConversionAtProduc[3] +
+      (localP->TorquetotalThrustToThrustperMot[i + 8] *
+       rtb_TmpSignalConversionAtProduc[2] +
+       (localP->TorquetotalThrustToThrustperMot[i + 4] *
+        rtb_TmpSignalConversionAtProduc[1] +
+        localP->TorquetotalThrustToThrustperMot[i] * rtb_SaturationThrust));
+    tmp_0[i] = tmp_1;
   }
 
   /* End of Product: '<S4>/Product' */
 
-  /* Gain: '<S4>/Gain5' */
-  rtb_Gain6 = localP->Gain5_Gain * rtb_w2MotorsQF_Gain[3];
-
-  /* Saturate: '<S4>/Saturation4' */
-  if (rtb_Gain6 > localP->Saturation4_UpperSat) {
-    tmp_0 = localP->Saturation4_UpperSat;
-  } else if (rtb_Gain6 < localP->Saturation4_LowerSat) {
-    tmp_0 = localP->Saturation4_LowerSat;
-  } else {
-    tmp_0 = rtb_Gain6;
-  }
-
-  /* Gain: '<S4>/Gain6' incorporates:
-   *  Saturate: '<S4>/Saturation4'
+  /* Gain: '<S5>/W2ToMotorsCmd_Gain' incorporates:
+   *  Gain: '<S5>/MotorsRotationDirection'
+   *  Gain: '<S5>/ThrustToW2_Gain'
+   *  Saturate: '<S4>/Saturation2'
    */
-  rtb_Gain6 = localP->Gain6_Gain * tmp_0;
-
-  /* Saturate: '<S4>/Saturation3' */
-  rtb_w2MotorsQF_Gain_0 = rtb_w2MotorsQF_Gain[2];
-
-  /* Gain: '<S4>/Gain4' incorporates:
-   *  Gain: '<S4>/Gain3'
-   */
-  tmp_0 = localP->Gain3_Gain * rtb_w2MotorsQF_Gain[1];
-
-  /* Saturate: '<S4>/Saturation2' */
-  if (rtb_w2MotorsQF_Gain[0] > localP->Saturation2_UpperSat) {
+  if (tmp_0[0] > localP->Saturation2_UpperSat) {
     tmp_1 = localP->Saturation2_UpperSat;
-  } else if (rtb_w2MotorsQF_Gain[0] < localP->Saturation2_LowerSat) {
+  } else if (tmp_0[0] < localP->Saturation2_LowerSat) {
     tmp_1 = localP->Saturation2_LowerSat;
   } else {
-    tmp_1 = rtb_w2MotorsQF_Gain[0];
+    tmp_1 = tmp_0[0];
   }
 
-  /* End of Saturate: '<S4>/Saturation2' */
-
-  /* Gain: '<S6>/w2MotorsQF_Gain' */
-  rtb_w2MotorsQF_Gain[0] = localP->w2MotorsQF_Gain_Gain * tmp_1;
-
-  /* Gain: '<S4>/Gain4' incorporates:
-   *  Saturate: '<S4>/Saturation1'
-   */
-  if (tmp_0 > localP->Saturation1_UpperSat) {
-    tmp_0 = localP->Saturation1_UpperSat;
+  localB->W2ToMotorsCmd_Gain[0] = u1 * tmp_1 *
+    localP->MotorsRotationDirection_Gain[0] * u2;
+  if (tmp_0[1] > localP->Saturation2_UpperSat) {
+    tmp_1 = localP->Saturation2_UpperSat;
+  } else if (tmp_0[1] < localP->Saturation2_LowerSat) {
+    tmp_1 = localP->Saturation2_LowerSat;
   } else {
-    if (tmp_0 < localP->Saturation1_LowerSat) {
-      tmp_0 = localP->Saturation1_LowerSat;
-    }
+    tmp_1 = tmp_0[1];
   }
 
-  /* Gain: '<S6>/w2MotorsQF_Gain' incorporates:
-   *  Gain: '<S4>/Gain4'
-   *  Saturate: '<S4>/Saturation1'
-   */
-  rtb_w2MotorsQF_Gain[1] = localP->Gain4_Gain * tmp_0 *
-    localP->w2MotorsQF_Gain_Gain;
-
-  /* Saturate: '<S4>/Saturation3' */
-  if (rtb_w2MotorsQF_Gain_0 > localP->Saturation3_UpperSat) {
-    rtb_w2MotorsQF_Gain_0 = localP->Saturation3_UpperSat;
+  localB->W2ToMotorsCmd_Gain[1] = u1 * tmp_1 *
+    localP->MotorsRotationDirection_Gain[1] * u2;
+  if (tmp_0[2] > localP->Saturation2_UpperSat) {
+    tmp_1 = localP->Saturation2_UpperSat;
+  } else if (tmp_0[2] < localP->Saturation2_LowerSat) {
+    tmp_1 = localP->Saturation2_LowerSat;
   } else {
-    if (rtb_w2MotorsQF_Gain_0 < localP->Saturation3_LowerSat) {
-      rtb_w2MotorsQF_Gain_0 = localP->Saturation3_LowerSat;
-    }
+    tmp_1 = tmp_0[2];
   }
 
-  /* Gain: '<S6>/w2MotorsQF_Gain' */
-  rtb_w2MotorsQF_Gain[2] = localP->w2MotorsQF_Gain_Gain * rtb_w2MotorsQF_Gain_0;
-  rtb_w2MotorsQF_Gain[3] = localP->w2MotorsQF_Gain_Gain * rtb_Gain6;
-
-  /* Signum: '<S6>/Sign' */
-  if (rtb_w2MotorsQF_Gain[0] < 0.0) {
-    rtb_w2MotorsQF_Gain_0 = -1.0;
-  } else if (rtb_w2MotorsQF_Gain[0] > 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 1.0;
-  } else if (rtb_w2MotorsQF_Gain[0] == 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 0.0;
+  localB->W2ToMotorsCmd_Gain[2] = u1 * tmp_1 *
+    localP->MotorsRotationDirection_Gain[2] * u2;
+  if (tmp_0[3] > localP->Saturation2_UpperSat) {
+    tmp_1 = localP->Saturation2_UpperSat;
+  } else if (tmp_0[3] < localP->Saturation2_LowerSat) {
+    tmp_1 = localP->Saturation2_LowerSat;
   } else {
-    rtb_w2MotorsQF_Gain_0 = rtb_w2MotorsQF_Gain[0];
+    tmp_1 = tmp_0[3];
   }
 
-  /* Product: '<S6>/Product1' incorporates:
-   *  Math: '<S6>/Math Function'
-   *  Signum: '<S6>/Sign'
-   */
-  localB->Product1[0] = rtb_w2MotorsQF_Gain[0] * rtb_w2MotorsQF_Gain[0] *
-    rtb_w2MotorsQF_Gain_0;
-
-  /* Signum: '<S6>/Sign' */
-  if (rtb_w2MotorsQF_Gain[1] < 0.0) {
-    rtb_w2MotorsQF_Gain_0 = -1.0;
-  } else if (rtb_w2MotorsQF_Gain[1] > 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 1.0;
-  } else if (rtb_w2MotorsQF_Gain[1] == 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 0.0;
-  } else {
-    rtb_w2MotorsQF_Gain_0 = rtb_w2MotorsQF_Gain[1];
-  }
-
-  /* Product: '<S6>/Product1' incorporates:
-   *  Math: '<S6>/Math Function'
-   *  Signum: '<S6>/Sign'
-   */
-  localB->Product1[1] = rtb_w2MotorsQF_Gain[1] * rtb_w2MotorsQF_Gain[1] *
-    rtb_w2MotorsQF_Gain_0;
-
-  /* Signum: '<S6>/Sign' */
-  if (rtb_w2MotorsQF_Gain[2] < 0.0) {
-    rtb_w2MotorsQF_Gain_0 = -1.0;
-  } else if (rtb_w2MotorsQF_Gain[2] > 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 1.0;
-  } else if (rtb_w2MotorsQF_Gain[2] == 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 0.0;
-  } else {
-    rtb_w2MotorsQF_Gain_0 = rtb_w2MotorsQF_Gain[2];
-  }
-
-  /* Product: '<S6>/Product1' incorporates:
-   *  Math: '<S6>/Math Function'
-   *  Signum: '<S6>/Sign'
-   */
-  localB->Product1[2] = rtb_w2MotorsQF_Gain[2] * rtb_w2MotorsQF_Gain[2] *
-    rtb_w2MotorsQF_Gain_0;
-
-  /* Signum: '<S6>/Sign' */
-  if (rtb_w2MotorsQF_Gain[3] < 0.0) {
-    rtb_w2MotorsQF_Gain_0 = -1.0;
-  } else if (rtb_w2MotorsQF_Gain[3] > 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 1.0;
-  } else if (rtb_w2MotorsQF_Gain[3] == 0.0) {
-    rtb_w2MotorsQF_Gain_0 = 0.0;
-  } else {
-    rtb_w2MotorsQF_Gain_0 = rtb_w2MotorsQF_Gain[3];
-  }
-
-  /* Product: '<S6>/Product1' incorporates:
-   *  Math: '<S6>/Math Function'
-   *  Signum: '<S6>/Sign'
-   */
-  localB->Product1[3] = rtb_w2MotorsQF_Gain[3] * rtb_w2MotorsQF_Gain[3] *
-    rtb_w2MotorsQF_Gain_0;
-
-  /* Update for Delay: '<S2>/Delay' incorporates:
-   *  DiscreteIntegrator: '<S2>/Discrete-Time Integrator'
-   */
-  localDW->Delay_DSTATE[0] = localDW->DiscreteTimeIntegrator_DSTATE[0];
-  localDW->Delay_DSTATE[1] = localDW->DiscreteTimeIntegrator_DSTATE[1];
-
-  /* Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' incorporates:
-   *  Sum: '<S2>/Add'
-   */
-  localDW->DiscreteTimeIntegrator_DSTATE[0] += (rtb_pitchrollerror_idx_0 -
-    rtb_antiWU_Gain_idx_0) * localP->DiscreteTimeIntegrator_gainval;
-  localDW->DiscreteTimeIntegrator_DSTATE[1] += (rtb_pitchrollerror_idx_1 -
-    rtb_antiWU_Gain_idx_1) * localP->DiscreteTimeIntegrator_gainval;
-  if (localDW->DiscreteTimeIntegrator_DSTATE[0] >=
-      localP->DiscreteTimeIntegrator_UpperSat) {
-    localDW->DiscreteTimeIntegrator_DSTATE[0] =
-      localP->DiscreteTimeIntegrator_UpperSat;
-  } else {
-    if (localDW->DiscreteTimeIntegrator_DSTATE[0] <=
-        localP->DiscreteTimeIntegrator_LowerSat) {
-      localDW->DiscreteTimeIntegrator_DSTATE[0] =
-        localP->DiscreteTimeIntegrator_LowerSat;
-    }
-  }
-
-  if (localDW->DiscreteTimeIntegrator_DSTATE[1] >=
-      localP->DiscreteTimeIntegrator_UpperSat) {
-    localDW->DiscreteTimeIntegrator_DSTATE[1] =
-      localP->DiscreteTimeIntegrator_UpperSat;
-  } else {
-    if (localDW->DiscreteTimeIntegrator_DSTATE[1] <=
-        localP->DiscreteTimeIntegrator_LowerSat) {
-      localDW->DiscreteTimeIntegrator_DSTATE[1] =
-        localP->DiscreteTimeIntegrator_LowerSat;
-    }
-  }
-
-  /* End of Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
+  localB->W2ToMotorsCmd_Gain[3] = u1 * tmp_1 *
+    localP->MotorsRotationDirection_Gain[3] * u2;
 }
 
 /*
@@ -629,23 +446,6 @@ void DroneR_DroneRS_Compensator_Init(DW_DroneRS_Compensator_DroneR_T *localDW,
   localDW->SimplyIntegrateVelocity_DSTATE[1] =
     localP->SimplyIntegrateVelocity_IC;
   localDW->SimplyIntegrateVelocity_PrevRes = 2;
-
-  /* InitializeConditions for Atomic SubSystem: '<S1>/ControllerPID2W' */
-  DroneRS_Co_ControllerPID2W_Init(&localDW->ControllerPID2W,
-    (P_ControllerPID2W_DroneRS_Com_T *)&localP->ControllerPID2W);
-
-  /* End of InitializeConditions for SubSystem: '<S1>/ControllerPID2W' */
-}
-
-/* Start for atomic system: '<Root>/DroneRS_Compensator' */
-void Drone_DroneRS_Compensator_Start(RT_MODEL_DroneRS_Compensator_T * const
-  DroneRS_Compensator_M, DW_DroneRS_Compensator_DroneR_T *localDW)
-{
-  /* Start for Atomic SubSystem: '<S1>/ControllerPID2W' */
-  DroneRS_C_ControllerPID2W_Start(DroneRS_Compensator_M,
-    &localDW->ControllerPID2W);
-
-  /* End of Start for SubSystem: '<S1>/ControllerPID2W' */
 }
 
 /* Output and update for atomic system: '<Root>/DroneRS_Compensator' */
@@ -1543,15 +1343,15 @@ void DroneRS_Com_DroneRS_Compensator(boolean_T rtu_controlModePosVSAtt_flagin,
 
   /* End of Switch: '<S66>/UseIPPosSwitch' */
 
-  /* Outputs for Atomic SubSystem: '<S1>/ControllerPID2W' */
-  DroneRS_Compens_ControllerPID2W(rtu_pos_refin, rtu_attRS_refin,
-    localB->controlModePosVSAtt_flagin, localB->att_estimout,
-    localB->datt_estimout, localB->acc_RS[2], localB->Reshapexhat[0],
-    localB->Reshapexhat_o, localB->UseIPPosSwitch, &localB->ControllerPID2W,
-    &localDW->ControllerPID2W, (P_ControllerPID2W_DroneRS_Com_T *)
-    &localP->ControllerPID2W, DroneRS_Compensator_P);
+  /* Outputs for Atomic SubSystem: '<S1>/ControllerFSFB' */
+  DroneRS_Compensa_ControllerFSFB(rtu_pos_refin, rtu_attRS_refin,
+    localB->controlModePosVSAtt_flagin, localB->UseIPPosSwitch,
+    localB->Reshapexhat_o, localB->Reshapexhat[0], localB->att_estimout,
+    localB->acc_RS[2], localB->datt_estimout, &localB->ControllerFSFB,
+    (P_ControllerFSFB_DroneRS_Comp_T *)&localP->ControllerFSFB,
+    DroneRS_Compensator_P);
 
-  /* End of Outputs for SubSystem: '<S1>/ControllerPID2W' */
+  /* End of Outputs for SubSystem: '<S1>/ControllerFSFB' */
 
   /* Bias: '<S7>/Bias' */
   rtb_Ckxhatkk1_b = localB->Reshapexhat[0] +
@@ -1910,13 +1710,17 @@ void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
 
   /* Outport: '<Root>/motorsRS_cmdout' */
   DroneRS_Compensator_Y_motorsRS_cmdout[0] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.Product1[0];
+    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerFSFB.W2ToMotorsCmd_Gain
+    [0];
   DroneRS_Compensator_Y_motorsRS_cmdout[1] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.Product1[1];
+    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerFSFB.W2ToMotorsCmd_Gain
+    [1];
   DroneRS_Compensator_Y_motorsRS_cmdout[2] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.Product1[2];
+    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerFSFB.W2ToMotorsCmd_Gain
+    [2];
   DroneRS_Compensator_Y_motorsRS_cmdout[3] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.Product1[3];
+    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerFSFB.W2ToMotorsCmd_Gain
+    [3];
 
   /* Outport: '<Root>/X' */
   *DroneRS_Compensator_Y_X =
@@ -1971,18 +1775,13 @@ void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
     DroneRS_Compensator_B->DroneRS_Compensator_d.controlModePosVSAtt_flagin;
 
   /* Outport: '<Root>/poseRS_refout' */
-  DroneRS_Compensator_Y_poseRS_refout[0] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.pos_ref[0];
-  DroneRS_Compensator_Y_poseRS_refout[1] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.pos_ref[1];
-  DroneRS_Compensator_Y_poseRS_refout[2] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.pos_ref[2];
-  DroneRS_Compensator_Y_poseRS_refout[3] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.att_ref[0];
-  DroneRS_Compensator_Y_poseRS_refout[4] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.Switch_refAtt[0];
-  DroneRS_Compensator_Y_poseRS_refout[5] =
-    DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerPID2W.Switch_refAtt[1];
+  for (i = 0; i < 6; i++) {
+    DroneRS_Compensator_Y_poseRS_refout[i] =
+      DroneRS_Compensator_B->DroneRS_Compensator_d.ControllerFSFB.PosVSAtt_Switch
+      [i];
+  }
+
+  /* End of Outport: '<Root>/poseRS_refout' */
 
   /* Outport: '<Root>/ddxb' */
   *DroneRS_Compensator_Y_ddxb =
@@ -2689,12 +2488,6 @@ void DroneRS_Compensator_initialize(RT_MODEL_DroneRS_Compensator_T *const
   rt_StartDataLoggingWithStartTime(DroneRS_Compensator_M->rtwLogInfo, 0.0,
     rtmGetTFinal(DroneRS_Compensator_M), DroneRS_Compensator_M->Timing.stepSize0,
     (&rtmGetErrorStatus(DroneRS_Compensator_M)));
-
-  /* Start for Atomic SubSystem: '<Root>/DroneRS_Compensator' */
-  Drone_DroneRS_Compensator_Start(DroneRS_Compensator_M,
-    &DroneRS_Compensator_DW->DroneRS_Compensator_d);
-
-  /* End of Start for SubSystem: '<Root>/DroneRS_Compensator' */
 
   /* InitializeConditions for Atomic SubSystem: '<Root>/DroneRS_Compensator' */
   DroneR_DroneRS_Compensator_Init(&DroneRS_Compensator_DW->DroneRS_Compensator_d,

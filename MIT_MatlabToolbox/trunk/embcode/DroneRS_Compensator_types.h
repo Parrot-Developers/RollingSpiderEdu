@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2579
+ * Model version                  : 1.2590
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Mon Oct  5 15:46:50 2015
+ * C/C++ source code generated on : Tue Oct  6 21:06:55 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -68,18 +68,13 @@ typedef struct {
 
 #endif
 
-#ifndef _DEFINED_TYPEDEF_FOR_struct_eTOByJ6BrrCe8gZfBpKFUD_
-#define _DEFINED_TYPEDEF_FOR_struct_eTOByJ6BrrCe8gZfBpKFUD_
+#ifndef _DEFINED_TYPEDEF_FOR_struct_0jN8MAWy2BXvS2aGwr3OoF_
+#define _DEFINED_TYPEDEF_FOR_struct_0jN8MAWy2BXvS2aGwr3OoF_
 
 typedef struct {
-  real_T filter_b_gyroz[6];
-  real_T filter_a_gyroz[6];
-  real_T filter_b_prs[6];
-  real_T filter_a_prs[6];
-  real_T outlierJump_UpperLimit;
-  real_T stateDeviationPrs_Threshold;
-  real_T stateDeviationSonflt_Threshold;
-} struct_eTOByJ6BrrCe8gZfBpKFUD;
+  real_T motorsRS_UpperLimit;
+  real_T motorsThrust_i_UpperLimit;
+} struct_0jN8MAWy2BXvS2aGwr3OoF;
 
 #endif
 
@@ -110,6 +105,21 @@ typedef struct {
 
 #endif
 
+#ifndef _DEFINED_TYPEDEF_FOR_struct_eTOByJ6BrrCe8gZfBpKFUD_
+#define _DEFINED_TYPEDEF_FOR_struct_eTOByJ6BrrCe8gZfBpKFUD_
+
+typedef struct {
+  real_T filter_b_gyroz[6];
+  real_T filter_a_gyroz[6];
+  real_T filter_b_prs[6];
+  real_T filter_a_prs[6];
+  real_T outlierJump_UpperLimit;
+  real_T stateDeviationPrs_Threshold;
+  real_T stateDeviationSonflt_Threshold;
+} struct_eTOByJ6BrrCe8gZfBpKFUD;
+
+#endif
+
 #ifndef _DEFINED_TYPEDEF_FOR_struct_rM3FFntOU5Aaym8djgtmlC_
 #define _DEFINED_TYPEDEF_FOR_struct_rM3FFntOU5Aaym8djgtmlC_
 
@@ -134,8 +144,8 @@ typedef struct {
 
 #endif
 
-/* Parameters for system: '<S1>/ControllerPID2W' */
-typedef struct P_ControllerPID2W_DroneRS_Com_T_ P_ControllerPID2W_DroneRS_Com_T;
+/* Parameters for system: '<S1>/ControllerFSFB' */
+typedef struct P_ControllerFSFB_DroneRS_Comp_T_ P_ControllerFSFB_DroneRS_Comp_T;
 
 /* Parameters for system: '<Root>/DroneRS_Compensator' */
 typedef struct P_DroneRS_Compensator_DroneRS_T_ P_DroneRS_Compensator_DroneRS_T;

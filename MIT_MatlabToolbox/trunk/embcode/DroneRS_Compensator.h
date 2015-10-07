@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2579
+ * Model version                  : 1.2590
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Mon Oct  5 15:46:50 2015
+ * C/C++ source code generated on : Tue Oct  6 21:06:55 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -24,9 +24,9 @@
 
 #ifndef RTW_HEADER_DroneRS_Compensator_h_
 #define RTW_HEADER_DroneRS_Compensator_h_
-#include <stddef.h>
 #include <math.h>
 #include <float.h>
+#include <stddef.h>
 #include <string.h>
 #ifndef DroneRS_Compensator_COMMON_INCLUDES_
 # define DroneRS_Compensator_COMMON_INCLUDES_
@@ -75,26 +75,18 @@
 # define rtmGetTFinal(rtm)             ((rtm)->Timing.tFinal)
 #endif
 
-/* Block signals for system '<S1>/ControllerPID2W' */
+/* Block signals for system '<S1>/ControllerFSFB' */
 typedef struct {
-  real_T pos_ref[3];                   /* '<S2>/pos_ref' */
-  real_T att_ref[3];                   /* '<S2>/att_ref' */
-  real_T Switch_refAtt[2];             /* '<S2>/Switch_refAtt' */
-  real_T Product1[4];                  /* '<S6>/Product1' */
-} B_ControllerPID2W_DroneRS_Com_T;
+  real_T PosVSAtt_Switch[12];          /* '<S6>/PosVSAtt_Switch' */
+  real_T W2ToMotorsCmd_Gain[4];        /* '<S5>/W2ToMotorsCmd_Gain' */
+} B_ControllerFSFB_DroneRS_Comp_T;
 
-/* Block states (auto storage) for system '<S1>/ControllerPID2W' */
+/* Block states (auto storage) for system '<S1>/ControllerFSFB' */
 typedef struct {
-  real_T Delay_DSTATE[2];              /* '<S2>/Delay' */
-  real_T DiscreteTimeIntegrator_DSTATE[2];/* '<S2>/Discrete-Time Integrator' */
   struct {
     void *LoggedData;
-  } ToWorkspace1_PWORK;                /* '<S2>/To Workspace1' */
-
-  struct {
-    void *LoggedData;
-  } thrustw_PWORK;                     /* '<S2>/thrustw' */
-} DW_ControllerPID2W_DroneRS_Co_T;
+  } SCOPE_totalthrust_PWORK;           /* '<S2>/SCOPE_totalthrust ' */
+} DW_ControllerFSFB_DroneRS_Com_T;
 
 /* Block signals for system '<S89>/MeasurementUpdate' */
 typedef struct {
@@ -129,7 +121,7 @@ typedef struct {
   B_MeasurementUpdate_DroneRS_C_T MeasurementUpdate_f;/* '<S149>/MeasurementUpdate' */
   B_UseCurrentEstimator_DroneRS_T UseCurrentEstimator_l;/* '<S68>/UseCurrentEstimator' */
   B_MeasurementUpdate_DroneRS_C_T MeasurementUpdate_p;/* '<S89>/MeasurementUpdate' */
-  B_ControllerPID2W_DroneRS_Com_T ControllerPID2W;/* '<S1>/ControllerPID2W' */
+  B_ControllerFSFB_DroneRS_Comp_T ControllerFSFB;/* '<S1>/ControllerFSFB' */
 } B_DroneRS_Compensator_DroneRS_T;
 
 /* Block states (auto storage) for system '<Root>/DroneRS_Compensator' */
@@ -181,7 +173,7 @@ typedef struct {
   uint8_T icLoad;                      /* '<S11>/MemoryX' */
   uint8_T icLoad_c;                    /* '<S68>/MemoryX' */
   uint8_T icLoad_e;                    /* '<S128>/MemoryX' */
-  DW_ControllerPID2W_DroneRS_Co_T ControllerPID2W;/* '<S1>/ControllerPID2W' */
+  DW_ControllerFSFB_DroneRS_Com_T ControllerFSFB;/* '<S1>/ControllerFSFB' */
 } DW_DroneRS_Compensator_DroneR_T;
 
 /* Block signals (auto storage) */
@@ -194,110 +186,35 @@ typedef struct {
   DW_DroneRS_Compensator_DroneR_T DroneRS_Compensator_d;/* '<Root>/DroneRS_Compensator' */
 } DW_DroneRS_Compensator_T;
 
-/* Parameters for system: '<S1>/ControllerPID2W' */
-struct P_ControllerPID2W_DroneRS_Com_T_ {
-  real_T D_z_Gain;                     /* Expression: 350
-                                        * Referenced by: '<S2>/D_z'
-                                        */
-  real_T P_z_Gain;                     /* Expression: 600
-                                        * Referenced by: '<S2>/P_z'
-                                        */
-  real_T takeoff_Gain_Gain;            /* Expression: 0.05
+/* Parameters for system: '<S1>/ControllerFSFB' */
+struct P_ControllerFSFB_DroneRS_Comp_T_ {
+  real_T takeoff_Gain_Gain;            /* Expression: controlParams.takeoff_Gain
                                         * Referenced by: '<S2>/takeoff_Gain'
                                         */
-  real_T D_xy_Gain[2];                 /* Expression: [0.08, -0.09]
-                                        * Referenced by: '<S2>/D_xy'
+  real_T dz_ref_Value;                 /* Expression: 0
+                                        * Referenced by: '<S6>/dz_ref'
                                         */
-  real_T P_xy_Gain[2];                 /* Expression: [-0.32,0.29]
-                                        * Referenced by: '<S2>/P_xy'
+  real_T velocitiesPos_ref_Value[3];   /* Expression: [0;0;0]
+                                        * Referenced by: '<S6>/velocitiesPos_ref'
+                                        */
+  real_T velocitiesRot_ref_Value[3];   /* Expression: [0;0;0]
+                                        * Referenced by: '<S6>/velocitiesRot_ref'
                                         */
   real_T TakeoffOrControl_Switch_Thresho;/* Expression: 0
                                           * Referenced by: '<S2>/TakeoffOrControl_Switch'
                                           */
-  real_T Delay_InitialCondition;       /* Expression: 0
-                                        * Referenced by: '<S2>/Delay'
-                                        */
-  real_T antiWU_Gain_Gain;             /* Expression: 0.001
-                                        * Referenced by: '<S2>/antiWU_Gain'
-                                        */
-  real_T Action2omega_Value[16];       /* Expression: [0.7071, 0.7071, -1.0000, -1.00;   -0.7071,    0.7071,   -1.0000,    1.00;   -0.7071,   -0.7071,   -1.0000,   -1.00;    0.7071,   -0.7071,   -1.0000,    1.00]
-                                        * Referenced by: '<S4>/Action2omega'
-                                        */
-  real_T P_pr_Gain[2];                 /* Expression: [600;1300]
-                                        * Referenced by: '<S2>/P_pr'
-                                        */
-  real_T DiscreteTimeIntegrator_gainval;/* Computed Parameter: DiscreteTimeIntegrator_gainval
-                                         * Referenced by: '<S2>/Discrete-Time Integrator'
-                                         */
-  real_T DiscreteTimeIntegrator_IC;    /* Expression: 0
-                                        * Referenced by: '<S2>/Discrete-Time Integrator'
-                                        */
-  real_T DiscreteTimeIntegrator_UpperSat;/* Expression: 2
-                                          * Referenced by: '<S2>/Discrete-Time Integrator'
-                                          */
-  real_T DiscreteTimeIntegrator_LowerSat;/* Expression: -2
-                                          * Referenced by: '<S2>/Discrete-Time Integrator'
-                                          */
-  real_T I_pr_Gain;                    /* Expression: 200
-                                        * Referenced by: '<S2>/I_pr'
-                                        */
-  real_T D_pr_Gain[2];                 /* Expression: [80;300]
-                                        * Referenced by: '<S2>/D_pr'
-                                        */
-  real_T P_yaw_Gain;                   /* Expression: 6000
-                                        * Referenced by: '<S2>/P_yaw'
-                                        */
-  real_T D_yaw_Gain;                   /* Expression: 0.3*6000
-                                        * Referenced by: '<S2>/D_yaw'
-                                        */
-  real_T SaturationThrust_UpperSat;    /* Expression: 0.92*2618
-                                        * Referenced by: '<S2>/SaturationThrust'
-                                        */
-  real_T SaturationThrust_LowerSat;    /* Expression: -0.92*2618
-                                        * Referenced by: '<S2>/SaturationThrust'
-                                        */
-  real_T Gain3_Gain;                   /* Expression: -1
-                                        * Referenced by: '<S4>/Gain3'
-                                        */
-  real_T Saturation1_UpperSat;         /* Expression: 2618
-                                        * Referenced by: '<S4>/Saturation1'
-                                        */
-  real_T Saturation1_LowerSat;         /* Expression: 500
-                                        * Referenced by: '<S4>/Saturation1'
-                                        */
-  real_T Gain4_Gain;                   /* Expression: -1
-                                        * Referenced by: '<S4>/Gain4'
-                                        */
-  real_T Gain5_Gain;                   /* Expression: -1
-                                        * Referenced by: '<S4>/Gain5'
-                                        */
-  real_T Saturation4_UpperSat;         /* Expression: 2618
-                                        * Referenced by: '<S4>/Saturation4'
-                                        */
-  real_T Saturation4_LowerSat;         /* Expression: 500
-                                        * Referenced by: '<S4>/Saturation4'
-                                        */
-  real_T Gain6_Gain;                   /* Expression: -1
-                                        * Referenced by: '<S4>/Gain6'
-                                        */
-  real_T Saturation2_UpperSat;         /* Expression: 2618
+  real_T TorquetotalThrustToThrustperMot[16];/* Expression: controlParams.Q2Ts
+                                              * Referenced by: '<S4>/TorquetotalThrustToThrustperMotor'
+                                              */
+  real_T Saturation2_UpperSat;         /* Expression: -0.0118
                                         * Referenced by: '<S4>/Saturation2'
                                         */
-  real_T Saturation2_LowerSat;         /* Expression: 500
+  real_T Saturation2_LowerSat;         /* Expression: -0.3235
                                         * Referenced by: '<S4>/Saturation2'
                                         */
-  real_T Saturation3_UpperSat;         /* Expression: 2618
-                                        * Referenced by: '<S4>/Saturation3'
-                                        */
-  real_T Saturation3_LowerSat;         /* Expression: 500
-                                        * Referenced by: '<S4>/Saturation3'
-                                        */
-  real_T w2MotorsQF_Gain_Gain;         /* Expression: 0.0085
-                                        * Referenced by: '<S6>/w2MotorsQF_Gain'
-                                        */
-  uint32_T Delay_DelayLength;          /* Computed Parameter: Delay_DelayLength
-                                        * Referenced by: '<S2>/Delay'
-                                        */
+  real_T MotorsRotationDirection_Gain[4];/* Expression: [-1,1,-1,1]
+                                          * Referenced by: '<S5>/MotorsRotationDirection'
+                                          */
 };
 
 /* Parameters for system: '<Root>/DroneRS_Compensator' */
@@ -461,13 +378,14 @@ struct P_DroneRS_Compensator_DroneRS_T_ {
   uint32_T MemoryX_DelayLength_m;      /* Computed Parameter: MemoryX_DelayLength_m
                                         * Referenced by: '<S128>/MemoryX'
                                         */
-  P_ControllerPID2W_DroneRS_Com_T ControllerPID2W;/* '<S1>/ControllerPID2W' */
+  P_ControllerFSFB_DroneRS_Comp_T ControllerFSFB;/* '<S1>/ControllerFSFB' */
 };
 
 /* Parameters (auto storage) */
 struct P_DroneRS_Compensator_T_ {
   struct_nVjCgugzLFJzCZr6yyeDeH quadEDT;/* Variable: quadEDT
                                          * Referenced by:
+                                         *   '<S5>/W2ToMotorsCmd_Gain'
                                          *   '<S7>/prsToAlt_Gain'
                                          *   '<S10>/inversesIMU_Gain'
                                          *   '<S12>/SaturationSonar'
@@ -475,7 +393,9 @@ struct P_DroneRS_Compensator_T_ {
                                          *   '<S63>/Constant'
                                          */
   struct_pP0yJPvqYhejK9gHgcbWI quad;   /* Variable: quad
-                                        * Referenced by: '<S2>/w0'
+                                        * Referenced by:
+                                        *   '<S2>/HoverThrustLinearizationPoint'
+                                        *   '<S5>/ThrustToW2_Gain'
                                         */
   struct_eTOByJ6BrrCe8gZfBpKFUD altEstim;/* Variable: altEstim
                                           * Referenced by:
@@ -503,12 +423,18 @@ struct P_DroneRS_Compensator_T_ {
                                           *   '<S126>/Constant'
                                           *   '<S127>/Constant'
                                           */
+  struct_0jN8MAWy2BXvS2aGwr3OoF controlsParams;/* Variable: controlsParams
+                                                * Referenced by: '<S2>/SaturationThrust'
+                                                */
   struct_YkbJnRR8M5ye4XtO88GdQC vishandle;/* Variable: vishandle
                                            * Referenced by:
                                            *   '<S178>/Constant'
                                            *   '<S179>/Constant'
                                            *   '<S180>/Constant'
                                            */
+  real_T K_lqr[48];                    /* Variable: K_lqr
+                                        * Referenced by: '<S2>/FSFBMatrix_lqr'
+                                        */
   real_T sampleTime_qcsim;             /* Variable: sampleTime_qcsim
                                         * Referenced by: '<S3>/sampleTime'
                                         */
@@ -628,11 +554,11 @@ extern void DroneRS_Compensator_step(RT_MODEL_DroneRS_Compensator_T *const
  *
  * '<Root>' : 'sim_quadrotor'
  * '<S1>'   : 'sim_quadrotor/DroneRS_Compensator'
- * '<S2>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerPID2W'
+ * '<S2>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerFSFB'
  * '<S3>'   : 'sim_quadrotor/DroneRS_Compensator/Estimator'
- * '<S4>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerPID2W/Control ControlMixerRS'
- * '<S5>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerPID2W/inverse rotation Function'
- * '<S6>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerPID2W/wToMotors'
+ * '<S4>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerFSFB/ControlMixerRS'
+ * '<S5>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerFSFB/Thrust2Motorcmd'
+ * '<S6>'   : 'sim_quadrotor/DroneRS_Compensator/ControllerFSFB/statesReferences'
  * '<S7>'   : 'sim_quadrotor/DroneRS_Compensator/Estimator/EstimatorAltitude'
  * '<S8>'   : 'sim_quadrotor/DroneRS_Compensator/Estimator/EstimatorAttitude'
  * '<S9>'   : 'sim_quadrotor/DroneRS_Compensator/Estimator/EstimatorXYPosition'

@@ -23,6 +23,7 @@ symsvector  = [Pxw; Pyw; Pzw ;yaw ;pitch ;roll ;dpx ;dpy ;dpz ;p ;q ;r ;T ;tauy 
 %Transform inertia from RTB frame to RS frame
 J           = ([cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]'*quad.J*[cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]);
 
+
 %Define Rotation matrices
 Ryaw = [
 	[ cos(yaw), -sin(yaw), 0],
@@ -92,7 +93,7 @@ u_0 = input_equil
 
 %% 2.0) Load Full-state Feedback Controller derived from the PIDtoW-controller
 %(see linearizePID2W.m)
-K_pid = [0 0 0.425862895347363 0 0 0 0 0 0.248420022285962 0 0 0;0 0 0 8.28435779424437e-05 0 0 0 0 0 0 0 2.48530733827331e-05;-0.00398603848919041 0 0 0 0.013286794963968 0 -0.0019930192445952 0 0 0 0.0017715726618624 0;0 0.00863641672657921 0 0 0 0.028788055755264 0 0.00431820836328961 0 0.00664339748198401 0 0];
+K_pid = [0 0 0.425862895347363 0 0 0 0 0 0.248420022285962 0 0 0;0 0 0 8.28435779424437e-05 0 0 0 0 0 0 0 2.48530733827331e-05;-0.00425177438846976 0 0 0 0.013286794963968 0 -0.00106294359711744 0 0 0 0.0017715726618624 0;0 0.00834853616902657 0 0 0 0.028788055755264 0 0.00259092501797376 0 0.00664339748198401 0 0]
 
 % Generate c-code ready format for copy-paste straight into src-files rsedu_control.c
 K_pid_ccode_string = sprintf('%E,' , K_pid(:));
@@ -104,21 +105,18 @@ K_pid_ccode_string = ['{ ' K_pid_ccode_string(1:end-1) ' }']
 
 %CODE MISSING
 
-% Check what system looks like with K_pid-fullstate-feedback from (2.0)
-
-%CODE MISSING
-
 % Now place your own poles
-
+K_decoupled_x = ...
 %CODE MISSING
 
-% Compute Full-state feedback for original system
-
+% Compute Full-state feedback for 'original' system
+K_poleplace = ...
 %CODE MISSING
+K_poleplace(abs(K_poleplace)<1e-10)=0;
 
 % Generate c-code ready format for copy-paste straight into src-files rsedu_control.c
-K_poleplace_string = sprintf('%E,' , K_poleplace(:));
-K_poleplace_string = ['{ ' K_poleplace_string(1:end-1) ' }']
+% K_poleplace_string = sprintf('%E,' , K_poleplace(:));
+% K_poleplace_string = ['{ ' K_poleplace_string(1:end-1) ' }']
 
 % Check where poles land
 % [V,E,]=eig(A_dec_x-B_dec_x*K_dec_x);
@@ -129,7 +127,6 @@ K_poleplace_string = ['{ ' K_poleplace_string(1:end-1) ' }']
 
 %CODE MISSING
 
-K_LQR       = lqr(A,B,Q,R);
 K_LQR(abs(K_LQR)<(1e-10))=0;  %set small values zero
 K_LQR(2,:) = K_poleplace(2,:); %LQR does not work well on yaw as LQR places much weight on yaw-rate (which is quite noisy)
 
