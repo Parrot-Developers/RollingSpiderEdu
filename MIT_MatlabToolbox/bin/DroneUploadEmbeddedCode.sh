@@ -25,6 +25,16 @@ echo "Drone: Code built!"
 echo "Drone: Trying to upload shared library..."
 
 echo "> Drone: FTP into the drone"
-/usr/bin/expect -c 'set timeout -1; spawn ftp 192.168.1.1; expect "(192.168.1.1:'"$USER"'):"; send "\r"; expect "ftp>"; send "put ../DroneExchange/librsedu.so librsedu.so\r"; expect "ftp>"; send "exit\r"; expect eof'
+/usr/bin/expect <<SCRIPT
+set timeout -1;
+spawn ftp 192.168.1.1;
+expect "(192.168.1.1:$USER):";
+send "\r";
+expect "ftp>";
+send "put ../DroneExchange/librsedu.so librsedu.so\r";
+expect "ftp>";
+send "exit\r";
+expect eof
+SCRIPT
 
 echo "Drone: Shared library uploaded!"
