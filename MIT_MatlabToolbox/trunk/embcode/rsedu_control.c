@@ -122,12 +122,12 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
     20.0
   },                                   /* Variable: quadEDT
                                         * Referenced by:
-                                        *   '<S5>/W2ToMotorsCmd_Gain'
-                                        *   '<S7>/prsToAlt_Gain'
-                                        *   '<S10>/inversesIMU_Gain'
-                                        *   '<S12>/SaturationSonar'
-                                        *   '<S65>/opticalFlowToVelocity_Gain'
-                                        *   '<S63>/Constant'
+                                        *   '<S11>/prsToAlt_Gain'
+                                        *   '<S14>/inversesIMU_Gain'
+                                        *   '<S9>/W2ToMotorsCmd_Gain'
+                                        *   '<S16>/SaturationSonar'
+                                        *   '<S69>/opticalFlowToVelocity_Gain'
+                                        *   '<S67>/Constant'
                                         */
 
   {
@@ -168,8 +168,8 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
     0
   },                                   /* Variable: quad
                                         * Referenced by:
-                                        *   '<S2>/HoverThrustLinearizationPoint'
-                                        *   '<S5>/ThrustToW2_Gain'
+                                        *   '<S8>/HoverThrustLinearizationPoint'
+                                        *   '<S9>/ThrustToW2_Gain'
                                         */
 
   {
@@ -189,15 +189,15 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
     0.4
   },                                   /* Variable: altEstim
                                         * Referenced by:
-                                        *   '<S7>/Bias'
-                                        *   '<S7>/Bias1'
-                                        *   '<S10>/IIRgyroz'
-                                        *   '<S12>/IIRprs'
-                                        *   '<S12>/IIRsonar'
-                                        *   '<S61>/Constant'
-                                        *   '<S62>/Constant'
-                                        *   '<S64>/Constant'
-                                        *   '<S69>/IIRgyroz'
+                                        *   '<S11>/Bias'
+                                        *   '<S11>/Bias1'
+                                        *   '<S14>/IIRgyroz'
+                                        *   '<S16>/IIRprs'
+                                        *   '<S16>/IIRsonar'
+                                        *   '<S65>/Constant'
+                                        *   '<S66>/Constant'
+                                        *   '<S68>/Constant'
+                                        *   '<S73>/IIRgyroz'
                                         */
 
   {
@@ -209,10 +209,6 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
     5.0
   },                                   /* Variable: ofhandle
                                         * Referenced by:
-                                        *   '<S117>/Constant'
-                                        *   '<S118>/Constant'
-                                        *   '<S119>/Constant'
-                                        *   '<S120>/Constant'
                                         *   '<S121>/Constant'
                                         *   '<S122>/Constant'
                                         *   '<S123>/Constant'
@@ -220,13 +216,17 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
                                         *   '<S125>/Constant'
                                         *   '<S126>/Constant'
                                         *   '<S127>/Constant'
+                                        *   '<S128>/Constant'
+                                        *   '<S129>/Constant'
+                                        *   '<S130>/Constant'
+                                        *   '<S131>/Constant'
                                         */
 
   {
     500.0,
     0.32664221335170257
   },                                   /* Variable: controlsParams
-                                        * Referenced by: '<S2>/SaturationThrust'
+                                        * Referenced by: '<S8>/SaturationThrust'
                                         */
 
   {
@@ -234,13 +234,13 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
     0.5
   },                                   /* Variable: vishandle
                                         * Referenced by:
-                                        *   '<S178>/Constant'
-                                        *   '<S179>/Constant'
-                                        *   '<S180>/Constant'
+                                        *   '<S182>/Constant'
+                                        *   '<S183>/Constant'
+                                        *   '<S184>/Constant'
                                         */
 
   /*  Variable: K_lqr
-   * Referenced by: '<S2>/FSFBMatrix_lqr'
+   * Referenced by: '<S4>/FSFBMatrix_lqr'
    */
   { 0.0, 0.0, -0.000577350269189617, 0.0, 0.0, 0.0, 0.0, 0.00057735026918962287,
     0.22360679774997827, 0.0, 0.0, 0.0, 0.0, 8.8790000000000022E-5, 0.0, 0.0,
@@ -255,110 +255,110 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
   /* Start of '<Root>/DroneRS_Compensator' */
   {
     0.0,                               /* Mask Parameter: DiscreteDerivative_ICPrevScaled
-                                        * Referenced by: '<S116>/UD'
+                                        * Referenced by: '<S120>/UD'
                                         */
     -99.0,                             /* Mask Parameter: checkPosavailable_const
-                                        * Referenced by: '<S177>/Constant'
-                                        */
-    -99.0,                             /* Mask Parameter: CompareToConstant_const
                                         * Referenced by: '<S181>/Constant'
                                         */
+    -99.0,                             /* Mask Parameter: CompareToConstant_const
+                                        * Referenced by: '<S185>/Constant'
+                                        */
     0.0,                               /* Mask Parameter: outlierBelowFloor_const
-                                        * Referenced by: '<S15>/Constant'
+                                        * Referenced by: '<S19>/Constant'
                                         */
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S10>/FIRaccelero'
+                                        * Referenced by: '<S14>/FIRaccelero'
                                         */
 
     /*  Expression: controlParams.filter_accelero.Coefficients
-     * Referenced by: '<S10>/FIRaccelero'
+     * Referenced by: '<S14>/FIRaccelero'
      */
     { 0.026407724923238066, 0.14053136276241623, 0.3330609123143457,
       0.3330609123143457, 0.14053136276241623, 0.026407724923238066 },
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S10>/IIRgyroz'
+                                        * Referenced by: '<S14>/IIRgyroz'
                                         */
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S66>/Delay'
+                                        * Referenced by: '<S70>/Delay'
                                         */
 
     /*  Expression: pInitialization.M
-     * Referenced by: '<S131>/KalmanGainM'
+     * Referenced by: '<S135>/KalmanGainM'
      */
     { 0.005756860081440762, 0.0, 0.0, 0.005756860081440762 },
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S69>/IIRgyroz'
+                                        * Referenced by: '<S73>/IIRgyroz'
                                         */
     200.0,                             /* Computed Parameter: TSamp_WtEt
-                                        * Referenced by: '<S116>/TSamp'
+                                        * Referenced by: '<S120>/TSamp'
                                         */
     -1.0,                              /* Expression: -1
-                                        * Referenced by: '<S7>/invertzaxisGain'
+                                        * Referenced by: '<S11>/invertzaxisGain'
                                         */
     0.0,                               /* Expression: -inf
-                                        * Referenced by: '<S12>/SaturationSonar'
+                                        * Referenced by: '<S16>/SaturationSonar'
                                         */
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S7>/Delay2'
+                                        * Referenced by: '<S11>/Delay2'
                                         */
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S12>/IIRprs'
+                                        * Referenced by: '<S16>/IIRprs'
                                         */
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S12>/IIRsonar'
+                                        * Referenced by: '<S16>/IIRsonar'
                                         */
 
     /*  Expression: pInitialization.M
-     * Referenced by: '<S16>/KalmanGainM'
+     * Referenced by: '<S20>/KalmanGainM'
      */
     { 0.026241420641871072, 0.069776736071495274 },
 
     /*  Expression: [0 0 quad.g]
-     * Referenced by: '<S7>/gravity'
+     * Referenced by: '<S11>/gravity'
      */
     { 0.0, 0.0, 9.81 },
 
     /*  Expression: pInitialization.C
-     * Referenced by: '<S11>/C'
+     * Referenced by: '<S15>/C'
      */
     { 1.0, 0.0 },
     0.0,                               /* Expression: pInitialization.D
-                                        * Referenced by: '<S11>/D'
+                                        * Referenced by: '<S15>/D'
                                         */
 
     /*  Expression: pInitialization.X0
-     * Referenced by: '<S11>/X0'
+     * Referenced by: '<S15>/X0'
      */
     { -0.046, 0.0 },
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S65>/Delay'
+                                        * Referenced by: '<S69>/Delay'
                                         */
 
     /*  Expression: pInitialization.M
-     * Referenced by: '<S71>/KalmanGainM'
+     * Referenced by: '<S75>/KalmanGainM'
      */
     { 0.1254656089860898, 0.0, 0.0, 0.1254656089860898 },
 
     /*  Expression: [0 0 -quad.g]
-     * Referenced by: '<S67>/gravity'
+     * Referenced by: '<S71>/gravity'
      */
     { 0.0, 0.0, -9.81 },
     0.2,                               /* Expression: 0.2
-                                        * Referenced by: '<S67>/gainaccinput'
+                                        * Referenced by: '<S71>/gainaccinput'
                                         */
 
     /*  Expression: pInitialization.C
-     * Referenced by: '<S68>/C'
+     * Referenced by: '<S72>/C'
      */
     { 1.0, 0.0, 0.0, 1.0 },
 
     /*  Expression: pInitialization.D
-     * Referenced by: '<S68>/D'
+     * Referenced by: '<S72>/D'
      */
     { 0.0, 0.0, 0.0, 0.0 },
 
     /*  Expression: pInitialization.X0
-     * Referenced by: '<S68>/X0'
+     * Referenced by: '<S72>/X0'
      */
     { 0.0, 0.0 },
     0.0,                               /* Expression: 0
@@ -366,105 +366,105 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
                                         */
 
     /*  Expression: pInitialization.C
-     * Referenced by: '<S128>/C'
+     * Referenced by: '<S132>/C'
      */
     { 1.0, 0.0, 0.0, 1.0 },
 
     /*  Expression: pInitialization.D
-     * Referenced by: '<S128>/D'
+     * Referenced by: '<S132>/D'
      */
     { 0.0, 0.0, 0.0, 0.0 },
 
     /*  Expression: pInitialization.X0
-     * Referenced by: '<S128>/X0'
+     * Referenced by: '<S132>/X0'
      */
     { 0.1, 0.0 },
     0.005,                             /* Computed Parameter: SimplyIntegrateVelocity_gainval
-                                        * Referenced by: '<S66>/SimplyIntegrateVelocity'
+                                        * Referenced by: '<S70>/SimplyIntegrateVelocity'
                                         */
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S66>/SimplyIntegrateVelocity'
+                                        * Referenced by: '<S70>/SimplyIntegrateVelocity'
                                         */
     2.0,                               /* Expression: 2
-                                        * Referenced by: '<S66>/SimplyIntegrateVelocity'
+                                        * Referenced by: '<S70>/SimplyIntegrateVelocity'
                                         */
     -2.0,                              /* Expression: -2
-                                        * Referenced by: '<S66>/SimplyIntegrateVelocity'
+                                        * Referenced by: '<S70>/SimplyIntegrateVelocity'
                                         */
     0.0,                               /* Expression: 0
-                                        * Referenced by: '<S66>/UseIPPosSwitch'
+                                        * Referenced by: '<S70>/UseIPPosSwitch'
                                         */
 
     /*  Expression: pInitialization.A
-     * Referenced by: '<S11>/A'
+     * Referenced by: '<S15>/A'
      */
     { 1.0, 0.0, 0.005, 1.0 },
 
     /*  Expression: pInitialization.B
-     * Referenced by: '<S11>/B'
+     * Referenced by: '<S15>/B'
      */
     { 0.0, 0.005 },
 
     /*  Expression: pInitialization.L
-     * Referenced by: '<S16>/KalmanGainL'
+     * Referenced by: '<S20>/KalmanGainL'
      */
     { 0.026590304322228548, 0.069776736071495274 },
 
     /*  Expression: pInitialization.A
-     * Referenced by: '<S68>/A'
+     * Referenced by: '<S72>/A'
      */
     { 1.0, 0.0, 0.0, 1.0 },
 
     /*  Expression: pInitialization.B
-     * Referenced by: '<S68>/B'
+     * Referenced by: '<S72>/B'
      */
     { 0.005, 0.0, 0.0, 0.005 },
 
     /*  Expression: pInitialization.L
-     * Referenced by: '<S71>/KalmanGainL'
+     * Referenced by: '<S75>/KalmanGainL'
      */
     { 0.1254656089860898, 0.0, 0.0, 0.1254656089860898 },
 
     /*  Expression: pInitialization.A
-     * Referenced by: '<S128>/A'
+     * Referenced by: '<S132>/A'
      */
     { 1.0, 0.0, 0.0, 1.0 },
 
     /*  Expression: pInitialization.B
-     * Referenced by: '<S128>/B'
+     * Referenced by: '<S132>/B'
      */
     { 0.005, 0.0, 0.0, 0.005 },
 
     /*  Expression: pInitialization.L
-     * Referenced by: '<S131>/KalmanGainL'
+     * Referenced by: '<S135>/KalmanGainL'
      */
     { 0.005756860081440762, 0.0, 0.0, 0.005756860081440762 },
     1U,                                /* Computed Parameter: Delay_DelayLength
-                                        * Referenced by: '<S66>/Delay'
+                                        * Referenced by: '<S70>/Delay'
                                         */
     1U,                                /* Computed Parameter: Delay2_DelayLength
-                                        * Referenced by: '<S7>/Delay2'
+                                        * Referenced by: '<S11>/Delay2'
                                         */
     1U,                                /* Computed Parameter: MemoryX_DelayLength
-                                        * Referenced by: '<S11>/MemoryX'
+                                        * Referenced by: '<S15>/MemoryX'
                                         */
     1U,                                /* Computed Parameter: Delay_DelayLength_g
-                                        * Referenced by: '<S65>/Delay'
+                                        * Referenced by: '<S69>/Delay'
                                         */
     1U,                                /* Computed Parameter: MemoryX_DelayLength_g
-                                        * Referenced by: '<S68>/MemoryX'
+                                        * Referenced by: '<S72>/MemoryX'
                                         */
     1U,                                /* Computed Parameter: Delay1_DelayLength
                                         * Referenced by: '<S3>/Delay1'
                                         */
     1U,                                /* Computed Parameter: MemoryX_DelayLength_m
-                                        * Referenced by: '<S128>/MemoryX'
+                                        * Referenced by: '<S132>/MemoryX'
                                         */
 
     /* Start of '<S1>/ControllerFSFB' */
     {
       0.05,                            /* Expression: controlParams.takeoff_Gain
-                                        * Referenced by: '<S2>/takeoff_Gain'
+                                        * Referenced by: '<S8>/takeoff_Gain'
                                         */
       0.0,                             /* Expression: 0
                                         * Referenced by: '<S6>/dz_ref'
@@ -479,27 +479,27 @@ static P_DroneRS_Compensator_T DroneRS_Compensator_P = {
        * Referenced by: '<S6>/velocitiesRot_ref'
        */
       { 0.0, 0.0, 0.0 },
-      0.0,                             /* Expression: 0
-                                        * Referenced by: '<S2>/TakeoffOrControl_Switch'
-                                        */
 
       /*  Expression: controlParams.Q2Ts
-       * Referenced by: '<S4>/TorquetotalThrustToThrustperMotor'
+       * Referenced by: '<S7>/TorquetotalThrustToThrustperMotor'
        */
       { 0.25, 0.25, 0.25, 0.25000000000000006, 12851.415428063669,
         -12851.415428063669, 12851.415428063669, -12851.415428063669,
         -5.6659197210460546, -5.6659197210460537, 5.6659197210460537,
         5.6659197210460555, -5.6659197210460546, 5.6659197210460546,
         5.6659197210460546, -5.6659197210460546 },
+      0.0,                             /* Expression: 0
+                                        * Referenced by: '<S10>/Constant'
+                                        */
       -0.0118,                         /* Expression: -0.0118
-                                        * Referenced by: '<S4>/Saturation2'
+                                        * Referenced by: '<S7>/Saturation2'
                                         */
       -0.3235,                         /* Expression: -0.3235
-                                        * Referenced by: '<S4>/Saturation2'
+                                        * Referenced by: '<S7>/Saturation2'
                                         */
 
       /*  Expression: [-1,1,-1,1]
-       * Referenced by: '<S5>/MotorsRotationDirection'
+       * Referenced by: '<S9>/MotorsRotationDirection'
        */
       { -1.0, 1.0, -1.0, 1.0 }
     }
