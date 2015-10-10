@@ -61,7 +61,7 @@ equil       = [state_equil; input_equil];
 %%Dynamics
 %----------      
 %P dot      
-P_dot           = Body2Global*[dpx;dpy;dpz];
+P_dot           = simplify(Body2Global*[dpx;dpy;dpz]);
 P_dot_jacobian  = jacobian(P_dot,symsvector);
 P_dot_jacobian_eql = subs(P_dot_jacobian,symsvector,equil);
 
@@ -102,25 +102,28 @@ K_pid_ccode_string = ['{ ' K_pid_ccode_string(1:end-1) ' }']
 %% 2.1) Designing Full-state Feedback Controllers with Simplified Dynamics Model (1.1) via Pole Placement
 
 % Find states to decouple
+[V,J]   = jordan(A);
+Veig_nrm = diag(1./sum(V,1))*V;
+% System matrices of decoupled system
+A_dec   = inv(Veig_nrm)*A*Veig_nrm;
+B_dec   = inv(Veig_nrm)*B;
 
-%CODE MISSING
+% Define decoupled subsystems
+A_dec_x   = ...
+B_dec_x   = ...
 
-% Now place your own poles
+% Now place your own poles for the decoupled subsystems separately
 K_decoupled_x = ...
-%CODE MISSING
+
 
 % Compute Full-state feedback for 'original' system
-K_poleplace = ...
-%CODE MISSING
+K_poleplace = [K_dec_x K_dec_alt K_dec_y K_dec_yaw]*inv(Veig_nrm);
 K_poleplace(abs(K_poleplace)<1e-10)=0;
 
 % Generate c-code ready format for copy-paste straight into src-files rsedu_control.c
 % K_poleplace_string = sprintf('%E,' , K_poleplace(:));
 % K_poleplace_string = ['{ ' K_poleplace_string(1:end-1) ' }']
 
-% Check where poles land
-% [V,E,]=eig(A_dec_x-B_dec_x*K_dec_x);
-% [V,E,]=eig(A_dec_y-B_dec_y*K_dec_y);
 
 
 %% 2.2) Designing Full-state Feedback Controllers with Simplified Dynamics Model (1.1) via LQR
