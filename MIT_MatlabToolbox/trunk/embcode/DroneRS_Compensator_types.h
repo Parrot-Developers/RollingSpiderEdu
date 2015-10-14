@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2593
+ * Model version                  : 1.2611
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Sat Oct 10 12:04:02 2015
+ * C/C++ source code generated on : Wed Oct 14 16:32:57 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -65,16 +65,6 @@ typedef struct {
   real_T k;
   boolean_T verbose;
 } struct_pP0yJPvqYhejK9gHgcbWI;
-
-#endif
-
-#ifndef _DEFINED_TYPEDEF_FOR_struct_0jN8MAWy2BXvS2aGwr3OoF_
-#define _DEFINED_TYPEDEF_FOR_struct_0jN8MAWy2BXvS2aGwr3OoF_
-
-typedef struct {
-  real_T motorsRS_UpperLimit;
-  real_T motorsThrust_i_UpperLimit;
-} struct_0jN8MAWy2BXvS2aGwr3OoF;
 
 #endif
 

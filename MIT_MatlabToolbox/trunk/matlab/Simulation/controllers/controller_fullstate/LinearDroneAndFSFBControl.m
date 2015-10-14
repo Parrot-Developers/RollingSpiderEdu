@@ -21,8 +21,7 @@ syms Pxw Pyw Pzw yaw pitch roll dpx dpy dpz p q r T tauy taup taur;
 symsvector  = [Pxw; Pyw; Pzw ;yaw ;pitch ;roll ;dpx ;dpy ;dpz ;p ;q ;r ;T ;tauy ;taup ;taur];
 
 %Transform inertia from RTB frame to RS frame
-J           = ([cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]'*quad.J*[cos(-pi/4) -sin(-pi/4) 0; sin(-pi/4) cos(-pi/4) 0; 0 0 1]);
-
+J           = ([cos(pi/4) -sin(pi/4) 0; sin(pi/4) cos(pi/4) 0; 0 0 1]'*quad.J*[cos(pi/4) -sin(pi/4) 0; sin(pi/4) cos(pi/4) 0; 0 0 1]);
 
 %Define Rotation matrices
 Ryaw = [
@@ -93,7 +92,7 @@ u_0 = input_equil
 
 %% 2.0) Load Full-state Feedback Controller derived from the PIDtoW-controller
 %(see linearizePID2W.m)
-K_pid = [0 0 0.425862895347363 0 0 0 0 0 0.248420022285962 0 0 0;0 0 0 8.28435779424437e-05 0 0 0 0 0 0 0 2.48530733827331e-05;-0.00425177438846976 0 0 0 0.013286794963968 0 -0.00106294359711744 0 0 0 0.0017715726618624 0;0 0.00834853616902657 0 0 0 0.028788055755264 0 0.00259092501797376 0 0.00664339748198401 0 0]
+K_pid =  [0 0 0.425862895347363 0 0 0 0 0 0.248420022285962 0 0 0;0 0 0 0.0102792311510984 0 0 0 0 0 0 0 0.00308376934532953;-0.00425177438846976 0 0 0 0.013286794963968 0 -0.00106294359711744 0 0 0 0.0017715726618624 0;0 0.00834853616902657 0 0 0 0.028788055755264 0 0.00259092501797376 0 0.00664339748198401 0 0];
 
 % Generate c-code ready format for copy-paste straight into src-files rsedu_control.c
 K_pid_ccode_string = sprintf('%E,' , K_pid(:));
@@ -130,12 +129,12 @@ K_poleplace(abs(K_poleplace)<1e-10)=0;
 
 %CODE MISSING
 
-K_LQR(abs(K_LQR)<(1e-10))=0;  %set small values zero
-K_LQR(2,:) = K_poleplace(2,:); %LQR does not work well on yaw as LQR places much weight on yaw-rate (which is quite noisy)
+K_lqr(abs(K_lqr)<(1e-10))=0;  %set small values zero
+K_lqr(2,:) = K_poleplace(2,:); %LQR does not work well on yaw as LQR places much weight on yaw-rate (which is quite noisy)
 
 % Generate c-code ready format for copy-paste to src-files.
-K_LQR_ccode_string = sprintf('%E,' , K_LQR(:));
-K_LQR_ccode_string = ['{ ' K_LQR_ccode_string(1:end-1) ' }']
+K_lqr_ccode_string = sprintf('%E,' , K_lqr(:));
+K_lqr_ccode_string = ['{ ' K_lqr_ccode_string(1:end-1) ' }']
 
 
 

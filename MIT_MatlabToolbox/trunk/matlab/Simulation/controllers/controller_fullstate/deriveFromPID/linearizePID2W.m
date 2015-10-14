@@ -17,7 +17,7 @@ paramsFilters;
 %From SIMULINK diagram
 K_PID2act=[...
             600*0.32 0         0     0       -600     0      600*0.08 0       0    0  -80 0;
-            0       -1300*0.29 0     0       0       -1300   0       -0.09*600    0   -300 0  0;
+            0       -1300*0.29 0     0       0       -1300   0       -0.09*1300    0   -300 0  0;
             0               0 0     -6000   0       0       0       0       0    0   0  -0.3*6000;
             0               0 -600  0       0       0       0       0       -350 0   0  0]; %states to pitch roll yaw Thrustsingle_engine (here not total Thrust!)-action
 
@@ -50,7 +50,7 @@ K_pid(abs(K_pid)<1e-10)=0
 %% 2) Have linearization done by SIMULINK
 %use Simulink's ControlDesign/Linear Analysis with linearizeController.slx
 %result in linearizedPID2W
-load('linearizedPID2W.mat')
+load('linearizedPID2W_x2motorcmdRS.mat');
 motorcmd_hover = quad.g*quad.M*1/(quad.Ct*quad.rho*quad.A*quad.r^2)*1/quadEDT.motorsRSToW2_Gain/4;
 K_pid = controlParams.Ts2Q *motorsdirection*(quad.g*quad.M/4)/motorcmd_hover*linearizedPID2W.d;
 K_pid(abs(K_pid)<1e-10)=0;

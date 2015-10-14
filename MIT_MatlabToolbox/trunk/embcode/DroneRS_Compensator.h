@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2593
+ * Model version                  : 1.2611
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Sat Oct 10 12:04:02 2015
+ * C/C++ source code generated on : Wed Oct 14 16:32:57 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -205,6 +205,12 @@ struct P_ControllerFSFB_DroneRS_Comp_T_ {
                                               */
   real_T Constant_Value;               /* Expression: 0
                                         * Referenced by: '<S10>/Constant'
+                                        */
+  real_T SaturationThrust_UpperSat;    /* Expression: controlParams.totalThrust_maxRelative*controlParams.motorsThrust_i_UpperLimit*4
+                                        * Referenced by: '<S8>/SaturationThrust'
+                                        */
+  real_T SaturationThrust_LowerSat;    /* Expression: -(controlParams.totalThrust_maxRelative*controlParams.motorsThrust_i_UpperLimit*4)
+                                        * Referenced by: '<S8>/SaturationThrust'
                                         */
   real_T Saturation2_UpperSat;         /* Expression: -0.0118
                                         * Referenced by: '<S7>/Saturation2'
@@ -423,17 +429,14 @@ struct P_DroneRS_Compensator_T_ {
                                           *   '<S130>/Constant'
                                           *   '<S131>/Constant'
                                           */
-  struct_0jN8MAWy2BXvS2aGwr3OoF controlsParams;/* Variable: controlsParams
-                                                * Referenced by: '<S8>/SaturationThrust'
-                                                */
   struct_YkbJnRR8M5ye4XtO88GdQC vishandle;/* Variable: vishandle
                                            * Referenced by:
                                            *   '<S182>/Constant'
                                            *   '<S183>/Constant'
                                            *   '<S184>/Constant'
                                            */
-  real_T K_lqr[48];                    /* Variable: K_lqr
-                                        * Referenced by: '<S4>/FSFBMatrix_lqr'
+  real_T K_poleplace[48];              /* Variable: K_poleplace
+                                        * Referenced by: '<S4>/FSFBMatrix_pp'
                                         */
   real_T sampleTime_qcsim;             /* Variable: sampleTime_qcsim
                                         * Referenced by: '<S3>/sampleTime'

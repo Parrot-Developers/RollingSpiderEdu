@@ -48,9 +48,10 @@ vishandle.deltaXY           = 0.5;
 
 %% Control Mixer
 
-%Ts2Q transforms thrust [Nm] for motors 1..4 to Q=[totalThrust;Torqueyaw;pitch;roll]
+%Ts2Q transforms thrust [Nm] for motors 1..4 to Q_desired=[totalThrust;Torqueyaw;pitch;roll]
 controlParams.Ts2Q = [1 1 1 1;
-    quad.Cq/quad.Ct/2/1880 -quad.Cq/quad.Ct/2/1880 quad.Cq/quad.Ct/2/1880 -quad.Cq/quad.Ct/2/1880;
+    %quad.Cq/quad.Ct/2/1880 -quad.Cq/quad.Ct/2/1880 quad.Cq/quad.Ct/2/1880 -quad.Cq/quad.Ct/2/1880;
+    quad.Cq/quad.Ct*quad.r -quad.Cq/quad.Ct*quad.r quad.Cq/quad.Ct*quad.r -quad.Cq/quad.Ct*quad.r;
     -quad.d*sqrt(2)/2 -quad.d*sqrt(2)/2  quad.d*sqrt(2)/2 quad.d*sqrt(2)/2; 
                        -quad.d*sqrt(2)/2  quad.d*sqrt(2)/2 quad.d*sqrt(2)/2 -quad.d*sqrt(2)/2                       
                        ];
@@ -61,11 +62,11 @@ controlParams.Q2Ts                        = inv(controlParams.Ts2Q);
 %% Controllers (generic helpers)
 controlParams.takeoff_Gain                = 0.05;
 controlParams.totalThrust_maxRelative     = 0.92;
-controlsParams.motorsRS_UpperLimit        = 500;        
-controlsParams.motorsThrust_i_UpperLimit  = controlsParams.motorsRS_UpperLimit*quad.Ct*quad.rho*quad.A*quad.r^2*quadEDT.motorsRSToW2_Gain;
+controlParams.motorsRS_UpperLimit        = 500;        
+controlParams.motorsThrust_i_UpperLimit  = controlParams.motorsRS_UpperLimit*quad.Ct*quad.rho*quad.A*quad.r^2*quadEDT.motorsRSToW2_Gain;
 
 controlParams.NO_VIS_X                    = -99.0;
 controlParams.NO_VIS_YAW                  = -9.0;
 
-%see LinearizationControlDesign.m for actual State-Space Controllers
+%see LinearDroneAndFSFBControl.m for actual State-Space Controllers
 

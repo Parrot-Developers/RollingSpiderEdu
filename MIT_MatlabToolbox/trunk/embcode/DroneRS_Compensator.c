@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2593
+ * Model version                  : 1.2611
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Sat Oct 10 12:04:02 2015
+ * C/C++ source code generated on : Wed Oct 14 16:32:57 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -31,24 +31,24 @@ static real_T DroneRS_Compensator_genpnorm(const real_T x[3]);
 /* Output and update for atomic system: '<S1>/ControllerFSFB' */
 void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
   rtu_att_refin[3], boolean_T rtu_controlModePosVSAtt_flagin, const real_T
-  rtu_states_estimin[2], const real_T rtu_states_estimin_f[2], real_T
-  rtu_states_estimin_m, const real_T rtu_states_estimin_b[3], real_T
-  rtu_states_estimin_bw, const real_T rtu_states_estimin_p[3],
+  rtu_states_estimin[2], const real_T rtu_states_estimin_j[2], real_T
+  rtu_states_estimin_d, const real_T rtu_states_estimin_dp[3], real_T
+  rtu_states_estimin_m, const real_T rtu_states_estimin_jy[3],
   B_ControllerFSFB_DroneRS_Comp_T *localB, P_ControllerFSFB_DroneRS_Comp_T
   *localP, P_DroneRS_Compensator_T *DroneRS_Compensator_P)
 {
   /* local block i/o variables */
   real_T rtb_SaturationThrust;
   real_T y;
+  real_T y_0;
   real_T rtb_TmpSignalConversionAtProduc[4];
   real_T rtu_states_estimin_0[12];
   real_T tmp[12];
   int32_T i;
   int32_T i_0;
   real_T tmp_0[4];
-  real_T u1;
-  real_T u2;
   real_T tmp_1;
+  real_T tmp_2;
 
   /* Switch: '<S6>/PosVSAtt_Switch' incorporates:
    *  Constant: '<S6>/dz_ref'
@@ -72,8 +72,8 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
     localB->PosVSAtt_Switch[7] = localP->velocitiesPos_ref_Value[1];
     localB->PosVSAtt_Switch[8] = localP->velocitiesPos_ref_Value[2];
   } else {
-    localB->PosVSAtt_Switch[6] = rtu_states_estimin_f[0];
-    localB->PosVSAtt_Switch[7] = rtu_states_estimin_f[1];
+    localB->PosVSAtt_Switch[6] = rtu_states_estimin_j[0];
+    localB->PosVSAtt_Switch[7] = rtu_states_estimin_j[1];
     localB->PosVSAtt_Switch[8] = localP->dz_ref_Value;
   }
 
@@ -88,16 +88,16 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
    */
   rtu_states_estimin_0[0] = rtu_states_estimin[0];
   rtu_states_estimin_0[1] = rtu_states_estimin[1];
-  rtu_states_estimin_0[2] = rtu_states_estimin_m;
-  rtu_states_estimin_0[3] = rtu_states_estimin_b[0];
-  rtu_states_estimin_0[4] = rtu_states_estimin_b[1];
-  rtu_states_estimin_0[5] = rtu_states_estimin_b[2];
-  rtu_states_estimin_0[6] = rtu_states_estimin_f[0];
-  rtu_states_estimin_0[7] = rtu_states_estimin_f[1];
-  rtu_states_estimin_0[8] = rtu_states_estimin_bw;
-  rtu_states_estimin_0[9] = rtu_states_estimin_p[0];
-  rtu_states_estimin_0[10] = rtu_states_estimin_p[1];
-  rtu_states_estimin_0[11] = rtu_states_estimin_p[2];
+  rtu_states_estimin_0[2] = rtu_states_estimin_d;
+  rtu_states_estimin_0[3] = rtu_states_estimin_dp[0];
+  rtu_states_estimin_0[4] = rtu_states_estimin_dp[1];
+  rtu_states_estimin_0[5] = rtu_states_estimin_dp[2];
+  rtu_states_estimin_0[6] = rtu_states_estimin_j[0];
+  rtu_states_estimin_0[7] = rtu_states_estimin_j[1];
+  rtu_states_estimin_0[8] = rtu_states_estimin_m;
+  rtu_states_estimin_0[9] = rtu_states_estimin_jy[0];
+  rtu_states_estimin_0[10] = rtu_states_estimin_jy[1];
+  rtu_states_estimin_0[11] = rtu_states_estimin_jy[2];
   for (i = 0; i < 12; i++) {
     tmp[i] = localB->PosVSAtt_Switch[i] - rtu_states_estimin_0[i];
   }
@@ -105,13 +105,13 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
   /* End of Sum: '<S2>/Add' */
 
   /* Product: '<S4>/FullStateFeedback' incorporates:
-   *  Constant: '<S4>/FSFBMatrix_lqr'
+   *  Constant: '<S4>/FSFBMatrix_pp'
    */
   for (i = 0; i < 4; i++) {
     rtb_TmpSignalConversionAtProduc[i] = 0.0;
     for (i_0 = 0; i_0 < 12; i_0++) {
-      rtb_TmpSignalConversionAtProduc[i] += DroneRS_Compensator_P->K_lqr[(i_0 <<
-        2) + i] * tmp[i_0];
+      rtb_TmpSignalConversionAtProduc[i] += DroneRS_Compensator_P->K_poleplace
+        [(i_0 << 2) + i] * tmp[i_0];
     }
   }
 
@@ -137,29 +137,25 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
     DroneRS_Compensator_P->quad.M;
 
   /* Saturate: '<S8>/SaturationThrust' */
-  u1 = -(0.92 * DroneRS_Compensator_P->controlsParams.motorsThrust_i_UpperLimit *
-         4.0);
-  u2 = 0.92 * DroneRS_Compensator_P->controlsParams.motorsThrust_i_UpperLimit *
-    4.0;
-  if (rtb_SaturationThrust > u2) {
-    rtb_SaturationThrust = u2;
+  if (rtb_SaturationThrust > localP->SaturationThrust_UpperSat) {
+    rtb_SaturationThrust = localP->SaturationThrust_UpperSat;
   } else {
-    if (rtb_SaturationThrust < u1) {
-      rtb_SaturationThrust = u1;
+    if (rtb_SaturationThrust < localP->SaturationThrust_LowerSat) {
+      rtb_SaturationThrust = localP->SaturationThrust_LowerSat;
     }
   }
 
   /* End of Saturate: '<S8>/SaturationThrust' */
 
   /* SignalConversion: '<S7>/TmpSignal ConversionAtProductInport2' */
-  u1 = rtb_SaturationThrust;
+  tmp_1 = rtb_SaturationThrust;
 
   /* Gain: '<S9>/ThrustToW2_Gain' */
-  u2 = 1.0 / (DroneRS_Compensator_P->quad.Ct * DroneRS_Compensator_P->quad.rho *
-              DroneRS_Compensator_P->quad.A * 0.0010890000000000001);
+  y = 1.0 / (DroneRS_Compensator_P->quad.Ct * DroneRS_Compensator_P->quad.rho *
+             DroneRS_Compensator_P->quad.A * 0.0010890000000000001);
 
   /* Gain: '<S9>/W2ToMotorsCmd_Gain' */
-  y = 1.0 / DroneRS_Compensator_P->quadEDT.motorsRSToW2_Gain;
+  y_0 = 1.0 / DroneRS_Compensator_P->quadEDT.motorsRSToW2_Gain;
 
   /* Product: '<S7>/Product' incorporates:
    *  Constant: '<S7>/TorquetotalThrustToThrustperMotor'
@@ -167,14 +163,14 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
    *  SignalConversion: '<S7>/TmpSignal ConversionAtProductInport2'
    */
   for (i = 0; i < 4; i++) {
-    tmp_1 = localP->TorquetotalThrustToThrustperMot[i + 12] *
+    tmp_2 = localP->TorquetotalThrustToThrustperMot[i + 12] *
       rtb_TmpSignalConversionAtProduc[3] +
       (localP->TorquetotalThrustToThrustperMot[i + 8] *
        rtb_TmpSignalConversionAtProduc[2] +
        (localP->TorquetotalThrustToThrustperMot[i + 4] *
         rtb_TmpSignalConversionAtProduc[1] +
-        localP->TorquetotalThrustToThrustperMot[i] * u1));
-    tmp_0[i] = tmp_1;
+        localP->TorquetotalThrustToThrustperMot[i] * tmp_1));
+    tmp_0[i] = tmp_2;
   }
 
   /* End of Product: '<S7>/Product' */
@@ -185,45 +181,45 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
    *  Saturate: '<S7>/Saturation2'
    */
   if (tmp_0[0] > localP->Saturation2_UpperSat) {
-    tmp_1 = localP->Saturation2_UpperSat;
+    tmp_2 = localP->Saturation2_UpperSat;
   } else if (tmp_0[0] < localP->Saturation2_LowerSat) {
-    tmp_1 = localP->Saturation2_LowerSat;
+    tmp_2 = localP->Saturation2_LowerSat;
   } else {
-    tmp_1 = tmp_0[0];
+    tmp_2 = tmp_0[0];
   }
 
-  localB->W2ToMotorsCmd_Gain[0] = u2 * tmp_1 *
-    localP->MotorsRotationDirection_Gain[0] * y;
+  localB->W2ToMotorsCmd_Gain[0] = y * tmp_2 *
+    localP->MotorsRotationDirection_Gain[0] * y_0;
   if (tmp_0[1] > localP->Saturation2_UpperSat) {
-    tmp_1 = localP->Saturation2_UpperSat;
+    tmp_2 = localP->Saturation2_UpperSat;
   } else if (tmp_0[1] < localP->Saturation2_LowerSat) {
-    tmp_1 = localP->Saturation2_LowerSat;
+    tmp_2 = localP->Saturation2_LowerSat;
   } else {
-    tmp_1 = tmp_0[1];
+    tmp_2 = tmp_0[1];
   }
 
-  localB->W2ToMotorsCmd_Gain[1] = u2 * tmp_1 *
-    localP->MotorsRotationDirection_Gain[1] * y;
+  localB->W2ToMotorsCmd_Gain[1] = y * tmp_2 *
+    localP->MotorsRotationDirection_Gain[1] * y_0;
   if (tmp_0[2] > localP->Saturation2_UpperSat) {
-    tmp_1 = localP->Saturation2_UpperSat;
+    tmp_2 = localP->Saturation2_UpperSat;
   } else if (tmp_0[2] < localP->Saturation2_LowerSat) {
-    tmp_1 = localP->Saturation2_LowerSat;
+    tmp_2 = localP->Saturation2_LowerSat;
   } else {
-    tmp_1 = tmp_0[2];
+    tmp_2 = tmp_0[2];
   }
 
-  localB->W2ToMotorsCmd_Gain[2] = u2 * tmp_1 *
-    localP->MotorsRotationDirection_Gain[2] * y;
+  localB->W2ToMotorsCmd_Gain[2] = y * tmp_2 *
+    localP->MotorsRotationDirection_Gain[2] * y_0;
   if (tmp_0[3] > localP->Saturation2_UpperSat) {
-    tmp_1 = localP->Saturation2_UpperSat;
+    tmp_2 = localP->Saturation2_UpperSat;
   } else if (tmp_0[3] < localP->Saturation2_LowerSat) {
-    tmp_1 = localP->Saturation2_LowerSat;
+    tmp_2 = localP->Saturation2_LowerSat;
   } else {
-    tmp_1 = tmp_0[3];
+    tmp_2 = tmp_0[3];
   }
 
-  localB->W2ToMotorsCmd_Gain[3] = u2 * tmp_1 *
-    localP->MotorsRotationDirection_Gain[3] * y;
+  localB->W2ToMotorsCmd_Gain[3] = y * tmp_2 *
+    localP->MotorsRotationDirection_Gain[3] * y_0;
 }
 
 /*
