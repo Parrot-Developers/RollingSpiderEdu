@@ -70,7 +70,7 @@ O_dot_jacobian  = jacobian(O_dot,symsvector);
 O_dot_jacobian_eql = subs(O_dot_jacobian,symsvector,equil);
 
 %p ddot      
-p_ddot          = Global2Body*[0;0;quad.g] + T/quad.M*[0;0;1];
+p_ddot          = Global2Body*[0;0;quad.g] + T/quad.M*[0;0;1] -cross(transpose([p,q,r]),transpose([dpx,dpy,dpz]));
 p_ddot_jacobian = jacobian(p_ddot,symsvector);
 p_ddot_jacobian_eql = subs(p_ddot_jacobian,symsvector,equil);
 %o ddot      
@@ -102,7 +102,8 @@ K_pid_ccode_string = ['{ ' K_pid_ccode_string(1:end-1) ' }']
 
 % Find states to decouple
 [V,J]   = jordan(A);
-Veig_nrm = diag(1./sum(V,1))*V;
+Veig_nrm = diag(1./sum(V,1))*V; % decoupled system will have a new state-vector x_dec = inv(Veig_nrm)*x
+
 % System matrices of decoupled system
 A_dec   = inv(Veig_nrm)*A*Veig_nrm;
 B_dec   = inv(Veig_nrm)*B;
@@ -111,12 +112,23 @@ B_dec   = inv(Veig_nrm)*B;
 A_dec_x   = ...
 B_dec_x   = ...
 
-% Now place your own poles for the decoupled subsystems separately
-K_decoupled_x = ...
+A_dec_z   = ...
+B_dec_z   = ...
 
+A_dec_y   = ...
+B_dec_y   = ...
+
+A_dec_yaw   = ...
+B_dec_yaw   = ...
+
+% Now place your own poles for the decoupled subsystems separately
+K_dec_x = ...
+K_dec_z = ...
+K_dec_y = ...    
+K_dec_yaw = ...
 
 % Compute Full-state feedback for 'original' system
-K_poleplace = [K_dec_x K_dec_alt K_dec_y K_dec_yaw]*inv(Veig_nrm);
+K_poleplace = [K_dec_x K_dec_z K_dec_y K_dec_yaw]*inv(Veig_nrm);
 K_poleplace(abs(K_poleplace)<1e-10)=0;
 
 % Generate c-code ready format for copy-paste straight into src-files rsedu_control.c
