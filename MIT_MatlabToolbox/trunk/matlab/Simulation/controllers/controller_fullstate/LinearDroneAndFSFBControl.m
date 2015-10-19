@@ -53,8 +53,8 @@ iW = ...
 
 %%Linearization Point = Hover
 %-----------
-state_equil = [0; 0; -1.5; 0 ;0 ;0 ;0 ;0 ;0 ;0 ;0 ;0 ];
-input_equil = [-quad.g*quad.M ;0 ;0 ;0];
+state_equil = [0; 0; -1.5; 0 ;0 ;0 ;0 ;0 ;0 ;0 ;0 ;0 ]; %x_eq
+input_equil = [-quad.g*quad.M ;0 ;0 ;0];		%u_eq
 equil       = [state_equil; input_equil];
 
 %%Dynamics
@@ -84,8 +84,8 @@ o_ddot_jacobian_eql = subs(o_ddot_jacobian,symsvector,equil);
 matrixAB = [P_dot_jacobian_eql;O_dot_jacobian_eql;p_ddot_jacobian_eql;o_ddot_jacobian_eql];
 A = double(matrixAB(1:12,1:12))
 B = double(matrixAB(1:12,13:16))
-x_0 = state_equil
-u_0 = input_equil
+%Note x_nonlinearSys = x_eq + x_linearizedSys! Thus, x0_linearizedSys = x0_nonlinear - x_eq; 
+%Note u_nonlinearSys = u_eq + x_linearizedSys!
 
 %% 1.2) Linearizing Full Nonlinear Simulink Model (the model from Robotics Toolbox)
 %use Simulation/controllers/controller_fullstate/linearizeDrone.slx and Simulink's ControlDesign/Linear Analysis
