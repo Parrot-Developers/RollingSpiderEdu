@@ -199,7 +199,11 @@ function sys = mdlDerivatives(t,x,u, quad)
     
     dv = (quad.g*e3 + R*(1/quad.M)*sum(T,2));
     do = inv(quad.J)*(-cross(o,quad.J*o) + sum(tau,2) + sum(Q,2)); %row sum of torques
-    sys = [dz;dn;dv;do];                                           %This is the state derivative vector
+    if isnan(do)
+      warning('system rotating too fast!')
+      do = zeros(size(do));
+    end
+    sys = [dz;dn;dv;do];                                         %This is the state derivative vector
 end % End of mdlDerivatives.
 
 
