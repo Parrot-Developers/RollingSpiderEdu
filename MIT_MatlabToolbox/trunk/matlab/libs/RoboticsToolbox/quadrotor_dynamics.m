@@ -180,7 +180,7 @@ function sys = mdlDerivatives(t,x,u, quad)
             sin(j) cos(j)];                               %BBF > mu sideslip rotation matrix
         
         %Flapping
-        beta = [((8/3*quad.theta0 + 2*quad.theta1)*mu - 2*(lc)*mu)/(1-mu^2/2); %Longitudinal flapping
+        beta = [((8/3*quad.theta0 + 2*quad.theta1) - 2*(lc))/(1/mu-mu/2); %Longitudinal flapping
             0;];                                          %sign(w) * (4/3)*((Ct/sigma)*(2*mu*gamma/3/a)/(1+3*e/2/r) + li)/(1+mu^2/2)]; %Lattitudinal flapping (note sign)
         beta = J'*beta;                                   %Rotate the beta flapping angles to longitudinal and lateral coordinates.
         a1s(i) = beta(1) - 16/quad.gamma/abs(w(i)) * o(2);
