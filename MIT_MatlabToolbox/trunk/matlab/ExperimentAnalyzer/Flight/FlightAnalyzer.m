@@ -146,7 +146,7 @@ title 'Altitude'
 visUpdatesAvlble = (RSrun_posVIS(:,2)~=-99);
     
 figure('Name','Positions & Velocities');
-subplot(5,1,1);
+subplot(6,1,1:2);
 
 %Trajectory
 plot(RSrun_states_estim(:,3),RSrun_states_estim(:,2));
@@ -155,19 +155,20 @@ plot(RSrun_states_estim(1,3),RSrun_states_estim(1,2),'ro');
 plot(RSrun_states_estim(end,3),RSrun_states_estim(end,2),'go');
 plot(RSrun_posVIS(visUpdatesAvlble,3),RSrun_posVIS(visUpdatesAvlble,2),'x');
 ylim([-.3 .3]);
-xlabel 'Y'
-ylabel 'X'
+xlabel 'Y [m]'
+ylabel 'X [m]'
 axis equal
 
 %Positions
-h(1)=subplot(5,1,2)
+h(1)=subplot(12,1,5:6);
+axis normal
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,2));hold all;
 plot(RSrun_posVIS(visUpdatesAvlble,1),RSrun_posVIS(visUpdatesAvlble,2),'o'); 
 legend({'$\hat{X}$','$X_{VIS}$'},'Interpreter','latex')
 ylim([-.7 .7])
 ylabel 'X [m]'
 
-h(2)=subplot(5,1,3)
+h(2)=subplot(12,1,7:8);
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,3));   hold all;
 plot(RSrun_posVIS(visUpdatesAvlble,1),RSrun_posVIS(visUpdatesAvlble,3),'o');
 legend({'$\hat{Y}$','$Y_{VIS}$'},'Interpreter','latex')
@@ -175,13 +176,13 @@ ylim([-.5 .5])
 ylabel 'Y [m]'
 
 %Velocities
-h(3)=subplot(5,1,4);
+h(3)=subplot(12,1,9:10);
 plot(RSrun_opticalFlowRS(:,1),20*RSrun_opticalFlowRS(:,2),'.-'); hold all;
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,8));
 ylabel('$\dot x$ [m/s]','Interpreter','latex');
 legend({'~OF$_x$' '$\hat{\dot x}$'},'Interpreter','latex');
 
-h(4)=subplot(5,1,5);
+h(4)=subplot(12,1,11:12);
 plot(RSrun_opticalFlowRS(:,1),20*RSrun_opticalFlowRS(:,3),'.-'); hold all;
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,9));
 xlabel 't [s]'
