@@ -11,4 +11,4 @@ pkill -f "ReferenceValue*"
 ./DroneWatchDog.sh&
 
 # 4. Start the server app
-./utils/ReferenceValueServer
+python ./utils/ReferenceValueServer.py
