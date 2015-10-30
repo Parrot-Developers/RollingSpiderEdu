@@ -21,6 +21,6 @@ SCRIPT
 
 
 # 3. Move the data file to the correct location
-mv RSdata.mat ../DroneExchange
+mv RSdata.mat ../DroneExchange/RSdata__$(date '+%Y_%m_%d__%H_%M_%S').mat
 
 echo "Drone: RSdata.mat downloaded from drone to DroneExchange!"
