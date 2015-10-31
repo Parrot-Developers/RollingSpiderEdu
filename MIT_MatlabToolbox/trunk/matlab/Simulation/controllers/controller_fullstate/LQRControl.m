@@ -24,7 +24,7 @@ mdl_quadrotor
 %Limits on states
 pos_max     = 1;
 att_max     = 0.35;
-dpos_max    = 0.7;
+dpos_max    = 1;
 datt_max    = 1;
 
 %Limit on control input
