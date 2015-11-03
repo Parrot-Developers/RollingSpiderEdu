@@ -82,7 +82,6 @@ figure('Name','Sensors, Motors');
 h(1)=subplot(4,1,1);
 plot(RSrun_sensordataRS(:,1),RSrun_sensordataRS(:,2:4))
 ylabel 'IMU-accel'
-xlabel 't [s]'
 legend({'$\ddot x$' '$\ddot y$' '$\ddot z$'},'Interpreter','latex');
 ylim([-12 12])
 title('IMU, attitude, motor commands');
@@ -91,7 +90,6 @@ title('IMU, attitude, motor commands');
 h(2)=subplot(4,1,2);
 plot(RSrun_sensordataRS(:,1),RSrun_sensordataRS(:,5:end-2))
 ylabel 'IMU-gyro'
-xlabel 't [s]'
 legend({ '$w_x$' '$w_y$' '$w_z$'},'Interpreter','latex');
 ylim([-1 1])
 
@@ -102,7 +100,6 @@ plot(RSrun_posVIS(visUpdatesAvlble,1),RSrun_posVIS(visUpdatesAvlble,5),'o');
 plot(RSrun_attRS_ref(:,1),RSrun_attRS_ref(:,2:end));
 ylabel 'attitude estimate (in RS system)'
 legend({'yaw' 'pitch' 'roll' 'yaw_{vis}' 'yaw_{ref}' 'pitch_{ref}' 'roll_{ref}'});
-xlabel 't [s]'
 ylim([-0.3 0.3])
 
 %motorcommands
@@ -113,7 +110,8 @@ xlabel 't [s]'
 legend({'m_1' 'm_2' 'm_3' 'm_4'});
 ylim([-600 600])
 
-linkaxes([h(1) h(2) h(3) h(4)],'x');
+set(h(1:end-1),'xticklabel',[])
+linkaxes(h,'x');
 
 
 %% Altitude
@@ -148,7 +146,7 @@ title 'Altitude'
 visUpdatesAvlble = (RSrun_posVIS(:,2)~=-99);
     
 figure('Name','Positions & Velocities');
-h1=subplot(5,1,1);
+subplot(6,1,1:2);
 
 %Trajectory
 plot(RSrun_states_estim(:,3),RSrun_states_estim(:,2));
@@ -157,42 +155,42 @@ plot(RSrun_states_estim(1,3),RSrun_states_estim(1,2),'ro');
 plot(RSrun_states_estim(end,3),RSrun_states_estim(end,2),'go');
 plot(RSrun_posVIS(visUpdatesAvlble,3),RSrun_posVIS(visUpdatesAvlble,2),'x');
 ylim([-.3 .3]);
-xlabel 'Y'
-ylabel 'X'
+xlabel 'Y [m]'
+ylabel 'X [m]'
 axis equal
 
 %Positions
-subplot(5,1,2)
+h(1)=subplot(12,1,5:6);
+axis normal
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,2));hold all;
 plot(RSrun_posVIS(visUpdatesAvlble,1),RSrun_posVIS(visUpdatesAvlble,2),'o'); 
 legend({'$\hat{X}$','$X_{VIS}$'},'Interpreter','latex')
 ylim([-.7 .7])
-xlabel 't [s]'
 ylabel 'X [m]'
 
-subplot(5,1,3)
+h(2)=subplot(12,1,7:8);
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,3));   hold all;
 plot(RSrun_posVIS(visUpdatesAvlble,1),RSrun_posVIS(visUpdatesAvlble,3),'o');
 legend({'$\hat{Y}$','$Y_{VIS}$'},'Interpreter','latex')
 ylim([-.5 .5])
-xlabel 't [s]'
 ylabel 'Y [m]'
 
 %Velocities
-subplot(5,1,4);
+h(3)=subplot(12,1,9:10);
 plot(RSrun_opticalFlowRS(:,1),20*RSrun_opticalFlowRS(:,2),'.-'); hold all;
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,8));
-xlabel 't [s]'
 ylabel('$\dot x$ [m/s]','Interpreter','latex');
 legend({'~OF$_x$' '$\hat{\dot x}$'},'Interpreter','latex');
 
-subplot(5,1,5);
+h(4)=subplot(12,1,11:12);
 plot(RSrun_opticalFlowRS(:,1),20*RSrun_opticalFlowRS(:,3),'.-'); hold all;
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,9));
 xlabel 't [s]'
 ylabel('$\dot y$ [m/s]','Interpreter','latex');
 legend({'~OF$_y$' '$\hat{\dot y}$'},'Interpreter','latex');
 
+set(h(1:end-1),'xticklabel',[])
+linkaxes(h,'x');
 
 %% Optical Flow, Velocity
 
