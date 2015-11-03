@@ -45,7 +45,7 @@ Rroll = [
 Body2Global = Ryaw*Rpitch*Rroll;
 Global2Body = simplify(Body2Global^-1);
 
-%inverted Wronskian to transform body rates p-q-r to euler rates yaw pitch roll
+%Transformation from body rates p-q-r to euler rates yaw pitch roll
 iW = ...
     [0        sin(roll)          cos(roll);             
      0        cos(roll)*cos(pitch) -sin(roll)*cos(pitch);
