@@ -155,7 +155,7 @@ while(runcmd==1)
 	  sprintf(sendBuff,"%i %i %i %i %i",runcmd,(int)(pitch_ref_RS*1000 + 10000),(int)(roll_ref_RS*1000 + 10000), (int)(yaw_ref*1000 + 10000), (int)(alt_ref*100.0));
 	  send(connfd, sendBuff, strlen(sendBuff),0);
 
-	  //~100mhz
+	  
 	  usleep(10000);
 };
 
