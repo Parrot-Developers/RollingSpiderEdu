@@ -15,10 +15,10 @@ mdl_quadrotor
 %Note that we need to apply a state transformation on the results of the
 %linearization.
 
-    % A = linsys1.c*linsys1.a*inv(linsys1.c);
-    % B = linsys1.c*linsys1.b;
-    % C = eye(12);
-    % D = zeros(12,4);
+     A = linsys1.c*linsys1.a*inv(linsys1.c);
+     B = linsys1.c*linsys1.b;
+     C = eye(12);
+     D = zeros(12,4);
 
 %% 2) Setup Bryson's rule 
 
@@ -46,7 +46,8 @@ rho = 0.05;
 %...
 
 %% Normalize and pack weights and limits
-weights= [pos_x_wght pos_y_wght pos_z_wght orient_ypr_wghts orient_ypr_wghts orient_ypr_wghts dpos_wghts dpos_wghts dpos_wghts dorient_pqr_wghts dorient_pqr_wghts dorient_pqr_wghts]/sum(weights);
+weights= [pos_x_wght pos_y_wght pos_z_wght orient_ypr_wghts orient_ypr_wghts orient_ypr_wghts dpos_wghts dpos_wghts dpos_wghts dorient_pqr_wghts dorient_pqr_wghts dorient_pqr_wghts];
+weights=weights/sum(weights);
 maxs   = [pos_max pos_max pos_max att_max att_max att_max dpos_max dpos_max dpos_max datt_max datt_max datt_max];
 
 %% 3) Compute Q and R cost matrices
