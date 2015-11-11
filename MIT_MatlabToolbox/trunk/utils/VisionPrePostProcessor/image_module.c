@@ -447,7 +447,7 @@ void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int
 		lndmrks[i].weights  = 0;
 		lndmrks[i].px = 0;
 		lndmrks[i].py = 0;
-		printf("matches reset!\n");
+		//printf("matches reset!\n");
 	}
 
 	
@@ -581,7 +581,7 @@ void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int
 			}
 
 		}
-		else printf("ERROR not enough distinct features found! \n")	;
+		else printf("WARNING not enough distinct landmarks (colored markers) found for vision-based pose reconstruction! \n")	;
 
 
 	}

@@ -529,7 +529,7 @@ for (kimg=6;kimg<=lastImg;kimg=kimg+6)
 
 
 	// analysis image
-
+	/*
 	printf("YUV Analysis \n");
 	analyse_matrix(Y,nx,ny);
 	analyse_matrix(U,nx,ny);
@@ -542,7 +542,7 @@ for (kimg=6;kimg<=lastImg;kimg=kimg+6)
 	analyse_matrix(H,nx,ny);
 	analyse_matrix(S,nx,ny);
 	analyse_matrix(Va,nx,ny);
-
+	*/
 
 	// generate all channels for read image
 
@@ -550,7 +550,7 @@ for (kimg=6;kimg<=lastImg;kimg=kimg+6)
 	YUV_to_HSVimg(Y, U, V, H,S,Va,nx, ny);
 
 	// check conversions
-
+	/*
 	printf("YUV Analysis \n");
 	analyse_matrix(Y,nx,ny);
 	analyse_matrix(U,nx,ny);
@@ -563,7 +563,7 @@ for (kimg=6;kimg<=lastImg;kimg=kimg+6)
 	analyse_matrix(H,nx,ny);
 	analyse_matrix(S,nx,ny);
 	analyse_matrix(Va,nx,ny);
-
+	*/
 
 	// generate test buffer image from YUV channel of image read from file
 
