@@ -56,9 +56,16 @@ float rgbmin,rgbmax;
 
 //https://innovativesolution.wordpress.com/2009/09/10/yuv-to-rgb-and-rgb-to-yuv-conversions/
 
-red  = 1.1644*(yuv[0] - 16.0) + 1.596*(yuv[2] - 128.0);
-green= 1.1644*(yuv[0] - 16.0) - 0.813*(yuv[1] - 128.0) - 0.391*(yuv[2] - 128.0);
-blue = 1.1644*(yuv[0] - 16.0) + 2.018*(yuv[1] - 128.0);
+red  = (yuv[0] - 0.0) + 1.596*(yuv[2] - 128.0);
+green= (yuv[0] - 0.0) - 0.813*(yuv[1] - 128.0) - 0.3981*(yuv[2] - 128.0);
+blue = (yuv[0] - 0.0) + 2.0172*(yuv[1] - 128.0);
+
+if (red>255)   red=255;
+if (green>255) green=255;
+if (blue>255)  blue=255;
+if (red<0)   red=0;
+if (green<0) green=0;
+if (blue<0)  blue=0;
 
 rgbmax = red;
 (rgbmax < green) && (rgbmax = green);
@@ -420,6 +427,8 @@ void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int
 
 
 		//reset posefile
+	  	mkdir("../../DroneExchange/imgs/",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		mkdir("../../DroneExchange/imgs/processed/",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		fclose(fopen("../../DroneExchange/imgs/processed/poses.txt","w"));
 
 		//load lookuptable for matching process
@@ -525,8 +534,8 @@ void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int
 								 weight=1;
 								}
 
-						lndmrks[lndmrk_best].px = lndmrks[lndmrk_best].px*lndmrks[lndmrk_best].weights/(lndmrks[lndmrk_best].weights+weight) + (((double)(col+1))*2)*weight/(lndmrks[lndmrk_best].weights+weight); //@TODO is it row?
-						lndmrks[lndmrk_best].py = lndmrks[lndmrk_best].py*lndmrks[lndmrk_best].weights/(lndmrks[lndmrk_best].weights+weight) + ((double)(row+1))*weight/(lndmrks[lndmrk_best].weights+weight); //@TODO is it row?
+						lndmrks[lndmrk_best].px = lndmrks[lndmrk_best].px*lndmrks[lndmrk_best].weights/(lndmrks[lndmrk_best].weights+weight) + (((double)(col+1))*2)*weight/(lndmrks[lndmrk_best].weights+weight);
+						lndmrks[lndmrk_best].py = lndmrks[lndmrk_best].py*lndmrks[lndmrk_best].weights/(lndmrks[lndmrk_best].weights+weight) + ((double)(row+1))*weight/(lndmrks[lndmrk_best].weights+weight);
 						 //save that one more pixel lndmrks was added to this landmark
 						 lndmrks[lndmrk_best].n += 1;
 						 lndmrks[lndmrk_best].weights += weight;

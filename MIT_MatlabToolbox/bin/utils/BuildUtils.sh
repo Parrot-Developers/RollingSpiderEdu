@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 # 1. change folder to where this script is
 cd `dirname $0`
 SCRIPTPATH=$(pwd)
@@ -27,3 +28,5 @@ make clean
 make
 cd $SCRIPTPATH
 echo "Drone: PackEmbeddedCode built!"
+
+echo "Drone: Utilts built!"
