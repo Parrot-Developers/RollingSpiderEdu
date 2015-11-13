@@ -122,7 +122,7 @@ typedef struct _RTWLogInfo_tag {
   const void * mmi;    /* Add the ModelMapping Info to the LogInfo 
                         * so we can get at it for state logging */
 
-
+  void* loggingInterval;
 } RTWLogInfo;
 
 #endif
