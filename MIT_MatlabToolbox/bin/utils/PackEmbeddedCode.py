@@ -54,6 +54,8 @@ with open(control_fname, 'w') as newf, open(control_copy_fname) as oldf:
         if "static RT_MODEL_" in line:
             break
         newf.write(line)
+    else:
+        raise Exception('Never found start of parameters section in {}'.format(control_copy_fname))
 
     # Open ert_main.c for read, find first line of parameter block, start appending parameters to rsedu_control.
     emb_main_fname = os.path.join(emb_dir, rtw_main_fname)
@@ -69,6 +71,10 @@ with open(control_fname, 'w') as newf, open(control_copy_fname) as oldf:
 
             if "};                                     /* Modifiable parameters */\n" in line:
                 break
+        else:
+            raise Exception('Never found end of parameters section in {}'.format(emb_main_fname))
+        if not in_param_section:
+            raise Exception('Never found start of parameters section in {}'.format(emb_main_fname))
 
     # Now read copy of rseducontrol till end of parameter section, then start appending rest of that code to rsedu_control
     after_params = False
@@ -79,7 +85,11 @@ with open(control_fname, 'w') as newf, open(control_copy_fname) as oldf:
         if "};                                     /* Modifiable parameters */\n" in line:
             after_params = True
 
-os.remove(emb_main_fname);
-os.remove(control_copy_fname);
+    if not after_params:
+        raise Exception('Never found end of parameters section in {}'.format(control_copy_fname))
+
+
+os.remove(emb_main_fname)
+os.remove(control_copy_fname)
 
 print("C-files packed and ready to be built!")
