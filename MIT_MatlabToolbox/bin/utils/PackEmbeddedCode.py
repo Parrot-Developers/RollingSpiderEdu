@@ -69,7 +69,7 @@ with open(control_fname, 'w') as newf, open(control_copy_fname) as oldf:
             if in_param_section:
                 newf.write(line)
 
-            if "};                                     /* Modifiable parameters */\n" in line:
+            if "};                                     /* Modifiable parameters */" in line:
                 break
         else:
             raise Exception('Never found end of parameters section in {}'.format(emb_main_fname))
@@ -82,7 +82,7 @@ with open(control_fname, 'w') as newf, open(control_copy_fname) as oldf:
         if after_params:
             newf.write(line)
 
-        if "};                                     /* Modifiable parameters */\n" in line:
+        if "};                                     /* Modifiable parameters */" in line:
             after_params = True
 
     if not after_params:
