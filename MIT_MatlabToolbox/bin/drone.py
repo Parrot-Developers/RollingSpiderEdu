@@ -63,8 +63,8 @@ def scan():
 
     try:
         curr_mac_address = get_mac_address()
-    except:
-        curr_mac_address = null
+    except DroneError:
+        curr_mac_address = None
 
     print("Found {} devices".format(len(devices)))
     for i, (mac_address, name) in enumerate(devices, 1):
@@ -81,7 +81,7 @@ def scan():
         return
 
 
-    with open(mac_address_fname) as f:
+    with open(mac_address_fname, 'w') as f:
         f.write(mac_address)
 
     print('Future connections will go to {} ({})'.format(name, mac_address))
