@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2611
+ * Model version                  : 1.2632
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Oct 14 16:32:57 2015
+ * C/C++ source code generated on : Wed Nov 11 16:41:48 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -31,9 +31,9 @@ static real_T DroneRS_Compensator_genpnorm(const real_T x[3]);
 /* Output and update for atomic system: '<S1>/ControllerFSFB' */
 void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
   rtu_att_refin[3], boolean_T rtu_controlModePosVSAtt_flagin, const real_T
-  rtu_states_estimin[2], const real_T rtu_states_estimin_j[2], real_T
-  rtu_states_estimin_d, const real_T rtu_states_estimin_dp[3], real_T
-  rtu_states_estimin_m, const real_T rtu_states_estimin_jy[3],
+  rtu_states_estimin[2], const real_T rtu_states_estimin_c[2], real_T
+  rtu_states_estimin_n, const real_T rtu_states_estimin_o[3], real_T
+  rtu_states_estimin_e, const real_T rtu_states_estimin_ne[3],
   B_ControllerFSFB_DroneRS_Comp_T *localB, P_ControllerFSFB_DroneRS_Comp_T
   *localP, P_DroneRS_Compensator_T *DroneRS_Compensator_P)
 {
@@ -72,8 +72,8 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
     localB->PosVSAtt_Switch[7] = localP->velocitiesPos_ref_Value[1];
     localB->PosVSAtt_Switch[8] = localP->velocitiesPos_ref_Value[2];
   } else {
-    localB->PosVSAtt_Switch[6] = rtu_states_estimin_j[0];
-    localB->PosVSAtt_Switch[7] = rtu_states_estimin_j[1];
+    localB->PosVSAtt_Switch[6] = rtu_states_estimin_c[0];
+    localB->PosVSAtt_Switch[7] = rtu_states_estimin_c[1];
     localB->PosVSAtt_Switch[8] = localP->dz_ref_Value;
   }
 
@@ -84,29 +84,27 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
   /* End of Switch: '<S6>/PosVSAtt_Switch' */
 
   /* Sum: '<S2>/Add' incorporates:
-   *  Product: '<S4>/FullStateFeedback'
+   *  Gain: '<S4>/Gain'
    */
   rtu_states_estimin_0[0] = rtu_states_estimin[0];
   rtu_states_estimin_0[1] = rtu_states_estimin[1];
-  rtu_states_estimin_0[2] = rtu_states_estimin_d;
-  rtu_states_estimin_0[3] = rtu_states_estimin_dp[0];
-  rtu_states_estimin_0[4] = rtu_states_estimin_dp[1];
-  rtu_states_estimin_0[5] = rtu_states_estimin_dp[2];
-  rtu_states_estimin_0[6] = rtu_states_estimin_j[0];
-  rtu_states_estimin_0[7] = rtu_states_estimin_j[1];
-  rtu_states_estimin_0[8] = rtu_states_estimin_m;
-  rtu_states_estimin_0[9] = rtu_states_estimin_jy[0];
-  rtu_states_estimin_0[10] = rtu_states_estimin_jy[1];
-  rtu_states_estimin_0[11] = rtu_states_estimin_jy[2];
+  rtu_states_estimin_0[2] = rtu_states_estimin_n;
+  rtu_states_estimin_0[3] = rtu_states_estimin_o[0];
+  rtu_states_estimin_0[4] = rtu_states_estimin_o[1];
+  rtu_states_estimin_0[5] = rtu_states_estimin_o[2];
+  rtu_states_estimin_0[6] = rtu_states_estimin_c[0];
+  rtu_states_estimin_0[7] = rtu_states_estimin_c[1];
+  rtu_states_estimin_0[8] = rtu_states_estimin_e;
+  rtu_states_estimin_0[9] = rtu_states_estimin_ne[0];
+  rtu_states_estimin_0[10] = rtu_states_estimin_ne[1];
+  rtu_states_estimin_0[11] = rtu_states_estimin_ne[2];
   for (i = 0; i < 12; i++) {
     tmp[i] = localB->PosVSAtt_Switch[i] - rtu_states_estimin_0[i];
   }
 
   /* End of Sum: '<S2>/Add' */
 
-  /* Product: '<S4>/FullStateFeedback' incorporates:
-   *  Constant: '<S4>/FSFBMatrix_pp'
-   */
+  /* Gain: '<S4>/Gain' */
   for (i = 0; i < 4; i++) {
     rtb_TmpSignalConversionAtProduc[i] = 0.0;
     for (i_0 = 0; i_0 < 12; i_0++) {
@@ -116,12 +114,11 @@ void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const real_T
   }
 
   /* Switch: '<S8>/TakeoffOrControl_Switch' incorporates:
-   *  Constant: '<S10>/Constant'
+   *  Constant: '<S8>/Constant'
    *  Constant: '<S8>/HoverThrustLinearizationPoint'
    *  Gain: '<S8>/takeoff_Gain'
-   *  RelationalOperator: '<S10>/Compare'
    */
-  if (rtu_pos_refin[2] > localP->Constant_Value) {
+  if (localP->Constant_Value > localP->TakeoffOrControl_Switch_Thresho) {
     rtb_SaturationThrust = -DroneRS_Compensator_P->quad.g *
       DroneRS_Compensator_P->quad.M * localP->takeoff_Gain_Gain;
   } else {

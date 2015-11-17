@@ -339,28 +339,28 @@ void RSEDU_image_processing(void * buffer)
 		}
 		else
 		{
-			printf("rsedu_vis(): WARNING not enough distinct features found! \n")	;
+			printf("rsedu_vis(): WARNING not enough distinct markers (colored balls) found! \n")	;
 		}
 
 	}
 
-	 	 //-----------
-	 	 //STREAMING INSTRUCTIONS
-	 	 //-----------
+ 	 //-----------
+ 	 //STREAMING INSTRUCTIONS
+ 	 //-----------
 
-		/* Copy the picture into a named FIFO. Picture can then be sent to a remote Ubuntu computer using standard commands:
+	/* Enabling image streaming, copies the picture into a named FIFO. Picture can then be sent to a remote Ubuntu computer using standard commands:
 
-		Run this one-liner in a shell on the RollingSpider :
-		(remember to connect via the Bluetooth link, since pluging the USB cable deactivates the camera !!!)
+	Run this one-liner in a shell on the RollingSpider (open terminal, log onto drone via telnet 192.168.1.1) :
+	(remember to connect via the Bluetooth link, since pluging the USB cable deactivates the camera !!!)
 
-		  while [ 1 ]; do cat /tmp/picture | nc 192.168.1.2 1234; done
+	  while [ 1 ]; do cat /tmp/picture | nc 192.168.1.2 1234; done
 
-		Run these two commands in two different shells on the reomte Ubuntu computer:
+	Run these two commands in two different shells on the remote Ubuntu computer:
 
-		  mkfifo /tmp/rollingspiderpicture ; while [ 1 ]; do nc -l 1234 > /tmp/rollingspiderpicture; done
-		  mplayer -demuxer rawvideo -rawvideo w=160:h=120:format=yuy2 -loop 0 /tmp/rollingspiderpicture
+	  mkfifo /tmp/rollingspiderpicture ; while [ 1 ]; do nc -l 1234 > /tmp/rollingspiderpicture; done
+	  mplayer -demuxer rawvideo -rawvideo w=160:h=120:format=yuy2 -loop 0 /tmp/rollingspiderpicture
 
-		*/
+	*/
 
 	 //stream image
 	 //-----------

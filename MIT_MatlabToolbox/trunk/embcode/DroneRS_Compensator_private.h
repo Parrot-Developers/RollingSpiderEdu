@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2611
+ * Model version                  : 1.2632
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Oct 14 16:32:57 2015
+ * C/C++ source code generated on : Wed Nov 11 16:41:48 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -40,9 +40,9 @@
 extern real_T rt_atan2d_snf(real_T u0, real_T u1);
 extern void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const
   real_T rtu_att_refin[3], boolean_T rtu_controlModePosVSAtt_flagin, const
-  real_T rtu_states_estimin[2], const real_T rtu_states_estimin_j[2], real_T
-  rtu_states_estimin_d, const real_T rtu_states_estimin_dp[3], real_T
-  rtu_states_estimin_m, const real_T rtu_states_estimin_jy[3],
+  real_T rtu_states_estimin[2], const real_T rtu_states_estimin_c[2], real_T
+  rtu_states_estimin_n, const real_T rtu_states_estimin_o[3], real_T
+  rtu_states_estimin_e, const real_T rtu_states_estimin_ne[3],
   B_ControllerFSFB_DroneRS_Comp_T *localB, P_ControllerFSFB_DroneRS_Comp_T
   *localP, P_DroneRS_Compensator_T *DroneRS_Compensator_P);
 extern void DroneRS_Compe_MeasurementUpdate(boolean_T rtu_Enable, const real_T

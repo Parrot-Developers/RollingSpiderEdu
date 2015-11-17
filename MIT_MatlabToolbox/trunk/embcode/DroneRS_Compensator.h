@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2611
+ * Model version                  : 1.2632
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Oct 14 16:32:57 2015
+ * C/C++ source code generated on : Wed Nov 11 16:41:48 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -204,8 +204,11 @@ struct P_ControllerFSFB_DroneRS_Comp_T_ {
                                               * Referenced by: '<S7>/TorquetotalThrustToThrustperMotor'
                                               */
   real_T Constant_Value;               /* Expression: 0
-                                        * Referenced by: '<S10>/Constant'
+                                        * Referenced by: '<S8>/Constant'
                                         */
+  real_T TakeoffOrControl_Switch_Thresho;/* Expression: 0
+                                          * Referenced by: '<S8>/TakeoffOrControl_Switch'
+                                          */
   real_T SaturationThrust_UpperSat;    /* Expression: controlParams.totalThrust_maxRelative*controlParams.motorsThrust_i_UpperLimit*4
                                         * Referenced by: '<S8>/SaturationThrust'
                                         */
@@ -436,7 +439,7 @@ struct P_DroneRS_Compensator_T_ {
                                            *   '<S184>/Constant'
                                            */
   real_T K_poleplace[48];              /* Variable: K_poleplace
-                                        * Referenced by: '<S4>/FSFBMatrix_pp'
+                                        * Referenced by: '<S4>/Gain'
                                         */
   real_T sampleTime_qcsim;             /* Variable: sampleTime_qcsim
                                         * Referenced by: '<S3>/sampleTime'
