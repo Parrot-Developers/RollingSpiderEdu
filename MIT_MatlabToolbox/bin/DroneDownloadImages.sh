@@ -23,12 +23,14 @@ expect eof
 SCRIPT
 
 
+
 # 3. Move the data file to the correct location
 IMGSDIR="../DroneExchange/imgs"
 
 if [ ! -d "$IMGSDIR" ]; then
   mkdir $IMGSDIR
 fi
+
 mv img* $IMGSDIR
 
 echo "Drone: imgs downloaded from drone to DroneExchange/imgs!"

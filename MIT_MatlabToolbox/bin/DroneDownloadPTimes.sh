@@ -25,6 +25,12 @@ SCRIPT
 
 
 # 3. Move the data file to the correct location
-mv pt_* ../DroneExchange/ptimes
+PTDIR="../DroneExchange/ptimes"
+
+if [ ! -d "$PTDIR" ]; then
+  mkdir $PTDIR
+fi
+
+mv pt_* $PTDIR
 
 echo "Drone: ptimes downloaded from drone to DroneExchange/ptimes!"
