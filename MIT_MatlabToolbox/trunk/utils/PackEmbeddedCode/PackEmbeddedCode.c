@@ -105,7 +105,7 @@ while  ( ((read = getline(&line, &len, fp_ertmain_inemb)) != -1))
 
 	if	(paramSection_found)
 		{
-			paramSection_found = (strstr(line,"};                                     /* Modifiable parameters */\n")==NULL);
+			paramSection_found = (strstr(line,"};                                     /* Modifiable parameters */")==NULL);
 		}
 
 
@@ -117,7 +117,7 @@ int sectionAfterParams=0;
 while  ( ((read = getline(&line, &len, fp_rscontrol_copy)) != -1) )
 {
 	if (sectionAfterParams) fprintf(fp_rscontrol,"%s", line);
-	if (!sectionAfterParams) sectionAfterParams = (strstr(line,"};                                     /* Modifiable parameters */\n")!=NULL);
+	if (!sectionAfterParams) sectionAfterParams = (strstr(line,"};                                     /* Modifiable parameters */")!=NULL);
 
 }
 
