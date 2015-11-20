@@ -1417,14 +1417,15 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         DroneRS_Compensator_U_batteryStatus_datin[1] = (double)((int)in->HAL_vbat_SI.vbat_percentage);
 
         // compute control commands
-        if(rtmGetErrorStatus(DroneRS_Compensator_M) == (NULL))
+        char* error = rtmGetErrorStatus(DroneRS_Compensator_M);
+        if(!error)
         {
             rt_OneStep(DroneRS_Compensator_M);
         }
         else
         {
             run_flag = 0;
-            printf("ERROR: Error from simulink model @ counter=%i !\n", counter);
+            printf("ERROR: Error from simulink model @ counter=%i !\n\t%s", counter, error);
             out->motors_speed[0] = 0;
             out->motors_speed[1] = 0;
             out->motors_speed[2] = 0;
