@@ -24,6 +24,11 @@ then
   mkdir /data/edu/ptimes    
 fi
 
+if [ ! -d "/data/ftp/internal_000/imgs" ]
+then      
+  mkdir /data/ftp/internal_000/imgs    
+fi
+
 #3 Run dragon-prog
 dragon-prog
 
@@ -54,7 +59,9 @@ echo "############################"
 if [ -f /tmp/edu/imgs/img12.bin ]
 then
   mv /tmp/edu/imgs/* /data/edu/imgs
-  echo "Recorded imgs moved from tmp to ftp-folder"	
+  echo "Recorded imgs moved from tmp to ftp-folder"
+  # mv /tmp/edu/imgs/* /data/ftp/internal_000/imgs
+  # echo "Recorded imgs moved from tmp to usb-folder"		
 fi
 
 if [ -f /tmp/edu/ptimes/pt_RSEDU_control.txt ]
