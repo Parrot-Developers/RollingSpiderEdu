@@ -21,7 +21,12 @@ syms Pxw Pyw Pzw yaw pitch roll dpx dpy dpz p q r T tauy taup taur;
 symsvector  = [Pxw; Pyw; Pzw ;yaw ;pitch ;roll ;dpx ;dpy ;dpz ;p ;q ;r ;T ;tauy ;taup ;taur];
 
 %Transform inertia from RTB frame to RS frame
-J           = ([cos(pi/4) -sin(pi/4) 0; sin(pi/4) cos(pi/4) 0; 0 0 1]'*quad.J*[cos(pi/4) -sin(pi/4) 0; sin(pi/4) cos(pi/4) 0; 0 0 1]);
+rotz45 = [
+  cos(pi/4) -sin(pi/4) 0;
+  sin(pi/4) cos(pi/4)  0;
+  0         0          1;
+];
+J = rotz45' * quad.J * rotz45;
 
 %Define Rotation matrices
 Ryaw = [
@@ -46,10 +51,12 @@ Body2Global = Ryaw*Rpitch*Rroll;
 Global2Body = simplify(Body2Global^-1);
 
 %Transformation from body rates p-q-r to euler rates yaw pitch roll
-iW = ...
-    [0        sin(roll)          cos(roll);             
-     0        cos(roll)*cos(pitch) -sin(roll)*cos(pitch);
-     cos(pitch) sin(roll)*sin(pitch) cos(roll)*sin(pitch)] / cos(pitch);
+% [p;q;r] = W * [yaw;pitch;roll]
+iW = simplify([
+  (Rroll^-1) * (Rpitch^-1) * [0;0;1] ... % yaw column
+  (Rroll^-1) *               [0;1;0] ... % pitch column
+                             [1;0;0] ... % roll column
+]^-1);
 
 %%Linearization Point = Hover
 %-----------
