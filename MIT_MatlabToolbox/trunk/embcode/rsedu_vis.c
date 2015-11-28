@@ -111,8 +111,7 @@ void RSEDU_image_processing(void * buffer)
     static int counter = 0;
 
     //communication
-    static float vis_data[4];
-    int status;
+    static float vis_data[4];    
     static int vis_fifo;
 
     //image variables

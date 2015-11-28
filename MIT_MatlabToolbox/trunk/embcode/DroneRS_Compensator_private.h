@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'DroneRS_Compensator'.
  *
- * Model version                  : 1.2632
+ * Model version                  : 1.2644
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Wed Nov 11 16:41:48 2015
+ * C/C++ source code generated on : Sat Nov 28 00:29:02 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -38,13 +38,18 @@
 #endif
 
 extern real_T rt_atan2d_snf(real_T u0, real_T u1);
-extern void DroneRS_Compensa_ControllerFSFB(const real_T rtu_pos_refin[3], const
-  real_T rtu_att_refin[3], boolean_T rtu_controlModePosVSAtt_flagin, const
-  real_T rtu_states_estimin[2], const real_T rtu_states_estimin_c[2], real_T
-  rtu_states_estimin_n, const real_T rtu_states_estimin_o[3], real_T
-  rtu_states_estimin_e, const real_T rtu_states_estimin_ne[3],
-  B_ControllerFSFB_DroneRS_Comp_T *localB, P_ControllerFSFB_DroneRS_Comp_T
-  *localP, P_DroneRS_Compensator_T *DroneRS_Compensator_P);
+extern void DroneRS_Co_ControllerPID2W_Init(DW_ControllerPID2W_DroneRS_Co_T
+  *localDW, P_ControllerPID2W_DroneRS_Com_T *localP);
+extern void DroneRS_C_ControllerPID2W_Start(RT_MODEL_DroneRS_Compensator_T *
+  const DroneRS_Compensator_M, DW_ControllerPID2W_DroneRS_Co_T *localDW);
+extern void DroneRS_Compens_ControllerPID2W(const real_T rtu_pos_ref[3], const
+  real_T rtu_att_ref[3], boolean_T rtu_controlModePosVatt_flagin, const real_T
+  rtu_states_estim[3], const real_T rtu_states_estim_i[3], real_T
+  rtu_states_estim_n, real_T rtu_states_estim_k, const real_T
+  rtu_states_estim_l[2], const real_T rtu_states_estim_f[2],
+  B_ControllerPID2W_DroneRS_Com_T *localB, DW_ControllerPID2W_DroneRS_Co_T
+  *localDW, P_ControllerPID2W_DroneRS_Com_T *localP, P_DroneRS_Compensator_T
+  *DroneRS_Compensator_P);
 extern void DroneRS_Compe_MeasurementUpdate(boolean_T rtu_Enable, const real_T
   rtu_Lk[4], const real_T rtu_yk[2], const real_T rtu_yhatkk1[2],
   B_MeasurementUpdate_DroneRS_C_T *localB);
@@ -54,6 +59,8 @@ extern void DroneRS_Com_UseCurrentEstimator(boolean_T rtu_Enablek, const real_T
   B_UseCurrentEstimator_DroneRS_T *localB);
 extern void DroneR_DroneRS_Compensator_Init(DW_DroneRS_Compensator_DroneR_T
   *localDW, P_DroneRS_Compensator_DroneRS_T *localP);
+extern void Drone_DroneRS_Compensator_Start(RT_MODEL_DroneRS_Compensator_T *
+  const DroneRS_Compensator_M, DW_DroneRS_Compensator_DroneR_T *localDW);
 extern void DroneRS_Com_DroneRS_Compensator(boolean_T
   rtu_controlModePosVSAtt_flagin, const real_T rtu_pos_refin[3], const real_T
   rtu_attRS_refin[3], real_T rtu_sensordataRS_datin, real_T
