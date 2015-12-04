@@ -125,10 +125,17 @@ function sys = mdlDerivatives(t,x,u, quad)
     W = 4;                      %   W       'West'                              1x1
     
     
-    D(:,1) = [quad.d;0;quad.h];          %   Di      Rotor hub displacements             1x3
-    D(:,2) = [0;quad.d;quad.h];
-    D(:,3) = [-quad.d;0;quad.h];
-    D(:,4) = [0;-quad.d;quad.h];
+%     D(:,1) = [quad.d;0;quad.h];          %   Di      Rotor hub displacements             1x3
+%     D(:,2) = [0;quad.d;quad.h];
+%     D(:,3) = [-quad.d;0;quad.h];
+%     D(:,4) = [0;-quad.d;quad.h];
+
+    d=sqrt(2)/2*quad.d;
+    
+    D(:,1) = [ d;-d;quad.h];          %   Di      Rotor hub displacements             1x3
+    D(:,2) = [ d; d;quad.h];
+    D(:,3) = [-d; d;quad.h];
+    D(:,4) = [-d;-d;quad.h]; 
     
     %Body-fixed frame references
     e1 = [1;0;0];               %   ei      Body fixed frame references         3x1
@@ -166,6 +173,7 @@ function sys = mdlDerivatives(t,x,u, quad)
           0        cos(psi)*cos(the) -sin(psi)*cos(the);
           cos(the) sin(psi)*sin(the) cos(psi)*sin(the)] / cos(the);
     
+    
     %ROTOR MODEL
     for i=[N E S W] %for each rotor
         %Relative motion
@@ -192,7 +200,7 @@ function sys = mdlDerivatives(t,x,u, quad)
         %tau(:,i) = cross(T(:,i),D(:,i));                %Torque due to rotor thrust
         tau(:,i) = cross(D(:,i),T(:,i));                 %changed sign (F)
     end
-    
+    sum(tau,2)
     %RIGID BODY DYNAMIC MODEL
     dz = v;
     dn = iW*o;
