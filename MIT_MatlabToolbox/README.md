@@ -12,6 +12,6 @@ The drone's dynamics are simulated using code of Peter Corke's Robotics Toolbox 
 
 To make this toolbox possible, Parrot SA provided a compiler toolchain and a custom firmware that opens up three interfaces to insert custom controls code, image processing code and optical flow handling.
 
-# Installing and Getting Started ...
+### Installing and Getting Started ...
 To install the toolbox, get familiar with the work flow and hit the ground running,
 please read https://github.com/Parrot-Developers/RollingSpiderEdu/blob/master/MIT_MatlabToolbox/media/GettingStarted.pdf
