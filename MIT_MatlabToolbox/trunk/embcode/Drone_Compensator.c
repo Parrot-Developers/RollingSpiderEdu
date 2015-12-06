@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Drone_Compensator'.
  *
- * Model version                  : 1.3012
+ * Model version                  : 1.3035
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Sat Dec  5 23:16:06 2015
+ * C/C++ source code generated on : Sun Dec  6 03:38:55 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -25,258 +25,226 @@
 #include "Drone_Compensator.h"
 #include "Drone_Compensator_private.h"
 
-/* Initial conditions for atomic system: '<S1>/ControllerPID' */
-void Drone_Compen_ControllerPID_Init(DW_ControllerPID_Drone_Compen_T *localDW,
-  P_ControllerPID_Drone_Compens_T *localP)
-{
-  /* InitializeConditions for Delay: '<S2>/Delay' */
-  localDW->Delay_DSTATE[0] = localP->Delay_InitialCondition;
-  localDW->Delay_DSTATE[1] = localP->Delay_InitialCondition;
-
-  /* InitializeConditions for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
-  localDW->DiscreteTimeIntegrator_DSTATE[0] = localP->DiscreteTimeIntegrator_IC;
-  localDW->DiscreteTimeIntegrator_DSTATE[1] = localP->DiscreteTimeIntegrator_IC;
-}
-
-/* Output and update for atomic system: '<S1>/ControllerPID' */
-void Drone_Compensator_ControllerPID(const real_T rtu_pos_ref[3], boolean_T
-  rtu_takeoff_flag, const real_T rtu_orient_ref[3], boolean_T
-  rtu_controlModePosVOrient_flagi, const real_T rtu_states_estim[3], const
-  real_T rtu_states_estim_m[3], real_T rtu_states_estim_l, real_T
-  rtu_states_estim_b, const real_T rtu_states_estim_o[2], const real_T
-  rtu_states_estim_p[2], B_ControllerPID_Drone_Compens_T *localB,
-  DW_ControllerPID_Drone_Compen_T *localDW, P_ControllerPID_Drone_Compens_T
-  *localP, P_Drone_Compensator_T *Drone_Compensator_P)
+/* Output and update for atomic system: '<S1>/ControllerPolePlace' */
+void Drone_Compe_ControllerPolePlace(const real_T rtu_pos_refin[3], boolean_T
+  rtu_takeoff_flag, const real_T rtu_orient_refin[3], boolean_T
+  rtu_controlModePosVSOrient_flag, const real_T rtu_states_estimin[2], const
+  real_T rtu_states_estimin_m[2], real_T rtu_states_estimin_l, const real_T
+  rtu_states_estimin_m4[3], real_T rtu_states_estimin_ly, const real_T
+  rtu_states_estimin_le[3], B_ControllerPolePlace_Drone_C_T *localB,
+  P_ControllerPolePlace_Drone_C_T *localP, P_Drone_Compensator_T
+  *Drone_Compensator_P)
 {
   /* local block i/o variables */
   real_T rtb_SaturationThrust;
-  real_T tmp[4];
+  real_T y;
+  real_T y_0;
+  real_T rtb_TmpSignalConversionAtProduc[4];
+  real_T rtu_states_estimin_0[12];
+  real_T tmp[48];
+  real_T rtu_states_estimin_1[12];
   int32_T i;
-  real_T rtb_pitchrollerror_idx_0;
-  real_T rtb_pitchrollerror_idx_1;
-  real_T rtb_antiWU_Gain_idx_0;
-  real_T rtb_antiWU_Gain_idx_1;
-  real_T tmp_0;
-  real_T tmp_1;
+  int32_T i_0;
+  real_T tmp_0[4];
+  real_T u1;
   real_T u2;
-  real_T tmp_2;
+  real_T tmp_1;
 
-  /* Inport: '<S2>/pos_ref' */
-  localB->pos_ref[0] = rtu_pos_ref[0];
-  localB->pos_ref[1] = rtu_pos_ref[1];
-  localB->pos_ref[2] = rtu_pos_ref[2];
+  /* Switch: '<S6>/PosVSOrient_Switch' incorporates:
+   *  Constant: '<S6>/dz_ref'
+   *  Constant: '<S6>/velocitiesPos_ref'
+   *  Constant: '<S6>/velocitiesRot_ref'
+   */
+  if (rtu_controlModePosVSOrient_flag) {
+    localB->PosVSOrient_Switch[0] = rtu_pos_refin[0];
+    localB->PosVSOrient_Switch[1] = rtu_pos_refin[1];
+  } else {
+    localB->PosVSOrient_Switch[0] = rtu_states_estimin[0];
+    localB->PosVSOrient_Switch[1] = rtu_states_estimin[1];
+  }
 
-  /* Switch: '<S2>/TakeoffOrControl_Switch' incorporates:
-   *  Constant: '<S2>/w0'
-   *  Gain: '<S2>/D_z'
-   *  Gain: '<S2>/P_z'
-   *  Gain: '<S2>/takeoff_gain'
-   *  Sum: '<S2>/Sum15'
-   *  Sum: '<S2>/Sum3'
+  localB->PosVSOrient_Switch[2] = rtu_pos_refin[2];
+  localB->PosVSOrient_Switch[3] = rtu_orient_refin[0];
+  localB->PosVSOrient_Switch[4] = rtu_orient_refin[1];
+  localB->PosVSOrient_Switch[5] = rtu_orient_refin[2];
+  if (rtu_controlModePosVSOrient_flag) {
+    localB->PosVSOrient_Switch[6] = localP->velocitiesPos_ref_Value[0];
+    localB->PosVSOrient_Switch[7] = localP->velocitiesPos_ref_Value[1];
+    localB->PosVSOrient_Switch[8] = localP->velocitiesPos_ref_Value[2];
+  } else {
+    localB->PosVSOrient_Switch[6] = rtu_states_estimin_m[0];
+    localB->PosVSOrient_Switch[7] = rtu_states_estimin_m[1];
+    localB->PosVSOrient_Switch[8] = localP->dz_ref_Value;
+  }
+
+  localB->PosVSOrient_Switch[9] = localP->velocitiesRot_ref_Value[0];
+  localB->PosVSOrient_Switch[10] = localP->velocitiesRot_ref_Value[1];
+  localB->PosVSOrient_Switch[11] = localP->velocitiesRot_ref_Value[2];
+
+  /* End of Switch: '<S6>/PosVSOrient_Switch' */
+
+  /* Sum: '<S2>/Add' */
+  rtu_states_estimin_0[0] = rtu_states_estimin[0];
+  rtu_states_estimin_0[1] = rtu_states_estimin[1];
+  rtu_states_estimin_0[2] = rtu_states_estimin_l;
+  rtu_states_estimin_0[3] = rtu_states_estimin_m4[0];
+  rtu_states_estimin_0[4] = rtu_states_estimin_m4[1];
+  rtu_states_estimin_0[5] = rtu_states_estimin_m4[2];
+  rtu_states_estimin_0[6] = rtu_states_estimin_m[0];
+  rtu_states_estimin_0[7] = rtu_states_estimin_m[1];
+  rtu_states_estimin_0[8] = rtu_states_estimin_ly;
+  rtu_states_estimin_0[9] = rtu_states_estimin_le[0];
+  rtu_states_estimin_0[10] = rtu_states_estimin_le[1];
+  rtu_states_estimin_0[11] = rtu_states_estimin_le[2];
+
+  /* Gain: '<S4>/Gain' */
+  for (i = 0; i < 12; i++) {
+    tmp[i << 2] = -Drone_Compensator_P->K_poleplace[i << 2];
+    tmp[1 + (i << 2)] = -Drone_Compensator_P->K_poleplace[(i << 2) + 1];
+    tmp[2 + (i << 2)] = -Drone_Compensator_P->K_poleplace[(i << 2) + 2];
+    tmp[3 + (i << 2)] = -Drone_Compensator_P->K_poleplace[(i << 2) + 3];
+  }
+
+  /* Sum: '<S2>/Add' incorporates:
+   *  Gain: '<S4>/Gain'
+   */
+  for (i = 0; i < 12; i++) {
+    rtu_states_estimin_1[i] = rtu_states_estimin_0[i] -
+      localB->PosVSOrient_Switch[i];
+  }
+
+  /* Gain: '<S4>/Gain' */
+  for (i = 0; i < 4; i++) {
+    rtb_TmpSignalConversionAtProduc[i] = 0.0;
+    for (i_0 = 0; i_0 < 12; i_0++) {
+      rtb_TmpSignalConversionAtProduc[i] += tmp[(i_0 << 2) + i] *
+        rtu_states_estimin_1[i_0];
+    }
+  }
+
+  /* Switch: '<S8>/TakeoffOrControl_Switch' incorporates:
+   *  Constant: '<S8>/HoverThrustLinearizationPoint'
+   *  Gain: '<S8>/takeoff_Gain'
    */
   if (rtu_takeoff_flag) {
     rtb_SaturationThrust = -Drone_Compensator_P->quad.g *
       Drone_Compensator_P->quad.M *
       Drone_Compensator_P->controlHelperParams.takeoff_gain;
   } else {
-    rtb_SaturationThrust = (localB->pos_ref[2] - rtu_states_estim_b) *
-      localP->P_z_Gain - localP->D_z_Gain * rtu_states_estim_l;
+    rtb_SaturationThrust = rtb_TmpSignalConversionAtProduc[0];
   }
 
-  /* End of Switch: '<S2>/TakeoffOrControl_Switch' */
+  /* End of Switch: '<S8>/TakeoffOrControl_Switch' */
 
-  /* Sum: '<S2>/Sum4' incorporates:
-   *  Constant: '<S2>/w0'
+  /* Sum: '<S8>/Add1' incorporates:
+   *  Constant: '<S8>/HoverThrustLinearizationPoint'
    */
   rtb_SaturationThrust += -Drone_Compensator_P->quad.g *
     Drone_Compensator_P->quad.M;
 
-  /* Inport: '<S2>/orient_ref' */
-  /* MATLAB Function 'Drone_Compensator/ControllerPID/inverse rotation Function': '<S5>:1' */
-  /* inverse yaw-rotation */
-  /* '<S5>:1:3' */
-  localB->orient_ref[0] = rtu_orient_ref[0];
-  localB->orient_ref[1] = rtu_orient_ref[1];
-  localB->orient_ref[2] = rtu_orient_ref[2];
-
-  /* Switch: '<S2>/Switch_refAtt' incorporates:
-   *  Gain: '<S2>/D_xy'
-   *  Gain: '<S2>/P_xy'
-   *  MATLAB Function: '<S2>/inverse rotation Function'
-   *  Product: '<S2>/Product'
-   *  Sum: '<S2>/Sum18'
-   */
-  if (rtu_controlModePosVOrient_flagi) {
-    /* Sum: '<S2>/Sum17' incorporates:
-     *  Product: '<S2>/Product'
-     */
-    tmp_0 = localB->pos_ref[0] - rtu_states_estim_p[0];
-    tmp_1 = localB->pos_ref[1] - rtu_states_estim_p[1];
-    localB->Switch_refAtt[0] = (cos(rtu_states_estim[0]) * tmp_0 + sin
-      (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[0] + localP->D_xy_Gain
-      [0] * rtu_states_estim_o[0];
-    localB->Switch_refAtt[1] = (-sin(rtu_states_estim[0]) * tmp_0 + cos
-      (rtu_states_estim[0]) * tmp_1) * localP->P_xy_Gain[1] + localP->D_xy_Gain
-      [1] * rtu_states_estim_o[1];
-  } else {
-    localB->Switch_refAtt[0] = localB->orient_ref[1];
-    localB->Switch_refAtt[1] = localB->orient_ref[2];
-  }
-
-  /* End of Switch: '<S2>/Switch_refAtt' */
-
-  /* Sum: '<S2>/Sum19' */
-  rtb_pitchrollerror_idx_0 = localB->Switch_refAtt[0] - rtu_states_estim[1];
-  rtb_pitchrollerror_idx_1 = localB->Switch_refAtt[1] - rtu_states_estim[2];
-
-  /* Gain: '<S2>/antiWU_Gain' incorporates:
-   *  Delay: '<S2>/Delay'
-   */
-  rtb_antiWU_Gain_idx_0 = localP->antiWU_Gain_Gain * localDW->Delay_DSTATE[0];
-  rtb_antiWU_Gain_idx_1 = localP->antiWU_Gain_Gain * localDW->Delay_DSTATE[1];
-
-  /* Saturate: '<S2>/SaturationThrust' */
-  tmp_0 = -4.0 *
-    Drone_Compensator_P->controlHelperParams.totalThrust_maxRelative *
-    Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max;
-  u2 = 4.0 * Drone_Compensator_P->controlHelperParams.totalThrust_maxRelative *
-    Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max;
+  /* Saturate: '<S8>/SaturationThrust' */
+  u1 = -Drone_Compensator_P->controlHelperParams.totalThrust_maxRelative *
+    Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max * 4.0;
+  u2 = Drone_Compensator_P->controlHelperParams.totalThrust_maxRelative *
+    Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max * 4.0;
   if (rtb_SaturationThrust > u2) {
     rtb_SaturationThrust = u2;
   } else {
-    if (rtb_SaturationThrust < tmp_0) {
-      rtb_SaturationThrust = tmp_0;
+    if (rtb_SaturationThrust < u1) {
+      rtb_SaturationThrust = u1;
     }
   }
 
-  /* End of Saturate: '<S2>/SaturationThrust' */
+  /* End of Saturate: '<S8>/SaturationThrust' */
 
-  /* SignalConversion: '<S4>/TmpSignal ConversionAtProductInport2' incorporates:
-   *  DiscreteIntegrator: '<S2>/Discrete-Time Integrator'
-   *  Gain: '<S2>/D_pr'
-   *  Gain: '<S2>/D_yaw'
-   *  Gain: '<S2>/I_pr'
-   *  Gain: '<S2>/P_pr'
-   *  Gain: '<S2>/P_yaw'
-   *  Sum: '<S2>/Sum1'
-   *  Sum: '<S2>/Sum16'
-   *  Sum: '<S2>/Sum2'
-   */
-  tmp_1 = (localB->orient_ref[0] - rtu_states_estim[0]) * localP->P_yaw_Gain -
-    localP->D_yaw_Gain * rtu_states_estim_m[2];
-  tmp_0 = (localP->P_pr_Gain[0] * rtb_pitchrollerror_idx_0 + localP->I_pr_Gain *
-           localDW->DiscreteTimeIntegrator_DSTATE[0]) - localP->D_pr_Gain[0] *
-    rtu_states_estim_m[1];
-  u2 = (localP->P_pr_Gain[1] * rtb_pitchrollerror_idx_1 + localP->I_pr_Gain *
-        localDW->DiscreteTimeIntegrator_DSTATE[1]) - localP->D_pr_Gain[1] *
-    rtu_states_estim_m[0];
+  /* SignalConversion: '<S7>/TmpSignal ConversionAtProductInport2' */
+  u1 = rtb_SaturationThrust;
 
-  /* Product: '<S4>/Product' incorporates:
-   *  Constant: '<S4>/TorquetotalThrustToThrustperMotor'
-   *  Gain: '<S6>/thrustToMotorcommand'
-   *  SignalConversion: '<S4>/TmpSignal ConversionAtProductInport2'
+  /* Saturate: '<S7>/Saturation2' */
+  u2 = -0.05 * Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max;
+
+  /* Gain: '<S9>/ThrustToW2_Gain' */
+  y = 1.0 / Drone_Compensator_P->quadEDT.w2ToThrust_gain;
+
+  /* Gain: '<S9>/W2ToMotorsCmd_Gain' */
+  y_0 = 1.0 / Drone_Compensator_P->quadEDT.motorcommandToW2_gain;
+
+  /* Product: '<S7>/Product' incorporates:
+   *  Constant: '<S7>/TorquetotalThrustToThrustperMotor'
+   *  Saturate: '<S7>/Saturation2'
+   *  SignalConversion: '<S7>/TmpSignal ConversionAtProductInport2'
    */
   for (i = 0; i < 4; i++) {
-    tmp_2 = Drone_Compensator_P->controlHelperParams.Q2Ts[i + 12] * u2 +
-      (Drone_Compensator_P->controlHelperParams.Q2Ts[i + 8] * tmp_0 +
-       (Drone_Compensator_P->controlHelperParams.Q2Ts[i + 4] * tmp_1 +
-        Drone_Compensator_P->controlHelperParams.Q2Ts[i] * rtb_SaturationThrust));
-    tmp[i] = tmp_2;
+    tmp_1 = Drone_Compensator_P->controlHelperParams.Q2Ts[i + 12] *
+      rtb_TmpSignalConversionAtProduc[3] +
+      (Drone_Compensator_P->controlHelperParams.Q2Ts[i + 8] *
+       rtb_TmpSignalConversionAtProduc[2] +
+       (Drone_Compensator_P->controlHelperParams.Q2Ts[i + 4] *
+        rtb_TmpSignalConversionAtProduc[1] +
+        Drone_Compensator_P->controlHelperParams.Q2Ts[i] * u1));
+    tmp_0[i] = tmp_1;
   }
 
-  /* End of Product: '<S4>/Product' */
+  /* End of Product: '<S7>/Product' */
 
-  /* Gain: '<S6>/Motordirections1' incorporates:
-   *  Gain: '<S6>/thrustToMotorcommand'
-   *  Saturate: '<S6>/Saturation5'
+  /* Gain: '<S9>/W2ToMotorsCmd_Gain' incorporates:
+   *  Gain: '<S9>/MotorsRotationDirection'
+   *  Gain: '<S9>/ThrustToW2_Gain'
+   *  Saturate: '<S7>/Saturation2'
    */
-  tmp_0 = -Drone_Compensator_P->quadEDT.thrustToMotorcommand * tmp[0];
-  if (tmp_0 > Drone_Compensator_P->quadEDT.motors_max) {
-    tmp_0 = Drone_Compensator_P->quadEDT.motors_max;
+  if (tmp_0[0] > u2) {
+    tmp_1 = u2;
+  } else if (tmp_0[0] <
+             -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max)
+  {
+    tmp_1 = -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max;
   } else {
-    if (tmp_0 < localP->Saturation5_LowerSat) {
-      tmp_0 = localP->Saturation5_LowerSat;
+    tmp_1 = tmp_0[0];
+  }
+
+  localB->W2ToMotorsCmd_Gain[0] = y * tmp_1 *
+    localP->MotorsRotationDirection_Gain[0] * y_0;
+  if (tmp_0[1] > u2) {
+    tmp_1 = u2;
+  } else if (tmp_0[1] <
+             -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max)
+  {
+    tmp_1 = -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max;
+  } else {
+    tmp_1 = tmp_0[1];
+  }
+
+  localB->W2ToMotorsCmd_Gain[1] = y * tmp_1 *
+    localP->MotorsRotationDirection_Gain[1] * y_0;
+  if (tmp_0[2] > u2) {
+    tmp_1 = u2;
+  } else if (tmp_0[2] <
+             -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max)
+  {
+    tmp_1 = -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max;
+  } else {
+    tmp_1 = tmp_0[2];
+  }
+
+  localB->W2ToMotorsCmd_Gain[2] = y * tmp_1 *
+    localP->MotorsRotationDirection_Gain[2] * y_0;
+  if (!(tmp_0[3] > u2)) {
+    if (tmp_0[3] <
+        -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max) {
+      u2 = -Drone_Compensator_P->controlHelperParams.motorsThrustperMotor_max;
+    } else {
+      u2 = tmp_0[3];
     }
   }
 
-  localB->Motordirections1[0] = localP->Motordirections1_Gain[0] * tmp_0;
-  tmp_0 = -Drone_Compensator_P->quadEDT.thrustToMotorcommand * tmp[1];
-  if (tmp_0 > Drone_Compensator_P->quadEDT.motors_max) {
-    tmp_0 = Drone_Compensator_P->quadEDT.motors_max;
-  } else {
-    if (tmp_0 < localP->Saturation5_LowerSat) {
-      tmp_0 = localP->Saturation5_LowerSat;
-    }
-  }
-
-  localB->Motordirections1[1] = localP->Motordirections1_Gain[1] * tmp_0;
-  tmp_0 = -Drone_Compensator_P->quadEDT.thrustToMotorcommand * tmp[2];
-  if (tmp_0 > Drone_Compensator_P->quadEDT.motors_max) {
-    tmp_0 = Drone_Compensator_P->quadEDT.motors_max;
-  } else {
-    if (tmp_0 < localP->Saturation5_LowerSat) {
-      tmp_0 = localP->Saturation5_LowerSat;
-    }
-  }
-
-  localB->Motordirections1[2] = localP->Motordirections1_Gain[2] * tmp_0;
-  tmp_0 = -Drone_Compensator_P->quadEDT.thrustToMotorcommand * tmp[3];
-  if (tmp_0 > Drone_Compensator_P->quadEDT.motors_max) {
-    tmp_0 = Drone_Compensator_P->quadEDT.motors_max;
-  } else {
-    if (tmp_0 < localP->Saturation5_LowerSat) {
-      tmp_0 = localP->Saturation5_LowerSat;
-    }
-  }
-
-  localB->Motordirections1[3] = localP->Motordirections1_Gain[3] * tmp_0;
-
-  /* End of Gain: '<S6>/Motordirections1' */
-
-  /* Update for Delay: '<S2>/Delay' incorporates:
-   *  DiscreteIntegrator: '<S2>/Discrete-Time Integrator'
-   */
-  localDW->Delay_DSTATE[0] = localDW->DiscreteTimeIntegrator_DSTATE[0];
-  localDW->Delay_DSTATE[1] = localDW->DiscreteTimeIntegrator_DSTATE[1];
-
-  /* Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' incorporates:
-   *  Sum: '<S2>/Add'
-   */
-  localDW->DiscreteTimeIntegrator_DSTATE[0] += (rtb_pitchrollerror_idx_0 -
-    rtb_antiWU_Gain_idx_0) * localP->DiscreteTimeIntegrator_gainval;
-  localDW->DiscreteTimeIntegrator_DSTATE[1] += (rtb_pitchrollerror_idx_1 -
-    rtb_antiWU_Gain_idx_1) * localP->DiscreteTimeIntegrator_gainval;
-  if (localDW->DiscreteTimeIntegrator_DSTATE[0] >=
-      localP->DiscreteTimeIntegrator_UpperSat) {
-    localDW->DiscreteTimeIntegrator_DSTATE[0] =
-      localP->DiscreteTimeIntegrator_UpperSat;
-  } else {
-    if (localDW->DiscreteTimeIntegrator_DSTATE[0] <=
-        localP->DiscreteTimeIntegrator_LowerSat) {
-      localDW->DiscreteTimeIntegrator_DSTATE[0] =
-        localP->DiscreteTimeIntegrator_LowerSat;
-    }
-  }
-
-  if (localDW->DiscreteTimeIntegrator_DSTATE[1] >=
-      localP->DiscreteTimeIntegrator_UpperSat) {
-    localDW->DiscreteTimeIntegrator_DSTATE[1] =
-      localP->DiscreteTimeIntegrator_UpperSat;
-  } else {
-    if (localDW->DiscreteTimeIntegrator_DSTATE[1] <=
-        localP->DiscreteTimeIntegrator_LowerSat) {
-      localDW->DiscreteTimeIntegrator_DSTATE[1] =
-        localP->DiscreteTimeIntegrator_LowerSat;
-    }
-  }
-
-  /* End of Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
+  localB->W2ToMotorsCmd_Gain[3] = y * u2 * localP->MotorsRotationDirection_Gain
+    [3] * y_0;
 }
 
 /*
  * Output and update for enable system:
- *    '<S92>/MeasurementUpdate'
- *    '<S152>/MeasurementUpdate'
+ *    '<S95>/MeasurementUpdate'
+ *    '<S155>/MeasurementUpdate'
  */
 void Drone_Compens_MeasurementUpdate(boolean_T rtu_Enable, const real_T rtu_Lk[4],
   const real_T rtu_yk[2], const real_T rtu_yhatkk1[2],
@@ -285,17 +253,17 @@ void Drone_Compens_MeasurementUpdate(boolean_T rtu_Enable, const real_T rtu_Lk[4
   real_T rtu_yk_idx_0;
   real_T rtu_yk_idx_1;
 
-  /* Outputs for Enabled SubSystem: '<S92>/MeasurementUpdate' incorporates:
-   *  EnablePort: '<S117>/Enable'
+  /* Outputs for Enabled SubSystem: '<S95>/MeasurementUpdate' incorporates:
+   *  EnablePort: '<S120>/Enable'
    */
   if (rtu_Enable) {
-    /* Sum: '<S117>/Sum' incorporates:
-     *  Product: '<S117>/Product3'
+    /* Sum: '<S120>/Sum' incorporates:
+     *  Product: '<S120>/Product3'
      */
     rtu_yk_idx_0 = rtu_yk[0] - rtu_yhatkk1[0];
     rtu_yk_idx_1 = rtu_yk[1] - rtu_yhatkk1[1];
 
-    /* Product: '<S117>/Product3' */
+    /* Product: '<S120>/Product3' */
     localB->Product3[0] = 0.0;
     localB->Product3[0] += rtu_Lk[0] * rtu_yk_idx_0;
     localB->Product3[0] += rtu_Lk[2] * rtu_yk_idx_1;
@@ -304,13 +272,13 @@ void Drone_Compens_MeasurementUpdate(boolean_T rtu_Enable, const real_T rtu_Lk[4
     localB->Product3[1] += rtu_Lk[3] * rtu_yk_idx_1;
   }
 
-  /* End of Outputs for SubSystem: '<S92>/MeasurementUpdate' */
+  /* End of Outputs for SubSystem: '<S95>/MeasurementUpdate' */
 }
 
 /*
  * Output and update for atomic system:
- *    '<S68>/UseCurrentEstimator'
- *    '<S131>/UseCurrentEstimator'
+ *    '<S71>/UseCurrentEstimator'
+ *    '<S134>/UseCurrentEstimator'
  */
 void Drone_Compe_UseCurrentEstimator(boolean_T rtu_Enablek, const real_T rtu_Mk
   [4], const real_T rtu_uk[2], const real_T rtu_yk[2], const real_T rtu_Ck[4],
@@ -320,20 +288,20 @@ void Drone_Compe_UseCurrentEstimator(boolean_T rtu_Enablek, const real_T rtu_Mk
   real_T rtu_yk_idx_0;
   real_T rtu_yk_idx_1;
 
-  /* Outputs for Enabled SubSystem: '<S97>/Enabled Subsystem' incorporates:
-   *  EnablePort: '<S118>/Enable'
+  /* Outputs for Enabled SubSystem: '<S100>/Enabled Subsystem' incorporates:
+   *  EnablePort: '<S121>/Enable'
    */
   if (rtu_Enablek) {
-    /* Sum: '<S118>/Add1' incorporates:
-     *  Product: '<S118>/Product'
-     *  Product: '<S118>/Product1'
+    /* Sum: '<S121>/Add1' incorporates:
+     *  Product: '<S121>/Product'
+     *  Product: '<S121>/Product1'
      */
     rtu_yk_idx_0 = (rtu_yk[0] - (rtu_Ck[0] * rtu_xhatkk1[0] + rtu_Ck[2] *
       rtu_xhatkk1[1])) - (rtu_Dk[0] * rtu_uk[0] + rtu_Dk[2] * rtu_uk[1]);
     rtu_yk_idx_1 = (rtu_yk[1] - (rtu_Ck[1] * rtu_xhatkk1[0] + rtu_Ck[3] *
       rtu_xhatkk1[1])) - (rtu_Dk[1] * rtu_uk[0] + rtu_Dk[3] * rtu_uk[1]);
 
-    /* Product: '<S118>/Product2' */
+    /* Product: '<S121>/Product2' */
     localB->Product2[0] = 0.0;
     localB->Product2[0] += rtu_Mk[0] * rtu_yk_idx_0;
     localB->Product2[0] += rtu_Mk[2] * rtu_yk_idx_1;
@@ -342,9 +310,9 @@ void Drone_Compe_UseCurrentEstimator(boolean_T rtu_Enablek, const real_T rtu_Mk
     localB->Product2[1] += rtu_Mk[3] * rtu_yk_idx_1;
   }
 
-  /* End of Outputs for SubSystem: '<S97>/Enabled Subsystem' */
+  /* End of Outputs for SubSystem: '<S100>/Enabled Subsystem' */
 
-  /* Sum: '<S97>/Add' */
+  /* Sum: '<S100>/Add' */
   localB->Add[0] = localB->Product2[0] + rtu_xhatkk1[0];
   localB->Add[1] = localB->Product2[1] + rtu_xhatkk1[1];
 }
@@ -355,81 +323,75 @@ void Drone_Co_Drone_Compensator_Init(DW_Drone_Compensator_Drone_Co_T *localDW,
 {
   int32_T i;
 
-  /* InitializeConditions for DiscreteFir: '<S10>/FIR_IMUaccel' */
+  /* InitializeConditions for DiscreteFir: '<S13>/FIR_IMUaccel' */
   localDW->FIR_IMUaccel_circBuf = 0;
   for (i = 0; i < 15; i++) {
     localDW->FIR_IMUaccel_states[i] = localP->FIR_IMUaccel_InitialStates;
   }
 
-  /* End of InitializeConditions for DiscreteFir: '<S10>/FIR_IMUaccel' */
+  /* End of InitializeConditions for DiscreteFir: '<S13>/FIR_IMUaccel' */
 
-  /* InitializeConditions for DiscreteFilter: '<S10>/IIR_IMUgyro_r' */
+  /* InitializeConditions for DiscreteFilter: '<S13>/IIR_IMUgyro_r' */
   for (i = 0; i < 5; i++) {
     localDW->IIR_IMUgyro_r_states[i] = localP->IIR_IMUgyro_r_InitialStates;
   }
 
-  /* End of InitializeConditions for DiscreteFilter: '<S10>/IIR_IMUgyro_r' */
+  /* End of InitializeConditions for DiscreteFilter: '<S13>/IIR_IMUgyro_r' */
 
   /* InitializeConditions for MATLAB Function: '<S3>/EstimatorOrientation' */
   localDW->yaw_cur = 0.0;
   localDW->pitch_cur = 0.0;
   localDW->roll_cur = 0.0;
 
-  /* InitializeConditions for Delay: '<S66>/Delay' */
+  /* InitializeConditions for Delay: '<S69>/Delay' */
   localDW->Delay_DSTATE[0] = localP->Delay_InitialCondition;
   localDW->Delay_DSTATE[1] = localP->Delay_InitialCondition;
 
-  /* InitializeConditions for DiscreteFilter: '<S69>/IIRgyroz' */
+  /* InitializeConditions for DiscreteFilter: '<S72>/IIRgyroz' */
   for (i = 0; i < 10; i++) {
     localDW->IIRgyroz_states[i] = localP->IIRgyroz_InitialStates;
   }
 
-  /* End of InitializeConditions for DiscreteFilter: '<S69>/IIRgyroz' */
+  /* End of InitializeConditions for DiscreteFilter: '<S72>/IIRgyroz' */
 
-  /* InitializeConditions for UnitDelay: '<S119>/UD' */
+  /* InitializeConditions for UnitDelay: '<S122>/UD' */
   localDW->UD_DSTATE[0] = localP->DiscreteDerivative_ICPrevScaled;
   localDW->UD_DSTATE[1] = localP->DiscreteDerivative_ICPrevScaled;
 
-  /* InitializeConditions for Delay: '<S65>/Delay' */
+  /* InitializeConditions for Delay: '<S68>/Delay' */
   localDW->Delay_DSTATE_b[0] = localP->Delay_InitialCondition_h;
   localDW->Delay_DSTATE_b[1] = localP->Delay_InitialCondition_h;
 
-  /* InitializeConditions for Delay: '<S7>/Delay2' */
+  /* InitializeConditions for Delay: '<S10>/Delay2' */
   localDW->Delay2_DSTATE = localP->Delay2_InitialCondition;
   for (i = 0; i < 5; i++) {
-    /* InitializeConditions for DiscreteFilter: '<S12>/pressureFilter_IIR' */
+    /* InitializeConditions for DiscreteFilter: '<S15>/pressureFilter_IIR' */
     localDW->pressureFilter_IIR_states[i] =
       localP->pressureFilter_IIR_InitialState;
 
-    /* InitializeConditions for DiscreteFilter: '<S12>/soonarFilter_IIR' */
+    /* InitializeConditions for DiscreteFilter: '<S15>/soonarFilter_IIR' */
     localDW->soonarFilter_IIR_states[i] = localP->soonarFilter_IIR_InitialStates;
   }
 
-  /* InitializeConditions for Delay: '<S11>/MemoryX' */
+  /* InitializeConditions for Delay: '<S14>/MemoryX' */
   localDW->icLoad = 1U;
 
-  /* InitializeConditions for Delay: '<S68>/MemoryX' */
+  /* InitializeConditions for Delay: '<S71>/MemoryX' */
   localDW->icLoad_l = 1U;
 
   /* InitializeConditions for Delay: '<S3>/Delay1' */
   localDW->Delay1_DSTATE[0] = localP->Delay1_InitialCondition;
   localDW->Delay1_DSTATE[1] = localP->Delay1_InitialCondition;
 
-  /* InitializeConditions for Delay: '<S131>/MemoryX' */
+  /* InitializeConditions for Delay: '<S134>/MemoryX' */
   localDW->icLoad_j = 1U;
 
-  /* InitializeConditions for DiscreteIntegrator: '<S66>/SimplyIntegrateVelocity' */
+  /* InitializeConditions for DiscreteIntegrator: '<S69>/SimplyIntegrateVelocity' */
   localDW->SimplyIntegrateVelocity_DSTATE[0] =
     localP->SimplyIntegrateVelocity_IC;
   localDW->SimplyIntegrateVelocity_DSTATE[1] =
     localP->SimplyIntegrateVelocity_IC;
   localDW->SimplyIntegrateVelocity_PrevRes = 2;
-
-  /* InitializeConditions for Atomic SubSystem: '<S1>/ControllerPID' */
-  Drone_Compen_ControllerPID_Init(&localDW->ControllerPID,
-    (P_ControllerPID_Drone_Compens_T *)&localP->ControllerPID);
-
-  /* End of InitializeConditions for SubSystem: '<S1>/ControllerPID' */
 }
 
 /* Output and update for atomic system: '<Root>/Drone_Compensator' */
@@ -524,9 +486,9 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   localB->opticalFlow_datin[1] = rtu_opticalFlow_datin[1];
   localB->opticalFlow_datin[2] = rtu_opticalFlow_datin[2];
 
-  /* Gain: '<S10>/inverseIMU_gain' incorporates:
-   *  Bias: '<S10>/Assuming that calib was done level!'
-   *  Sum: '<S10>/Sum1'
+  /* Gain: '<S13>/inverseIMU_gain' incorporates:
+   *  Bias: '<S13>/Assuming that calib was done level!'
+   *  Sum: '<S13>/Sum1'
    */
   for (i = 0; i < 6; i++) {
     inverseIMU_gain[i] = (localB->sensordata_datin[i] -
@@ -535,9 +497,9 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
       Drone_Compensator_P->quadEDT.inverseIMU_gain[i];
   }
 
-  /* End of Gain: '<S10>/inverseIMU_gain' */
+  /* End of Gain: '<S13>/inverseIMU_gain' */
 
-  /* DiscreteFir: '<S10>/FIR_IMUaccel' */
+  /* DiscreteFir: '<S13>/FIR_IMUaccel' */
   rtb_Add1_l = inverseIMU_gain[0] * localP->FIR_IMUaccel_Coefficients[0];
   i = 1;
   for (j = localDW->FIR_IMUaccel_circBuf; j < 5; j++) {
@@ -584,9 +546,9 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
 
   localB->FIR_IMUaccel[2] = rtb_Add1_l;
 
-  /* End of DiscreteFir: '<S10>/FIR_IMUaccel' */
+  /* End of DiscreteFir: '<S13>/FIR_IMUaccel' */
 
-  /* DiscreteFilter: '<S10>/IIR_IMUgyro_r' */
+  /* DiscreteFilter: '<S13>/IIR_IMUgyro_r' */
   IIR_IMUgyro_r_tmp = inverseIMU_gain[5];
   i = 1;
   for (j = 0; j < 5; j++) {
@@ -603,25 +565,25 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     i++;
   }
 
-  /* End of DiscreteFilter: '<S10>/IIR_IMUgyro_r' */
+  /* End of DiscreteFilter: '<S13>/IIR_IMUgyro_r' */
 
-  /* SignalConversion: '<S8>/TmpSignal ConversionAt SFunction Inport1' incorporates:
+  /* SignalConversion: '<S11>/TmpSignal ConversionAt SFunction Inport1' incorporates:
    *  MATLAB Function: '<S3>/EstimatorOrientation'
    */
   rtb_TmpSignalConversionAtSFun_0 = rtb_r;
 
   /* MATLAB Function: '<S3>/EstimatorOrientation' incorporates:
-   *  Constant: '<S184>/Constant'
+   *  Constant: '<S187>/Constant'
    *  Constant: '<S3>/sampleTime'
    *  Constant: '<S3>/sampleTime1'
-   *  Logic: '<S10>/Logical Operator'
-   *  RelationalOperator: '<S184>/Compare'
-   *  SignalConversion: '<S8>/TmpSignal ConversionAt SFunction Inport1'
+   *  Logic: '<S13>/Logical Operator'
+   *  RelationalOperator: '<S187>/Compare'
+   *  SignalConversion: '<S11>/TmpSignal ConversionAt SFunction Inport1'
    */
-  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorOrientation': '<S8>:1' */
-  /* '<S8>:1:4' */
-  /* '<S8>:1:5' */
-  /* '<S8>:1:6' */
+  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorOrientation': '<S11>:1' */
+  /* '<S11>:1:4' */
+  /* '<S11>:1:5' */
+  /* '<S11>:1:6' */
   /* % Estimating attitude */
   /*  =============================== */
   /*  PURPOSE estimates the orientation fusing gyroscopic and accelerometer measurements with potentially available vision updates on yaw */
@@ -713,43 +675,43 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
       localB->posVIS_datin[3];
   }
 
-  /* '<S8>:1:18' */
-  /* '<S8>:1:20' */
+  /* '<S11>:1:18' */
+  /* '<S11>:1:20' */
   localDW->yaw_cur = pressureFilter_IIR_tmp;
 
-  /* '<S8>:1:21' */
+  /* '<S11>:1:21' */
   localDW->pitch_cur = rtb_Add1_l;
 
-  /* '<S8>:1:22' */
+  /* '<S11>:1:22' */
   localDW->roll_cur = rtb_r;
 
-  /* '<S8>:1:24' */
+  /* '<S11>:1:24' */
   localB->orient_estimout[0] = pressureFilter_IIR_tmp;
   localB->orient_estimout[1] = rtb_Add1_l;
   localB->orient_estimout[2] = rtb_r;
 
-  /* '<S8>:1:25' */
+  /* '<S11>:1:25' */
   localB->dorient_estimout[0] = inverseIMU_gain[3];
   localB->dorient_estimout[1] = inverseIMU_gain[4];
   localB->dorient_estimout[2] = rtb_TmpSignalConversionAtSFun_0;
 
-  /* Abs: '<S132>/Abs' */
+  /* Abs: '<S135>/Abs' */
   rtb_Dk1uk1_p = fabs(localB->orient_estimout[1]);
 
-  /* RelationalOperator: '<S181>/Compare' incorporates:
-   *  Constant: '<S181>/Constant'
+  /* RelationalOperator: '<S184>/Compare' incorporates:
+   *  Constant: '<S184>/Constant'
    */
   rtb_Compare_ii = (rtb_Dk1uk1_p <= localP->maxp3_const);
 
-  /* Abs: '<S132>/Abs1' */
+  /* Abs: '<S135>/Abs1' */
   rtb_Dk1uk1_p = fabs(localB->orient_estimout[2]);
 
-  /* MATLAB Function: '<S132>/abs' incorporates:
-   *  Delay: '<S66>/Delay'
-   *  Sum: '<S132>/Add1'
+  /* MATLAB Function: '<S135>/abs' incorporates:
+   *  Delay: '<S69>/Delay'
+   *  Sum: '<S135>/Add1'
    */
-  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorXYPosition/EstimatorXYPosition/OutlierHandling/abs': '<S179>:1' */
-  /* '<S179>:1:2' */
+  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorXYPosition/EstimatorXYPosition/OutlierHandling/abs': '<S182>:1' */
+  /* '<S182>:1:2' */
   scale = 2.2250738585072014E-308;
   absxk = fabs(localB->posVIS_datin[0] - localDW->Delay_DSTATE[0]);
   if (absxk > 2.2250738585072014E-308) {
@@ -772,53 +734,53 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
 
   rtb_r = scale * sqrt(rtb_r);
 
-  /* End of MATLAB Function: '<S132>/abs' */
+  /* End of MATLAB Function: '<S135>/abs' */
 
-  /* Logic: '<S132>/Logical Operator3' incorporates:
-   *  Constant: '<S180>/Constant'
-   *  Constant: '<S182>/Constant'
+  /* Logic: '<S135>/Logical Operator3' incorporates:
    *  Constant: '<S183>/Constant'
-   *  RelationalOperator: '<S180>/Compare'
-   *  RelationalOperator: '<S182>/Compare'
+   *  Constant: '<S185>/Constant'
+   *  Constant: '<S186>/Constant'
    *  RelationalOperator: '<S183>/Compare'
+   *  RelationalOperator: '<S185>/Compare'
+   *  RelationalOperator: '<S186>/Compare'
    */
   rtb_LogicalOperator3 = ((localB->posVIS_datin[0] !=
     localP->checkifPosavailable_const) && rtb_Compare_ii && (rtb_Dk1uk1_p <=
     localP->maxq3_const) && (rtb_r < localP->planarjumpsVISPOS_const));
 
-  /* Abs: '<S69>/Abs2' */
+  /* Abs: '<S72>/Abs2' */
   rtb_Dk1uk1_p = fabs(localB->orient_estimout[1]);
 
-  /* RelationalOperator: '<S122>/Compare' incorporates:
-   *  Constant: '<S122>/Constant'
+  /* RelationalOperator: '<S125>/Compare' incorporates:
+   *  Constant: '<S125>/Constant'
    */
   rtb_Compare_ii = (rtb_Dk1uk1_p <= localP->maxp_const);
 
-  /* Abs: '<S69>/Abs3' */
+  /* Abs: '<S72>/Abs3' */
   rtb_Dk1uk1_p = fabs(localB->orient_estimout[2]);
-
-  /* RelationalOperator: '<S124>/Compare' incorporates:
-   *  Constant: '<S124>/Constant'
-   */
-  rtb_Compare_du = (rtb_Dk1uk1_p <= localP->maxq_const);
-
-  /* Abs: '<S69>/Abs' */
-  rtb_Dk1uk1_p = fabs(inverseIMU_gain[3]);
-
-  /* RelationalOperator: '<S126>/Compare' incorporates:
-   *  Constant: '<S126>/Constant'
-   */
-  rtb_Compare_po = (rtb_Dk1uk1_p <= localP->maxw1_const);
-
-  /* Abs: '<S69>/Abs1' */
-  rtb_Dk1uk1_p = fabs(inverseIMU_gain[4]);
 
   /* RelationalOperator: '<S127>/Compare' incorporates:
    *  Constant: '<S127>/Constant'
    */
+  rtb_Compare_du = (rtb_Dk1uk1_p <= localP->maxq_const);
+
+  /* Abs: '<S72>/Abs' */
+  rtb_Dk1uk1_p = fabs(inverseIMU_gain[3]);
+
+  /* RelationalOperator: '<S129>/Compare' incorporates:
+   *  Constant: '<S129>/Constant'
+   */
+  rtb_Compare_po = (rtb_Dk1uk1_p <= localP->maxw1_const);
+
+  /* Abs: '<S72>/Abs1' */
+  rtb_Dk1uk1_p = fabs(inverseIMU_gain[4]);
+
+  /* RelationalOperator: '<S130>/Compare' incorporates:
+   *  Constant: '<S130>/Constant'
+   */
   rtb_Compare_cz = (rtb_Dk1uk1_p <= localP->maxw2_const);
 
-  /* DiscreteFilter: '<S69>/IIRgyroz' */
+  /* DiscreteFilter: '<S72>/IIRgyroz' */
   for (k = 0; k < 2; k++) {
     memOffset = k * 5;
     rtb_Add1_l = inverseIMU_gain[k + 3];
@@ -842,58 +804,58 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     rtb_Dk1uk1[k] = rtb_r;
   }
 
-  /* End of DiscreteFilter: '<S69>/IIRgyroz' */
+  /* End of DiscreteFilter: '<S72>/IIRgyroz' */
 
-  /* SampleTimeMath: '<S119>/TSamp'
+  /* SampleTimeMath: '<S122>/TSamp'
    *
-   * About '<S119>/TSamp':
+   * About '<S122>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
   absxk = rtb_Dk1uk1[0] * localP->TSamp_WtEt;
   t = rtb_Dk1uk1[1] * localP->TSamp_WtEt;
 
-  /* Abs: '<S69>/Abs6' incorporates:
-   *  Sum: '<S119>/Diff'
-   *  UnitDelay: '<S119>/UD'
+  /* Abs: '<S72>/Abs6' incorporates:
+   *  Sum: '<S122>/Diff'
+   *  UnitDelay: '<S122>/UD'
    */
   rtb_Dk1uk1_p = fabs(absxk - localDW->UD_DSTATE[0]);
-
-  /* RelationalOperator: '<S120>/Compare' incorporates:
-   *  Constant: '<S120>/Constant'
-   */
-  rtb_Compare_l = (rtb_Dk1uk1_p <= localP->maxdw1_const);
-
-  /* Abs: '<S69>/Abs7' incorporates:
-   *  Sum: '<S119>/Diff'
-   *  UnitDelay: '<S119>/UD'
-   */
-  rtb_Dk1uk1_p = fabs(t - localDW->UD_DSTATE[1]);
-
-  /* Logic: '<S69>/Logical Operator' incorporates:
-   *  Constant: '<S121>/Constant'
-   *  RelationalOperator: '<S121>/Compare'
-   */
-  rtb_LogicalOperator_o = (rtb_Compare_ii && rtb_Compare_du && rtb_Compare_po &&
-    rtb_Compare_cz && rtb_Compare_l && (rtb_Dk1uk1_p <= localP->maxdw2_const));
-
-  /* Abs: '<S69>/Abs4' */
-  rtb_Dk1uk1_p = fabs(inverseIMU_gain[3]);
 
   /* RelationalOperator: '<S123>/Compare' incorporates:
    *  Constant: '<S123>/Constant'
    */
+  rtb_Compare_l = (rtb_Dk1uk1_p <= localP->maxdw1_const);
+
+  /* Abs: '<S72>/Abs7' incorporates:
+   *  Sum: '<S122>/Diff'
+   *  UnitDelay: '<S122>/UD'
+   */
+  rtb_Dk1uk1_p = fabs(t - localDW->UD_DSTATE[1]);
+
+  /* Logic: '<S72>/Logical Operator' incorporates:
+   *  Constant: '<S124>/Constant'
+   *  RelationalOperator: '<S124>/Compare'
+   */
+  rtb_LogicalOperator_o = (rtb_Compare_ii && rtb_Compare_du && rtb_Compare_po &&
+    rtb_Compare_cz && rtb_Compare_l && (rtb_Dk1uk1_p <= localP->maxdw2_const));
+
+  /* Abs: '<S72>/Abs4' */
+  rtb_Dk1uk1_p = fabs(inverseIMU_gain[3]);
+
+  /* RelationalOperator: '<S126>/Compare' incorporates:
+   *  Constant: '<S126>/Constant'
+   */
   rtb_Compare_ii = (rtb_Dk1uk1_p <= localP->maxp2_const);
 
-  /* Abs: '<S69>/Abs5' */
+  /* Abs: '<S72>/Abs5' */
   rtb_Dk1uk1_p = fabs(inverseIMU_gain[4]);
 
-  /* Logic: '<S69>/Logical Operator1' incorporates:
-   *  Constant: '<S125>/Constant'
-   *  RelationalOperator: '<S125>/Compare'
+  /* Logic: '<S72>/Logical Operator1' incorporates:
+   *  Constant: '<S128>/Constant'
+   *  RelationalOperator: '<S128>/Compare'
    */
   rtb_Compare_po = (rtb_Compare_ii && (rtb_Dk1uk1_p <= localP->maxq2_const));
 
-  /* Gain: '<S65>/opticalFlowToVelocity_gain' */
+  /* Gain: '<S68>/opticalFlowToVelocity_gain' */
   rtb_opticalFlowToVelocity_gain[0] = localP->opticalFlowToVelocity_gain_Gain *
     localB->opticalFlow_datin[0];
   rtb_opticalFlowToVelocity_gain[1] = localP->opticalFlowToVelocity_gain_Gain *
@@ -901,38 +863,38 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   rtb_opticalFlowToVelocity_gain[2] = localP->opticalFlowToVelocity_gain_Gain *
     localB->opticalFlow_datin[2];
 
-  /* Abs: '<S69>/Abs8' incorporates:
-   *  Delay: '<S65>/Delay'
-   *  Sum: '<S69>/Add'
+  /* Abs: '<S72>/Abs8' incorporates:
+   *  Delay: '<S68>/Delay'
+   *  Sum: '<S72>/Add'
    */
   rtb_Dk1uk1_p = fabs(rtb_opticalFlowToVelocity_gain[0] -
                       localDW->Delay_DSTATE_b[0]);
 
-  /* RelationalOperator: '<S128>/Compare' incorporates:
-   *  Constant: '<S128>/Constant'
+  /* RelationalOperator: '<S131>/Compare' incorporates:
+   *  Constant: '<S131>/Constant'
    */
   rtb_Compare_cz = (rtb_Dk1uk1_p <= localP->maxw3_const);
 
-  /* Abs: '<S69>/Abs9' incorporates:
-   *  Delay: '<S65>/Delay'
-   *  Sum: '<S69>/Add'
+  /* Abs: '<S72>/Abs9' incorporates:
+   *  Delay: '<S68>/Delay'
+   *  Sum: '<S72>/Add'
    */
   rtb_Dk1uk1_p = fabs(rtb_opticalFlowToVelocity_gain[1] -
                       localDW->Delay_DSTATE_b[1]);
 
-  /* RelationalOperator: '<S129>/Compare' incorporates:
-   *  Constant: '<S129>/Constant'
+  /* RelationalOperator: '<S132>/Compare' incorporates:
+   *  Constant: '<S132>/Constant'
    */
   rtb_Compare_l = (rtb_Dk1uk1_p <= localP->maxw4_const);
 
-  /* Gain: '<S7>/invertzaxisGain' */
+  /* Gain: '<S10>/invertzaxisGain' */
   rtb_invertzaxisGain = localP->invertzaxisGain_Gain * localB->sensordata_datin
     [6];
 
-  /* Delay: '<S7>/Delay2' */
+  /* Delay: '<S10>/Delay2' */
   rtb_Dk1uk1_p = localDW->Delay2_DSTATE;
 
-  /* Saturate: '<S12>/SaturationSonar' */
+  /* Saturate: '<S15>/SaturationSonar' */
   if (rtb_invertzaxisGain > -Drone_Compensator_P->quadEDT.altSenor_min) {
     rtb_TmpSignalConversionAtSFun_0 = -Drone_Compensator_P->quadEDT.altSenor_min;
   } else if (rtb_invertzaxisGain < localP->SaturationSonar_LowerSat) {
@@ -941,26 +903,26 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     rtb_TmpSignalConversionAtSFun_0 = rtb_invertzaxisGain;
   }
 
-  /* Sum: '<S12>/Add' incorporates:
-   *  Saturate: '<S12>/SaturationSonar'
+  /* Sum: '<S15>/Add' incorporates:
+   *  Saturate: '<S15>/SaturationSonar'
    */
   rtb_Ckxhatkk1_e = rtb_Dk1uk1_p - rtb_TmpSignalConversionAtSFun_0;
 
-  /* Abs: '<S12>/Absestdiff' */
+  /* Abs: '<S15>/Absestdiff' */
   rtb_Ckxhatkk1_e = fabs(rtb_Ckxhatkk1_e);
 
-  /* RelationalOperator: '<S64>/Compare' incorporates:
-   *  Constant: '<S64>/Constant'
+  /* RelationalOperator: '<S67>/Compare' incorporates:
+   *  Constant: '<S67>/Constant'
    */
   rtb_Compare_ii = (rtb_Ckxhatkk1_e <= localP->outlierJump_const);
 
-  /* Gain: '<S7>/prsToAlt_gain' incorporates:
-   *  Sum: '<S10>/Sum2'
+  /* Gain: '<S10>/prsToAlt_gain' incorporates:
+   *  Sum: '<S13>/Sum2'
    */
   rtb_altfrompress = 1.0 / Drone_Compensator_P->quadEDT.altToPrs_gain *
     (localB->sensordata_datin[7] - localB->sensordataCalib_datin[6]);
 
-  /* DiscreteFilter: '<S12>/pressureFilter_IIR' */
+  /* DiscreteFilter: '<S15>/pressureFilter_IIR' */
   pressureFilter_IIR_tmp = rtb_altfrompress;
   i = 1;
   for (j = 0; j < 5; j++) {
@@ -980,20 +942,20 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
 
   rtb_Ckxhatkk1_e = rtb_r;
 
-  /* End of DiscreteFilter: '<S12>/pressureFilter_IIR' */
+  /* End of DiscreteFilter: '<S15>/pressureFilter_IIR' */
 
-  /* Sum: '<S12>/Add1' */
+  /* Sum: '<S15>/Add1' */
   rtb_Ckxhatkk1_e -= rtb_Dk1uk1_p;
 
-  /* Abs: '<S12>/Absestdiff1' */
+  /* Abs: '<S15>/Absestdiff1' */
   rtb_Ckxhatkk1_e = fabs(rtb_Ckxhatkk1_e);
 
-  /* RelationalOperator: '<S62>/Compare' incorporates:
-   *  Constant: '<S62>/Constant'
+  /* RelationalOperator: '<S65>/Compare' incorporates:
+   *  Constant: '<S65>/Constant'
    */
   rtb_Compare_du = (rtb_Ckxhatkk1_e >= localP->currentEstimateVeryOffFromPress);
 
-  /* DiscreteFilter: '<S12>/soonarFilter_IIR' */
+  /* DiscreteFilter: '<S15>/soonarFilter_IIR' */
   soonarFilter_IIR_tmp = rtb_invertzaxisGain;
   i = 1;
   for (j = 0; j < 5; j++) {
@@ -1013,34 +975,34 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
 
   rtb_Ckxhatkk1_e = rtb_r;
 
-  /* End of DiscreteFilter: '<S12>/soonarFilter_IIR' */
+  /* End of DiscreteFilter: '<S15>/soonarFilter_IIR' */
 
-  /* Sum: '<S12>/Add2' */
+  /* Sum: '<S15>/Add2' */
   rtb_Ckxhatkk1_e -= rtb_Dk1uk1_p;
 
-  /* Abs: '<S12>/Absestdiff2' */
+  /* Abs: '<S15>/Absestdiff2' */
   rtb_Ckxhatkk1_e = fabs(rtb_Ckxhatkk1_e);
 
-  /* Logic: '<S12>/nicemeasurementor newupdateneeded' incorporates:
-   *  Constant: '<S61>/Constant'
-   *  Constant: '<S63>/Constant'
-   *  Logic: '<S12>/findingoutliers'
-   *  Logic: '<S12>/newupdateneeded'
-   *  RelationalOperator: '<S61>/Compare'
-   *  RelationalOperator: '<S63>/Compare'
+  /* Logic: '<S15>/nicemeasurementor newupdateneeded' incorporates:
+   *  Constant: '<S64>/Constant'
+   *  Constant: '<S66>/Constant'
+   *  Logic: '<S15>/findingoutliers'
+   *  Logic: '<S15>/newupdateneeded'
+   *  RelationalOperator: '<S64>/Compare'
+   *  RelationalOperator: '<S66>/Compare'
    */
   rtb_nicemeasurementornewupdaten = ((rtb_Compare_ii && (rtb_invertzaxisGain <
     -Drone_Compensator_P->quadEDT.altSenor_min)) || (rtb_Compare_du &&
     (rtb_Ckxhatkk1_e >= localP->currentStateVeryOffsonarflt_con)));
 
-  /* MATLAB Function: '<S7>/trafo_BodytoWorld_trans' */
-  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorAltitude/trafo_BodytoWorld_trans': '<S14>:1' */
-  /* '<S14>:1:2' */
-  /* '<S14>:1:3' */
-  /* '<S14>:1:4' */
+  /* MATLAB Function: '<S10>/trafo_BodytoWorld_trans' */
+  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorAltitude/trafo_BodytoWorld_trans': '<S17>:1' */
+  /* '<S17>:1:2' */
+  /* '<S17>:1:3' */
+  /* '<S17>:1:4' */
   /* BBF > Inertial rotation matrix */
-  /* '<S14>:1:6' */
-  /* '<S14>:1:10' */
+  /* '<S17>:1:6' */
+  /* '<S17>:1:10' */
   tmp_1[0] = cos(localB->orient_estimout[1]) * cos(localB->orient_estimout[0]);
   tmp_1[3] = sin(localB->orient_estimout[2]) * sin(localB->orient_estimout[1]) *
     cos(localB->orient_estimout[0]) - cos(localB->orient_estimout[2]) * sin
@@ -1059,9 +1021,9 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   tmp_1[5] = sin(localB->orient_estimout[2]) * cos(localB->orient_estimout[1]);
   tmp_1[8] = cos(localB->orient_estimout[2]) * cos(localB->orient_estimout[1]);
 
-  /* Sum: '<S7>/Sum' incorporates:
-   *  Constant: '<S7>/gravity'
-   *  MATLAB Function: '<S7>/trafo_BodytoWorld_trans'
+  /* Sum: '<S10>/Sum' incorporates:
+   *  Constant: '<S10>/gravity'
+   *  MATLAB Function: '<S10>/trafo_BodytoWorld_trans'
    */
   for (i = 0; i < 3; i++) {
     rtb_Sum[i] = ((tmp_1[i + 3] * localB->FIR_IMUaccel[1] + tmp_1[i] *
@@ -1069,12 +1031,12 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
                   localB->FIR_IMUaccel[2]) + localP->gravity_Value[i];
   }
 
-  /* End of Sum: '<S7>/Sum' */
+  /* End of Sum: '<S10>/Sum' */
 
-  /* Delay: '<S11>/MemoryX' incorporates:
-   *  Constant: '<S11>/X0'
-   *  Constant: '<S13>/Constant'
-   *  RelationalOperator: '<S13>/Compare'
+  /* Delay: '<S14>/MemoryX' incorporates:
+   *  Constant: '<S14>/X0'
+   *  Constant: '<S16>/Constant'
+   *  RelationalOperator: '<S16>/Compare'
    */
   if (rtb_Dk1uk1_p > localP->outlierBelowFloor_const) {
     localDW->icLoad = 1U;
@@ -1085,73 +1047,73 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     localDW->MemoryX_DSTATE[1] = localP->X0_Value[1];
   }
 
-  /* Outputs for Atomic SubSystem: '<S11>/UseCurrentEstimator' */
-  /* Outputs for Enabled SubSystem: '<S39>/Enabled Subsystem' incorporates:
-   *  EnablePort: '<S60>/Enable'
+  /* Outputs for Atomic SubSystem: '<S14>/UseCurrentEstimator' */
+  /* Outputs for Enabled SubSystem: '<S42>/Enabled Subsystem' incorporates:
+   *  EnablePort: '<S63>/Enable'
    */
   if (rtb_nicemeasurementornewupdaten) {
-    /* Sum: '<S60>/Add1' incorporates:
-     *  Constant: '<S11>/C'
-     *  Constant: '<S11>/D'
-     *  Delay: '<S11>/MemoryX'
-     *  Product: '<S60>/Product'
-     *  Product: '<S60>/Product1'
+    /* Sum: '<S63>/Add1' incorporates:
+     *  Constant: '<S14>/C'
+     *  Constant: '<S14>/D'
+     *  Delay: '<S14>/MemoryX'
+     *  Product: '<S63>/Product'
+     *  Product: '<S63>/Product1'
      */
     rtb_Add1_l = (rtb_invertzaxisGain - (localP->C_Value[0] *
       localDW->MemoryX_DSTATE[0] + localP->C_Value[1] * localDW->MemoryX_DSTATE
       [1])) - localP->D_Value * rtb_Sum[2];
 
-    /* Product: '<S60>/Product2' incorporates:
-     *  Constant: '<S16>/KalmanGainM'
+    /* Product: '<S63>/Product2' incorporates:
+     *  Constant: '<S19>/KalmanGainM'
      */
     localB->Product2[0] = localP->KalmanGainM_Value_p[0] * rtb_Add1_l;
     localB->Product2[1] = localP->KalmanGainM_Value_p[1] * rtb_Add1_l;
   }
 
-  /* End of Outputs for SubSystem: '<S39>/Enabled Subsystem' */
+  /* End of Outputs for SubSystem: '<S42>/Enabled Subsystem' */
 
-  /* Reshape: '<S11>/Reshapexhat' incorporates:
-   *  Delay: '<S11>/MemoryX'
-   *  Sum: '<S39>/Add'
+  /* Reshape: '<S14>/Reshapexhat' incorporates:
+   *  Delay: '<S14>/MemoryX'
+   *  Sum: '<S42>/Add'
    */
   localB->Reshapexhat[0] = localB->Product2[0] + localDW->MemoryX_DSTATE[0];
   localB->Reshapexhat[1] = localB->Product2[1] + localDW->MemoryX_DSTATE[1];
 
-  /* End of Outputs for SubSystem: '<S11>/UseCurrentEstimator' */
+  /* End of Outputs for SubSystem: '<S14>/UseCurrentEstimator' */
 
-  /* Logic: '<S69>/Logical Operator3' incorporates:
-   *  Constant: '<S130>/Constant'
-   *  Logic: '<S69>/Logical Operator2'
-   *  RelationalOperator: '<S130>/Compare'
+  /* Logic: '<S72>/Logical Operator3' incorporates:
+   *  Constant: '<S133>/Constant'
+   *  Logic: '<S72>/Logical Operator2'
+   *  RelationalOperator: '<S133>/Compare'
    */
   rtb_LogicalOperator3_j = ((rtb_LogicalOperator_o || rtb_Compare_po) &&
     rtb_Compare_cz && rtb_Compare_l && (localB->Reshapexhat[0] <=
     localP->minHeightforOF_const));
 
-  /* Logic: '<S67>/Logical Operator' incorporates:
-   *  Constant: '<S71>/Constant'
-   *  Constant: '<S72>/Constant'
-   *  RelationalOperator: '<S71>/Compare'
-   *  RelationalOperator: '<S72>/Compare'
+  /* Logic: '<S70>/Logical Operator' incorporates:
+   *  Constant: '<S74>/Constant'
+   *  Constant: '<S75>/Constant'
+   *  RelationalOperator: '<S74>/Compare'
+   *  RelationalOperator: '<S75>/Compare'
    */
   rtb_Compare_ii = ((rtb_opticalFlowToVelocity_gain[0] !=
                      localP->donotuseaccifopticalflowneverav) ||
                     (rtb_opticalFlowToVelocity_gain[1] !=
                      localP->donotuseaccifopticalflownever_g));
 
-  /* RelationalOperator: '<S70>/Compare' incorporates:
-   *  Constant: '<S70>/Constant'
+  /* RelationalOperator: '<S73>/Compare' incorporates:
+   *  Constant: '<S73>/Constant'
    */
-  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorXYPosition/EstimatorVelocity/AccelerationHandling/trafo_World2Body_trans': '<S73>:1' */
-  /* '<S73>:1:3' */
-  /* '<S73>:1:4' */
-  /* '<S73>:1:5' */
-  /* '<S73>:1:7' */
-  /* '<S73>:1:11' */
+  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorXYPosition/EstimatorVelocity/AccelerationHandling/trafo_World2Body_trans': '<S76>:1' */
+  /* '<S76>:1:3' */
+  /* '<S76>:1:4' */
+  /* '<S76>:1:5' */
+  /* '<S76>:1:7' */
+  /* '<S76>:1:11' */
   rtb_Compare_du = (localB->Reshapexhat[0] <=
                     localP->DeactivateAccelerationIfOFisnot);
 
-  /* MATLAB Function: '<S67>/trafo_World2Body_trans' */
+  /* MATLAB Function: '<S70>/trafo_World2Body_trans' */
   tmp_2[0] = cos(localB->orient_estimout[1]) * cos(localB->orient_estimout[0]);
   tmp_2[3] = cos(localB->orient_estimout[1]) * sin(localB->orient_estimout[0]);
   tmp_2[6] = -sin(localB->orient_estimout[1]);
@@ -1170,10 +1132,10 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     (localB->orient_estimout[2]);
   tmp_2[8] = cos(localB->orient_estimout[1]) * cos(localB->orient_estimout[2]);
 
-  /* Sum: '<S67>/Add' incorporates:
-   *  Constant: '<S67>/gravity'
-   *  Gain: '<S67>/gainaccinput'
-   *  MATLAB Function: '<S67>/trafo_World2Body_trans'
+  /* Sum: '<S70>/Add' incorporates:
+   *  Constant: '<S70>/gravity'
+   *  Gain: '<S70>/gainaccinput'
+   *  MATLAB Function: '<S70>/trafo_World2Body_trans'
    */
   for (i = 0; i < 3; i++) {
     rtb_vel_world[i] = localB->FIR_IMUaccel[i] - ((tmp_2[i + 3] *
@@ -1181,18 +1143,18 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
       tmp_2[i + 6] * localP->gravity_Value_b[2]);
   }
 
-  /* End of Sum: '<S67>/Add' */
+  /* End of Sum: '<S70>/Add' */
 
-  /* Product: '<S67>/Product' incorporates:
-   *  Gain: '<S67>/gainaccinput'
+  /* Product: '<S70>/Product' incorporates:
+   *  Gain: '<S70>/gainaccinput'
    */
   rtb_Dk1uk1[0] = localP->gainaccinput_Gain * rtb_vel_world[0] * (real_T)
     rtb_Compare_ii * (real_T)rtb_Compare_du;
   rtb_Dk1uk1[1] = localP->gainaccinput_Gain * rtb_vel_world[1] * (real_T)
     rtb_Compare_ii * (real_T)rtb_Compare_du;
 
-  /* Delay: '<S68>/MemoryX' incorporates:
-   *  Constant: '<S68>/X0'
+  /* Delay: '<S71>/MemoryX' incorporates:
+   *  Constant: '<S71>/X0'
    */
   if (localDW->icLoad_l != 0) {
     localDW->MemoryX_DSTATE_g[0] = localP->X0_Value_j[0];
@@ -1202,38 +1164,38 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   rtb_Add1[0] = localDW->MemoryX_DSTATE_g[0];
   rtb_Add1[1] = localDW->MemoryX_DSTATE_g[1];
 
-  /* Outputs for Atomic SubSystem: '<S68>/UseCurrentEstimator' */
+  /* Outputs for Atomic SubSystem: '<S71>/UseCurrentEstimator' */
 
-  /* Constant: '<S74>/KalmanGainM' incorporates:
-   *  Constant: '<S68>/C'
-   *  Constant: '<S68>/D'
+  /* Constant: '<S77>/KalmanGainM' incorporates:
+   *  Constant: '<S71>/C'
+   *  Constant: '<S71>/D'
    */
   Drone_Compe_UseCurrentEstimator(rtb_LogicalOperator3_j,
     localP->KalmanGainM_Value_n, rtb_Dk1uk1, &rtb_opticalFlowToVelocity_gain[0],
     localP->C_Value_j, localP->D_Value_b, rtb_Add1,
     &localB->UseCurrentEstimator_b);
 
-  /* End of Outputs for SubSystem: '<S68>/UseCurrentEstimator' */
+  /* End of Outputs for SubSystem: '<S71>/UseCurrentEstimator' */
 
-  /* Reshape: '<S68>/Reshapexhat' */
+  /* Reshape: '<S71>/Reshapexhat' */
   localB->Reshapexhat_o[0] = localB->UseCurrentEstimator_b.Add[0];
   localB->Reshapexhat_o[1] = localB->UseCurrentEstimator_b.Add[1];
 
-  /* SignalConversion: '<S15>/TmpSignal ConversionAt SFunction Inport2' incorporates:
+  /* SignalConversion: '<S18>/TmpSignal ConversionAt SFunction Inport2' incorporates:
    *  Delay: '<S3>/Delay1'
-   *  MATLAB Function: '<S7>/trafo_WorldToBody_trans'
+   *  MATLAB Function: '<S10>/trafo_WorldToBody_trans'
    */
-  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorAltitude/trafo_WorldToBody_trans': '<S15>:1' */
-  /* '<S15>:1:2' */
-  /* '<S15>:1:3' */
-  /* '<S15>:1:4' */
-  /* '<S15>:1:7' */
-  /* '<S15>:1:11' */
+  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorAltitude/trafo_WorldToBody_trans': '<S18>:1' */
+  /* '<S18>:1:2' */
+  /* '<S18>:1:3' */
+  /* '<S18>:1:4' */
+  /* '<S18>:1:7' */
+  /* '<S18>:1:11' */
   rtb_TmpSignalConversionAtSFun_0 = localDW->Delay1_DSTATE[0];
   scale = localDW->Delay1_DSTATE[1];
 
-  /* MATLAB Function: '<S7>/trafo_WorldToBody_trans' incorporates:
-   *  SignalConversion: '<S15>/TmpSignal ConversionAt SFunction Inport2'
+  /* MATLAB Function: '<S10>/trafo_WorldToBody_trans' incorporates:
+   *  SignalConversion: '<S18>/TmpSignal ConversionAt SFunction Inport2'
    */
   tmp_3[0] = cos(localB->orient_estimout[1]) * cos(localB->orient_estimout[0]);
   tmp_3[3] = cos(localB->orient_estimout[1]) * sin(localB->orient_estimout[0]);
@@ -1259,16 +1221,16 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     localB->acc_RS[i] += tmp_3[i + 6] * localB->Reshapexhat[1];
   }
 
-  /* MATLAB Function: '<S66>/trafo_BodytoWorld_trans' incorporates:
-   *  SignalConversion: '<S133>/TmpSignal ConversionAt SFunction Inport2'
+  /* MATLAB Function: '<S69>/trafo_BodytoWorld_trans' incorporates:
+   *  SignalConversion: '<S136>/TmpSignal ConversionAt SFunction Inport2'
    */
-  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorXYPosition/EstimatorXYPosition/trafo_BodytoWorld_trans': '<S133>:1' */
-  /* '<S133>:1:2' */
-  /* '<S133>:1:3' */
-  /* '<S133>:1:4' */
+  /* MATLAB Function 'Drone_Compensator/Estimator/EstimatorXYPosition/EstimatorXYPosition/trafo_BodytoWorld_trans': '<S136>:1' */
+  /* '<S136>:1:2' */
+  /* '<S136>:1:3' */
+  /* '<S136>:1:4' */
   /* BBF > Inertial rotation matrix */
-  /* '<S133>:1:6' */
-  /* '<S133>:1:10' */
+  /* '<S136>:1:6' */
+  /* '<S136>:1:10' */
   tmp_4[0] = cos(localB->orient_estimout[1]) * cos(localB->orient_estimout[0]);
   tmp_4[3] = sin(localB->orient_estimout[2]) * sin(localB->orient_estimout[1]) *
     cos(localB->orient_estimout[0]) - cos(localB->orient_estimout[2]) * sin
@@ -1291,10 +1253,10 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
       localB->Reshapexhat_o[1] + tmp_4[i] * localB->Reshapexhat_o[0]);
   }
 
-  /* End of MATLAB Function: '<S66>/trafo_BodytoWorld_trans' */
+  /* End of MATLAB Function: '<S69>/trafo_BodytoWorld_trans' */
 
-  /* Delay: '<S131>/MemoryX' incorporates:
-   *  Constant: '<S131>/X0'
+  /* Delay: '<S134>/MemoryX' incorporates:
+   *  Constant: '<S134>/X0'
    */
   if (localDW->icLoad_j != 0) {
     localDW->MemoryX_DSTATE_m[0] = localP->X0_Value_k[0];
@@ -1304,20 +1266,20 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   rtb_Add1[0] = localDW->MemoryX_DSTATE_m[0];
   rtb_Add1[1] = localDW->MemoryX_DSTATE_m[1];
 
-  /* Outputs for Atomic SubSystem: '<S131>/UseCurrentEstimator' */
+  /* Outputs for Atomic SubSystem: '<S134>/UseCurrentEstimator' */
 
-  /* Constant: '<S134>/KalmanGainM' incorporates:
-   *  Constant: '<S131>/C'
-   *  Constant: '<S131>/D'
+  /* Constant: '<S137>/KalmanGainM' incorporates:
+   *  Constant: '<S134>/C'
+   *  Constant: '<S134>/D'
    */
   Drone_Compe_UseCurrentEstimator(rtb_LogicalOperator3,
     localP->KalmanGainM_Value, &rtb_vel_world[0], &localB->posVIS_datin[0],
     localP->C_Value_f, localP->D_Value_o, rtb_Add1,
     &localB->UseCurrentEstimator_g);
 
-  /* End of Outputs for SubSystem: '<S131>/UseCurrentEstimator' */
+  /* End of Outputs for SubSystem: '<S134>/UseCurrentEstimator' */
 
-  /* DiscreteIntegrator: '<S66>/SimplyIntegrateVelocity' */
+  /* DiscreteIntegrator: '<S69>/SimplyIntegrateVelocity' */
   if (localB->controlModePosVSOrient_flagin &&
       (localDW->SimplyIntegrateVelocity_PrevRes <= 0)) {
     localDW->SimplyIntegrateVelocity_DSTATE[0] =
@@ -1350,8 +1312,8 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     }
   }
 
-  /* Switch: '<S66>/UseIPPosSwitch' incorporates:
-   *  DiscreteIntegrator: '<S66>/SimplyIntegrateVelocity'
+  /* Switch: '<S69>/UseIPPosSwitch' incorporates:
+   *  DiscreteIntegrator: '<S69>/SimplyIntegrateVelocity'
    */
   if (localB->usePosVIS_flagin > localP->UseIPPosSwitch_Threshold) {
     localB->UseIPPosSwitch[0] = localB->UseCurrentEstimator_g.Add[0];
@@ -1361,61 +1323,60 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     localB->UseIPPosSwitch[1] = localDW->SimplyIntegrateVelocity_DSTATE[1];
   }
 
-  /* End of Switch: '<S66>/UseIPPosSwitch' */
+  /* End of Switch: '<S69>/UseIPPosSwitch' */
 
-  /* Outputs for Atomic SubSystem: '<S1>/ControllerPID' */
-  Drone_Compensator_ControllerPID(rtu_pos_refin, localB->takeoff_flag,
+  /* Outputs for Atomic SubSystem: '<S1>/ControllerPolePlace' */
+  Drone_Compe_ControllerPolePlace(rtu_pos_refin, localB->takeoff_flag,
     rtu_orient_refin, localB->controlModePosVSOrient_flagin,
-    localB->orient_estimout, localB->dorient_estimout, localB->acc_RS[2],
-    localB->Reshapexhat[0], localB->Reshapexhat_o, localB->UseIPPosSwitch,
-    &localB->ControllerPID, &localDW->ControllerPID,
-    (P_ControllerPID_Drone_Compens_T *)&localP->ControllerPID,
-    Drone_Compensator_P);
+    localB->UseIPPosSwitch, localB->Reshapexhat_o, localB->Reshapexhat[0],
+    localB->orient_estimout, localB->acc_RS[2], localB->dorient_estimout,
+    &localB->ControllerPolePlace, (P_ControllerPolePlace_Drone_C_T *)
+    &localP->ControllerPolePlace, Drone_Compensator_P);
 
-  /* End of Outputs for SubSystem: '<S1>/ControllerPID' */
+  /* End of Outputs for SubSystem: '<S1>/ControllerPolePlace' */
 
-  /* Bias: '<S7>/Bias' */
+  /* Bias: '<S10>/Bias' */
   rtb_Ckxhatkk1_e = localB->Reshapexhat[0] + localP->Bias_Bias;
 
-  /* Bias: '<S7>/Bias1' */
+  /* Bias: '<S10>/Bias1' */
   rtb_Dk1uk1_p = localB->Reshapexhat[0] + localP->Bias1_Bias;
 
-  /* Product: '<S34>/C[k]*xhat[k|k-1]' incorporates:
-   *  Constant: '<S11>/C'
-   *  Delay: '<S11>/MemoryX'
+  /* Product: '<S37>/C[k]*xhat[k|k-1]' incorporates:
+   *  Constant: '<S14>/C'
+   *  Delay: '<S14>/MemoryX'
    */
   rtb_Ckxhatkk1_e = localP->C_Value[0] * localDW->MemoryX_DSTATE[0] +
     localP->C_Value[1] * localDW->MemoryX_DSTATE[1];
 
-  /* Product: '<S34>/D[k-1]*u[k-1]' incorporates:
-   *  Constant: '<S11>/D'
+  /* Product: '<S37>/D[k-1]*u[k-1]' incorporates:
+   *  Constant: '<S14>/D'
    */
   rtb_Dk1uk1_p = localP->D_Value * rtb_Sum[2];
 
-  /* Outputs for Enabled SubSystem: '<S34>/MeasurementUpdate' incorporates:
-   *  EnablePort: '<S59>/Enable'
+  /* Outputs for Enabled SubSystem: '<S37>/MeasurementUpdate' incorporates:
+   *  EnablePort: '<S62>/Enable'
    */
   if (rtb_nicemeasurementornewupdaten) {
-    /* Sum: '<S59>/Sum' incorporates:
-     *  Sum: '<S34>/Add1'
+    /* Sum: '<S62>/Sum' incorporates:
+     *  Sum: '<S37>/Add1'
      */
     rtb_r = rtb_invertzaxisGain - (rtb_Ckxhatkk1_e + rtb_Dk1uk1_p);
 
-    /* Product: '<S59>/Product3' incorporates:
-     *  Constant: '<S16>/KalmanGainL'
+    /* Product: '<S62>/Product3' incorporates:
+     *  Constant: '<S19>/KalmanGainL'
      */
     localB->Product3[0] = localP->KalmanGainL_Value[0] * rtb_r;
     localB->Product3[1] = localP->KalmanGainL_Value[1] * rtb_r;
   }
 
-  /* End of Outputs for SubSystem: '<S34>/MeasurementUpdate' */
+  /* End of Outputs for SubSystem: '<S37>/MeasurementUpdate' */
 
-  /* Sum: '<S92>/Add1' incorporates:
-   *  Constant: '<S68>/C'
-   *  Constant: '<S68>/D'
-   *  Delay: '<S68>/MemoryX'
-   *  Product: '<S92>/C[k]*xhat[k|k-1]'
-   *  Product: '<S92>/D[k-1]*u[k-1]'
+  /* Sum: '<S95>/Add1' incorporates:
+   *  Constant: '<S71>/C'
+   *  Constant: '<S71>/D'
+   *  Delay: '<S71>/MemoryX'
+   *  Product: '<S95>/C[k]*xhat[k|k-1]'
+   *  Product: '<S95>/D[k-1]*u[k-1]'
    */
   rtb_Add1[0] = (localP->C_Value_j[0] * localDW->MemoryX_DSTATE_g[0] +
                  localP->C_Value_j[2] * localDW->MemoryX_DSTATE_g[1]) +
@@ -1424,31 +1385,31 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
                  localP->C_Value_j[3] * localDW->MemoryX_DSTATE_g[1]) +
     (localP->D_Value_b[1] * rtb_Dk1uk1[0] + localP->D_Value_b[3] * rtb_Dk1uk1[1]);
 
-  /* Outputs for Enabled SubSystem: '<S92>/MeasurementUpdate' */
+  /* Outputs for Enabled SubSystem: '<S95>/MeasurementUpdate' */
 
-  /* Constant: '<S74>/KalmanGainL' */
+  /* Constant: '<S77>/KalmanGainL' */
   Drone_Compens_MeasurementUpdate(rtb_LogicalOperator3_j,
     localP->KalmanGainL_Value_p, &rtb_opticalFlowToVelocity_gain[0], rtb_Add1,
     &localB->MeasurementUpdate_h);
 
-  /* End of Outputs for SubSystem: '<S92>/MeasurementUpdate' */
+  /* End of Outputs for SubSystem: '<S95>/MeasurementUpdate' */
 
-  /* Product: '<S92>/A[k]*xhat[k|k-1]' incorporates:
-   *  Constant: '<S68>/A'
-   *  Delay: '<S68>/MemoryX'
-   *  Sum: '<S92>/Add'
+  /* Product: '<S95>/A[k]*xhat[k|k-1]' incorporates:
+   *  Constant: '<S71>/A'
+   *  Delay: '<S71>/MemoryX'
+   *  Sum: '<S95>/Add'
    */
   rtb_TmpSignalConversionAtSFun_0 = localP->A_Value_m[1] *
     localDW->MemoryX_DSTATE_g[0] + localP->A_Value_m[3] *
     localDW->MemoryX_DSTATE_g[1];
 
-  /* Update for Delay: '<S68>/MemoryX' incorporates:
-   *  Constant: '<S68>/A'
-   *  Constant: '<S68>/B'
-   *  Delay: '<S68>/MemoryX'
-   *  Product: '<S92>/A[k]*xhat[k|k-1]'
-   *  Product: '<S92>/B[k]*u[k]'
-   *  Sum: '<S92>/Add'
+  /* Update for Delay: '<S71>/MemoryX' incorporates:
+   *  Constant: '<S71>/A'
+   *  Constant: '<S71>/B'
+   *  Delay: '<S71>/MemoryX'
+   *  Product: '<S95>/A[k]*xhat[k|k-1]'
+   *  Product: '<S95>/B[k]*u[k]'
+   *  Sum: '<S95>/Add'
    */
   localDW->MemoryX_DSTATE_g[0] = ((localP->B_Value_b[0] * rtb_Dk1uk1[0] +
     localP->B_Value_b[2] * rtb_Dk1uk1[1]) + (localP->A_Value_m[0] *
@@ -1458,12 +1419,12 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     localP->B_Value_b[3] * rtb_Dk1uk1[1]) + rtb_TmpSignalConversionAtSFun_0) +
     localB->MeasurementUpdate_h.Product3[1];
 
-  /* Sum: '<S152>/Add1' incorporates:
-   *  Constant: '<S131>/C'
-   *  Constant: '<S131>/D'
-   *  Delay: '<S131>/MemoryX'
-   *  Product: '<S152>/C[k]*xhat[k|k-1]'
-   *  Product: '<S152>/D[k-1]*u[k-1]'
+  /* Sum: '<S155>/Add1' incorporates:
+   *  Constant: '<S134>/C'
+   *  Constant: '<S134>/D'
+   *  Delay: '<S134>/MemoryX'
+   *  Product: '<S155>/C[k]*xhat[k|k-1]'
+   *  Product: '<S155>/D[k-1]*u[k-1]'
    */
   rtb_Add1[0] = (localP->C_Value_f[0] * localDW->MemoryX_DSTATE_m[0] +
                  localP->C_Value_f[2] * localDW->MemoryX_DSTATE_m[1]) +
@@ -1474,20 +1435,20 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     (localP->D_Value_o[1] * rtb_vel_world[0] + localP->D_Value_o[3] *
      rtb_vel_world[1]);
 
-  /* Outputs for Enabled SubSystem: '<S152>/MeasurementUpdate' */
+  /* Outputs for Enabled SubSystem: '<S155>/MeasurementUpdate' */
 
-  /* Constant: '<S134>/KalmanGainL' */
+  /* Constant: '<S137>/KalmanGainL' */
   Drone_Compens_MeasurementUpdate(rtb_LogicalOperator3,
     localP->KalmanGainL_Value_o, &localB->posVIS_datin[0], rtb_Add1,
     &localB->MeasurementUpdate_o);
 
-  /* End of Outputs for SubSystem: '<S152>/MeasurementUpdate' */
+  /* End of Outputs for SubSystem: '<S155>/MeasurementUpdate' */
 
   /* Inport: '<S1>/batteryStatus_datin' */
   localB->batteryStatus_datin[0] = rtu_batteryStatus_datin[0];
   localB->batteryStatus_datin[1] = rtu_batteryStatus_datin[1];
 
-  /* Update for DiscreteFir: '<S10>/FIR_IMUaccel' */
+  /* Update for DiscreteFir: '<S13>/FIR_IMUaccel' */
   /* Update circular buffer index */
   localDW->FIR_IMUaccel_circBuf--;
   if (localDW->FIR_IMUaccel_circBuf < 0) {
@@ -1502,20 +1463,20 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   localDW->FIR_IMUaccel_states[localDW->FIR_IMUaccel_circBuf + 10] =
     inverseIMU_gain[2];
 
-  /* End of Update for DiscreteFir: '<S10>/FIR_IMUaccel' */
+  /* End of Update for DiscreteFir: '<S13>/FIR_IMUaccel' */
 
-  /* Update for DiscreteFilter: '<S10>/IIR_IMUgyro_r' */
+  /* Update for DiscreteFilter: '<S13>/IIR_IMUgyro_r' */
   localDW->IIR_IMUgyro_r_states[4] = localDW->IIR_IMUgyro_r_states[3];
   localDW->IIR_IMUgyro_r_states[3] = localDW->IIR_IMUgyro_r_states[2];
   localDW->IIR_IMUgyro_r_states[2] = localDW->IIR_IMUgyro_r_states[1];
   localDW->IIR_IMUgyro_r_states[1] = localDW->IIR_IMUgyro_r_states[0];
   localDW->IIR_IMUgyro_r_states[0] = IIR_IMUgyro_r_tmp;
 
-  /* Update for Delay: '<S66>/Delay' */
+  /* Update for Delay: '<S69>/Delay' */
   localDW->Delay_DSTATE[0] = localB->UseCurrentEstimator_g.Add[0];
   localDW->Delay_DSTATE[1] = localB->UseCurrentEstimator_g.Add[1];
 
-  /* Update for DiscreteFilter: '<S69>/IIRgyroz' */
+  /* Update for DiscreteFilter: '<S72>/IIRgyroz' */
   for (k = 0; k < 2; k++) {
     memOffset = k * 5;
     localDW->IIRgyroz_states[memOffset + 4] = localDW->IIRgyroz_states[memOffset
@@ -1528,51 +1489,51 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     localDW->IIRgyroz_states[memOffset] = localDW->IIRgyroz_tmp[k];
   }
 
-  /* End of Update for DiscreteFilter: '<S69>/IIRgyroz' */
+  /* End of Update for DiscreteFilter: '<S72>/IIRgyroz' */
 
-  /* Update for UnitDelay: '<S119>/UD' */
+  /* Update for UnitDelay: '<S122>/UD' */
   localDW->UD_DSTATE[0] = absxk;
   localDW->UD_DSTATE[1] = t;
 
-  /* Update for Delay: '<S65>/Delay' */
+  /* Update for Delay: '<S68>/Delay' */
   localDW->Delay_DSTATE_b[0] = localB->Reshapexhat_o[0];
   localDW->Delay_DSTATE_b[1] = localB->Reshapexhat_o[1];
 
-  /* Update for Delay: '<S7>/Delay2' */
+  /* Update for Delay: '<S10>/Delay2' */
   localDW->Delay2_DSTATE = localB->Reshapexhat[0];
 
-  /* Update for DiscreteFilter: '<S12>/pressureFilter_IIR' */
+  /* Update for DiscreteFilter: '<S15>/pressureFilter_IIR' */
   localDW->pressureFilter_IIR_states[4] = localDW->pressureFilter_IIR_states[3];
   localDW->pressureFilter_IIR_states[3] = localDW->pressureFilter_IIR_states[2];
   localDW->pressureFilter_IIR_states[2] = localDW->pressureFilter_IIR_states[1];
   localDW->pressureFilter_IIR_states[1] = localDW->pressureFilter_IIR_states[0];
   localDW->pressureFilter_IIR_states[0] = pressureFilter_IIR_tmp;
 
-  /* Update for DiscreteFilter: '<S12>/soonarFilter_IIR' */
+  /* Update for DiscreteFilter: '<S15>/soonarFilter_IIR' */
   localDW->soonarFilter_IIR_states[4] = localDW->soonarFilter_IIR_states[3];
   localDW->soonarFilter_IIR_states[3] = localDW->soonarFilter_IIR_states[2];
   localDW->soonarFilter_IIR_states[2] = localDW->soonarFilter_IIR_states[1];
   localDW->soonarFilter_IIR_states[1] = localDW->soonarFilter_IIR_states[0];
   localDW->soonarFilter_IIR_states[0] = soonarFilter_IIR_tmp;
 
-  /* Update for Delay: '<S11>/MemoryX' */
+  /* Update for Delay: '<S14>/MemoryX' */
   localDW->icLoad = 0U;
 
-  /* Product: '<S34>/A[k]*xhat[k|k-1]' incorporates:
-   *  Constant: '<S11>/A'
-   *  Delay: '<S11>/MemoryX'
-   *  Sum: '<S34>/Add'
+  /* Product: '<S37>/A[k]*xhat[k|k-1]' incorporates:
+   *  Constant: '<S14>/A'
+   *  Delay: '<S14>/MemoryX'
+   *  Sum: '<S37>/Add'
    */
   rtb_TmpSignalConversionAtSFun_0 = localP->A_Value[1] * localDW->
     MemoryX_DSTATE[0] + localP->A_Value[3] * localDW->MemoryX_DSTATE[1];
 
-  /* Update for Delay: '<S11>/MemoryX' incorporates:
-   *  Constant: '<S11>/A'
-   *  Constant: '<S11>/B'
-   *  Delay: '<S11>/MemoryX'
-   *  Product: '<S34>/A[k]*xhat[k|k-1]'
-   *  Product: '<S34>/B[k]*u[k]'
-   *  Sum: '<S34>/Add'
+  /* Update for Delay: '<S14>/MemoryX' incorporates:
+   *  Constant: '<S14>/A'
+   *  Constant: '<S14>/B'
+   *  Delay: '<S14>/MemoryX'
+   *  Product: '<S37>/A[k]*xhat[k|k-1]'
+   *  Product: '<S37>/B[k]*u[k]'
+   *  Sum: '<S37>/Add'
    */
   localDW->MemoryX_DSTATE[0] = ((localP->A_Value[0] * localDW->MemoryX_DSTATE[0]
     + localP->A_Value[2] * localDW->MemoryX_DSTATE[1]) + localP->B_Value[0] *
@@ -1580,32 +1541,32 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   localDW->MemoryX_DSTATE[1] = (localP->B_Value[1] * rtb_Sum[2] +
     rtb_TmpSignalConversionAtSFun_0) + localB->Product3[1];
 
-  /* Update for Delay: '<S68>/MemoryX' */
+  /* Update for Delay: '<S71>/MemoryX' */
   localDW->icLoad_l = 0U;
 
   /* Update for Delay: '<S3>/Delay1' */
   localDW->Delay1_DSTATE[0] = localB->Reshapexhat_o[0];
   localDW->Delay1_DSTATE[1] = localB->Reshapexhat_o[1];
 
-  /* Update for Delay: '<S131>/MemoryX' */
+  /* Update for Delay: '<S134>/MemoryX' */
   localDW->icLoad_j = 0U;
 
-  /* Product: '<S152>/A[k]*xhat[k|k-1]' incorporates:
-   *  Constant: '<S131>/A'
-   *  Delay: '<S131>/MemoryX'
-   *  Sum: '<S152>/Add'
+  /* Product: '<S155>/A[k]*xhat[k|k-1]' incorporates:
+   *  Constant: '<S134>/A'
+   *  Delay: '<S134>/MemoryX'
+   *  Sum: '<S155>/Add'
    */
   rtb_TmpSignalConversionAtSFun_0 = localP->A_Value_g[1] *
     localDW->MemoryX_DSTATE_m[0] + localP->A_Value_g[3] *
     localDW->MemoryX_DSTATE_m[1];
 
-  /* Update for Delay: '<S131>/MemoryX' incorporates:
-   *  Constant: '<S131>/A'
-   *  Constant: '<S131>/B'
-   *  Delay: '<S131>/MemoryX'
-   *  Product: '<S152>/A[k]*xhat[k|k-1]'
-   *  Product: '<S152>/B[k]*u[k]'
-   *  Sum: '<S152>/Add'
+  /* Update for Delay: '<S134>/MemoryX' incorporates:
+   *  Constant: '<S134>/A'
+   *  Constant: '<S134>/B'
+   *  Delay: '<S134>/MemoryX'
+   *  Product: '<S155>/A[k]*xhat[k|k-1]'
+   *  Product: '<S155>/B[k]*u[k]'
+   *  Sum: '<S155>/Add'
    */
   localDW->MemoryX_DSTATE_m[0] = ((localP->B_Value_a[0] * rtb_vel_world[0] +
     localP->B_Value_a[2] * rtb_vel_world[1]) + (localP->A_Value_g[0] *
@@ -1615,7 +1576,7 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
     localP->B_Value_a[3] * rtb_vel_world[1]) + rtb_TmpSignalConversionAtSFun_0)
     + localB->MeasurementUpdate_o.Product3[1];
 
-  /* Update for DiscreteIntegrator: '<S66>/SimplyIntegrateVelocity' */
+  /* Update for DiscreteIntegrator: '<S69>/SimplyIntegrateVelocity' */
   localDW->SimplyIntegrateVelocity_DSTATE[0] +=
     localP->SimplyIntegrateVelocity_gainval * rtb_vel_world[0];
   localDW->SimplyIntegrateVelocity_DSTATE[1] +=
@@ -1647,7 +1608,7 @@ void Drone_Compens_Drone_Compensator(boolean_T rtu_controlModePosVSOrient_flag,
   localDW->SimplyIntegrateVelocity_PrevRes = (int8_T)
     localB->controlModePosVSOrient_flagin;
 
-  /* End of Update for DiscreteIntegrator: '<S66>/SimplyIntegrateVelocity' */
+  /* End of Update for DiscreteIntegrator: '<S69>/SimplyIntegrateVelocity' */
 }
 
 /* Model step function */
@@ -1731,13 +1692,17 @@ void Drone_Compensator_step(RT_MODEL_Drone_Compensator_T *const
 
   /* Outport: '<Root>/motors_refout' */
   Drone_Compensator_Y_motors_refout[0] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.Motordirections1[0];
+    Drone_Compensator_B->Drone_Compensator_d.ControllerPolePlace.W2ToMotorsCmd_Gain
+    [0];
   Drone_Compensator_Y_motors_refout[1] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.Motordirections1[1];
+    Drone_Compensator_B->Drone_Compensator_d.ControllerPolePlace.W2ToMotorsCmd_Gain
+    [1];
   Drone_Compensator_Y_motors_refout[2] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.Motordirections1[2];
+    Drone_Compensator_B->Drone_Compensator_d.ControllerPolePlace.W2ToMotorsCmd_Gain
+    [2];
   Drone_Compensator_Y_motors_refout[3] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.Motordirections1[3];
+    Drone_Compensator_B->Drone_Compensator_d.ControllerPolePlace.W2ToMotorsCmd_Gain
+    [3];
 
   /* Outport: '<Root>/X' */
   *Drone_Compensator_Y_X =
@@ -1791,18 +1756,13 @@ void Drone_Compensator_step(RT_MODEL_Drone_Compensator_T *const
     Drone_Compensator_B->Drone_Compensator_d.controlModePosVSOrient_flagin;
 
   /* Outport: '<Root>/pose_refout' */
-  Drone_Compensator_Y_pose_refout[0] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.pos_ref[0];
-  Drone_Compensator_Y_pose_refout[1] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.pos_ref[1];
-  Drone_Compensator_Y_pose_refout[2] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.pos_ref[2];
-  Drone_Compensator_Y_pose_refout[3] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.orient_ref[0];
-  Drone_Compensator_Y_pose_refout[4] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.Switch_refAtt[0];
-  Drone_Compensator_Y_pose_refout[5] =
-    Drone_Compensator_B->Drone_Compensator_d.ControllerPID.Switch_refAtt[1];
+  for (i = 0; i < 6; i++) {
+    Drone_Compensator_Y_pose_refout[i] =
+      Drone_Compensator_B->Drone_Compensator_d.ControllerPolePlace.PosVSOrient_Switch
+      [i];
+  }
+
+  /* End of Outport: '<Root>/pose_refout' */
 
   /* Outport: '<Root>/ddxb' */
   *Drone_Compensator_Y_ddxb =

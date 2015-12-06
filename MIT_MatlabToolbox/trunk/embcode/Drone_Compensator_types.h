@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Drone_Compensator'.
  *
- * Model version                  : 1.3012
+ * Model version                  : 1.3035
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Sat Dec  5 23:16:06 2015
+ * C/C++ source code generated on : Sun Dec  6 03:38:55 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -37,6 +37,47 @@ typedef struct {
   real_T totalThrust_maxRelative;
   real_T motorsThrustperMotor_max;
 } struct_SNZkZ6rc9vhdEg27lKQdHF;
+
+#endif
+
+#ifndef _DEFINED_TYPEDEF_FOR_struct_pP0yJPvqYhejK9gHgcbWI_
+#define _DEFINED_TYPEDEF_FOR_struct_pP0yJPvqYhejK9gHgcbWI_
+
+typedef struct {
+  real_T nrotors;
+  real_T g;
+  real_T rho;
+  real_T muv;
+  real_T M;
+  real_T J[9];
+  real_T h;
+  real_T d;
+  real_T nb;
+  real_T r;
+  real_T c;
+  real_T e;
+  real_T Mb;
+  real_T Mc;
+  real_T ec;
+  real_T Ib;
+  real_T Ic;
+  real_T mb;
+  real_T Ir;
+  real_T Ct;
+  real_T Cq;
+  real_T sigma;
+  real_T thetat;
+  real_T theta0;
+  real_T theta1;
+  real_T theta75;
+  real_T thetai;
+  real_T a;
+  real_T A;
+  real_T gamma;
+  real_T b;
+  real_T k;
+  boolean_T verbose;
+} struct_pP0yJPvqYhejK9gHgcbWI;
 
 #endif
 
@@ -96,49 +137,8 @@ typedef struct {
 
 #endif
 
-#ifndef _DEFINED_TYPEDEF_FOR_struct_pP0yJPvqYhejK9gHgcbWI_
-#define _DEFINED_TYPEDEF_FOR_struct_pP0yJPvqYhejK9gHgcbWI_
-
-typedef struct {
-  real_T nrotors;
-  real_T g;
-  real_T rho;
-  real_T muv;
-  real_T M;
-  real_T J[9];
-  real_T h;
-  real_T d;
-  real_T nb;
-  real_T r;
-  real_T c;
-  real_T e;
-  real_T Mb;
-  real_T Mc;
-  real_T ec;
-  real_T Ib;
-  real_T Ic;
-  real_T mb;
-  real_T Ir;
-  real_T Ct;
-  real_T Cq;
-  real_T sigma;
-  real_T thetat;
-  real_T theta0;
-  real_T theta1;
-  real_T theta75;
-  real_T thetai;
-  real_T a;
-  real_T A;
-  real_T gamma;
-  real_T b;
-  real_T k;
-  boolean_T verbose;
-} struct_pP0yJPvqYhejK9gHgcbWI;
-
-#endif
-
-/* Parameters for system: '<S1>/ControllerPID' */
-typedef struct P_ControllerPID_Drone_Compens_T_ P_ControllerPID_Drone_Compens_T;
+/* Parameters for system: '<S1>/ControllerPolePlace' */
+typedef struct P_ControllerPolePlace_Drone_C_T_ P_ControllerPolePlace_Drone_C_T;
 
 /* Parameters for system: '<Root>/Drone_Compensator' */
 typedef struct P_Drone_Compensator_Drone_Com_T_ P_Drone_Compensator_Drone_Com_T;

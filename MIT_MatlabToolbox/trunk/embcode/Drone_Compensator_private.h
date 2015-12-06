@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Drone_Compensator'.
  *
- * Model version                  : 1.3012
+ * Model version                  : 1.3035
  * Simulink Coder version         : 8.8 (R2015a) 09-Feb-2015
- * C/C++ source code generated on : Sat Dec  5 23:16:06 2015
+ * C/C++ source code generated on : Sun Dec  6 03:38:55 2015
  *
  * Target selection: ert_shrlib.tlc
  * Embedded hardware selection: 32-bit Generic
@@ -37,16 +37,14 @@
 # define rtmGetTPtr(rtm)               (&(rtm)->Timing.taskTime0)
 #endif
 
-extern void Drone_Compen_ControllerPID_Init(DW_ControllerPID_Drone_Compen_T
-  *localDW, P_ControllerPID_Drone_Compens_T *localP);
-extern void Drone_Compensator_ControllerPID(const real_T rtu_pos_ref[3],
-  boolean_T rtu_takeoff_flag, const real_T rtu_orient_ref[3], boolean_T
-  rtu_controlModePosVOrient_flagi, const real_T rtu_states_estim[3], const
-  real_T rtu_states_estim_m[3], real_T rtu_states_estim_l, real_T
-  rtu_states_estim_b, const real_T rtu_states_estim_o[2], const real_T
-  rtu_states_estim_p[2], B_ControllerPID_Drone_Compens_T *localB,
-  DW_ControllerPID_Drone_Compen_T *localDW, P_ControllerPID_Drone_Compens_T
-  *localP, P_Drone_Compensator_T *Drone_Compensator_P);
+extern void Drone_Compe_ControllerPolePlace(const real_T rtu_pos_refin[3],
+  boolean_T rtu_takeoff_flag, const real_T rtu_orient_refin[3], boolean_T
+  rtu_controlModePosVSOrient_flag, const real_T rtu_states_estimin[2], const
+  real_T rtu_states_estimin_m[2], real_T rtu_states_estimin_l, const real_T
+  rtu_states_estimin_m4[3], real_T rtu_states_estimin_ly, const real_T
+  rtu_states_estimin_le[3], B_ControllerPolePlace_Drone_C_T *localB,
+  P_ControllerPolePlace_Drone_C_T *localP, P_Drone_Compensator_T
+  *Drone_Compensator_P);
 extern void Drone_Compens_MeasurementUpdate(boolean_T rtu_Enable, const real_T
   rtu_Lk[4], const real_T rtu_yk[2], const real_T rtu_yhatkk1[2],
   B_MeasurementUpdate_Drone_Com_T *localB);

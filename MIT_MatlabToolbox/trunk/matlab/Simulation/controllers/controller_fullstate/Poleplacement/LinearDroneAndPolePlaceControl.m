@@ -92,9 +92,9 @@ B = double(matrixAB(1:12,13:16))
 %% 2.1) Designing Full-state Feedback Controllers with Simplified Dynamics Model (1.1) via Pole Placement
 
  %Note: We linearized about hover. This also implies: The control "policy"
- %to correct a position error, was derived under a yaw-angle of zero!
- %If your drone yaw-drifts 90 deg and runs into an world-X-error, it will
- %still believe that pitch is the right answer! You can compensate for this by
+ %to correct a position error was derived under a yaw-angle of zero!
+ %If your drone yaw-drifts 90 deg and runs into a world-X-error, it will
+ %still believe that pitch is the right answer to correct for this position error! You can compensate for this by
  %rotation the X-Y-error by the current yaw angle.
 
 % Find states to decouple
@@ -121,7 +121,7 @@ B_dec_yaw   = ...
 % Now place your own poles for the decoupled subsystems separately
 
 xpoles      = [-9+6i;-9-6i;-0.18+1.8i;-0.18-1.8i];
-ypoles      = [-60;-4;-0.1+2i;-0.1-2i];     
+ypoles      = [-60;-4;-0.16+2i;-0.16-2i];       
 yawpoles    = [-3;-3.1];
 zpoles      = [-2;-2.1];               % Play around with poles here: Slow poles [-2;-2.1], Fast poles [-5;-5.1];
 %zpoles     = [-5;-5.1];               % Play around with poles here: Slow poles [-2;-2.1], Fast poles [-5;-5.1];
