@@ -19,8 +19,7 @@ mdl_quadrotor
 syms Pxw Pyw Pzw yaw pitch roll dpx dpy dpz p q r T tauy taup taur;
 symsvector  = [Pxw; Pyw; Pzw ;yaw ;pitch ;roll ;dpx ;dpy ;dpz ;p ;q ;r ;T ;tauy ;taup ;taur];
 
-%Transform inertia from RTB frame to RS frame
-%J           = ([cos(pi/4) -sin(pi/4) 0; sin(pi/4) cos(pi/4) 0; 0 0 1]'*quad.J*[cos(pi/4) -sin(pi/4) 0; sin(pi/4) cos(pi/4) 0; 0 0 1]);
+%Inertia
 J            = quad.J;
 
 %Define Rotation matrices
@@ -54,7 +53,7 @@ iW = ...
 %%Linearization Point = Hover
 %-----------
 state_equil = [0; 0; -1.5; 0 ;0 ;0 ;0 ;0 ;0 ;0 ;0 ;0 ]; %x_eq
-input_equil = [-quad.g*quad.M ;0 ;0 ;0];		%u_eq
+input_equil = [-quad.g*quad.M ;0 ;0 ;0];                %u_eq
 equil       = [state_equil; input_equil];
 
 %%Dynamics
@@ -88,11 +87,7 @@ B = double(matrixAB(1:12,13:16))
 %Note u_nonlinearSys = u_eq + x_linearizedSys!
 
 %% 1.2) Linearizing Full Nonlinear Simulink Model (the model from Robotics Toolbox)
-%use Simulation/controllers/controller_fullstate/linearizeDrone.slx and Simulink's ControlDesign/Linear Analysis
-
-%% 2.0) Load Full-state Feedback Controller derived from the PIDtoW-controller
-%(see linearizePID2W.m)
-K_pid =  [0 0 0.425862895347363 0 0 0 0 0 0.248420022285962 0 0 0;0 0 0 0.0102792311510984 0 0 0 0 0 0 0 0.00308376934532953;-0.00425177438846976 0 0 0 0.013286794963968 0 -0.00106294359711744 0 0 0 0.0017715726618624 0;0 0.00834853616902657 0 0 0 0.028788055755264 0 0.00259092501797376 0 0.00664339748198401 0 0];
+%use Simulation/controllers/controller_fullstate/Poleplacement/linearizeDrone(...).slx and Simulink's ControlDesign/Linear Analysis
 
 %% 2.1) Designing Full-state Feedback Controllers with Simplified Dynamics Model (1.1) via Pole Placement
 
@@ -138,6 +133,6 @@ K_dec_yaw = ...
 
 % Compute Full-state feedback for 'original' system
 K_poleplace = [K_dec_x K_dec_z K_dec_y K_dec_yaw]*inv(Veig_nrm);
-K_poleplace(abs(K_poleplace)<1e-10)=0;
+K_poleplace(abs(K_poleplace)<1e-7)=0;
 
 

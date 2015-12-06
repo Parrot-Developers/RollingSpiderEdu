@@ -67,7 +67,7 @@ R           = rho*diag(1./[motor_max motor_max motor_max motor_max]);
 
 %% 4) Compute K_LQR
 K_lqr_toMotorcmd       = lqr(A,B,Q,R);
-K_lqr_toMotorcmd(abs(K_lqr_toMotorcmd)<(1e-10)) = 0;  %set small values zero
+K_lqr_toMotorcmd(abs(K_lqr_toMotorcmd)<(1e-8)) = 0;  %set small values zero
 
 
 

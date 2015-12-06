@@ -23,7 +23,7 @@ end;
 
 %% Plot
 
-figure('Position',[100 100 700 150]);
+figure('Name','Access times of functions','Position',[100 100 700 150]);
 
 inouttimes_control = getInOutTimes(ptimes_control);
 inouttimes_ip = getInOutTimes(ptimes_ip);
@@ -41,6 +41,6 @@ inouttimes_of = getInOutTimes(ptimes_of);
 legend 'image processing' 'optical flow' 'control'
 ylim([0.99999999 1.000000025])
 xlim([0 1500])
-xlabel 't [ms]'
+xlabel({'t [ms]'},'Interpreter','latex');
 set(gca,'ytick',[])
 set(gca,'yticklabel',[])
