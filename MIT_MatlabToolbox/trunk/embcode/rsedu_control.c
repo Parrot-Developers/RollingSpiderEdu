@@ -818,8 +818,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
     static float MIN_BATT		= 30.0;
     static int MAX_noOF 		= 50; //maximum acceptable numbers of cycles without optical flow
 
-    //user input
-    int power_usrinpt;
+    //powe/usr input    
     double powerGain = 0;
     static double powerGain_paramsFile = 0.1;
 
@@ -829,7 +828,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
     static double battLevelAvg;
     float of_data[5];
     float vis_data[4];
-    float ofDefined;
+    //float ofDefined;
     float ofQuality;
 
     //communication
@@ -840,7 +839,6 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 
     int pitch_ref_buff, roll_ref_buff, yaw_ref_buff, alt_ref_buff;
 
-    static int serverstatus;
     static int of_fifo, vis_fifo;
 
 
@@ -878,7 +876,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 
         if(FEAT_TIME)
         {
-            close(ptfile);
+            fclose(ptfile);
         };
 
 
@@ -1004,8 +1002,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 
         if(connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
         {
-            printf("ERROR Connection to reference value server failed \n");
-            serverstatus = 1;
+            printf("ERROR Connection to reference value server failed \n");            
             exit(0);
         }
         else
@@ -1018,6 +1015,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         //Powergain user prompt
         //-----
         /*
+	int power_usrinpt;
         printf("Power-Gain in %% ? \n");
         scanf("%i", &power_usrinpt);
         powerGain_paramsFile = power_usrinpt/100.0;
@@ -1366,7 +1364,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
             if((read(of_fifo, (float*)(&of_data), sizeof(of_data)) > 0) && ((of_data[0] != 0.0) || (of_data[1] != 0.0)))
             {
                 ofQuality = of_data[3];
-                ofDefined = of_data[4];
+                //ofDefined = of_data[4];
                 if(ofQuality > 0)
                 {
                     counter_noOF = 0;
@@ -1457,7 +1455,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         Drone_Compensator_U_batteryStatus_datin[1] = (double)((int)in->HAL_vbat_SI.vbat_percentage);
 
         // compute control commands
-        char* error = rtmGetErrorStatus(Drone_Compensator_M);
+        const char* error = rtmGetErrorStatus(Drone_Compensator_M);
         if(!error)
         {
             rt_OneStep(Drone_Compensator_M);

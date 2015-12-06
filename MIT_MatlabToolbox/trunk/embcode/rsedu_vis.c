@@ -68,7 +68,7 @@ void RSEDU_image_processing(void * buffer)
     int fifo;
     if(FEAT_IMSAVE == 2)
     {
-        u8 * raw = buffer;
+        //u8 * raw = buffer;
     };
     pixel2_t *image = buffer;  /* Picture is a 160x120 pixels, stored in YUV422 interlaced format - TO BE CHECKED */
 

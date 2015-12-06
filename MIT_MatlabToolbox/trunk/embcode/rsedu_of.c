@@ -29,8 +29,7 @@ void RSEDU_optical_flow(float vx, float vy, float vz, int defined, float quality
     static int counter = 0;
 
     //communication
-    static float of_data[5];
-    int status;
+    static float of_data[5];    
     static int of_fifo;
 
     /*
