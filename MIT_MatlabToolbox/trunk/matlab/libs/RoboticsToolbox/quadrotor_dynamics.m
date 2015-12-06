@@ -151,6 +151,10 @@ function sys = mdlDerivatives(t,x,u, quad)
     the = n(2);    % pitch
     psi = n(3);    % roll
     
+    if (abs(the)>pi/2) error('|pitch| greater than pi/2!'); end;
+    if (abs(psi)>pi/2) error('|roll| greater than pi/2!'); end;
+    if (z(3)>0) error('z greater than 0 (under ground)!'); end;    
+    
     % rotz(phi)*roty(the)*rotx(psi)
     R_Body2World = [cos(the)*cos(phi) sin(psi)*sin(the)*cos(phi)-cos(psi)*sin(phi) cos(psi)*sin(the)*cos(phi)+sin(psi)*sin(phi);
          cos(the)*sin(phi) sin(psi)*sin(the)*sin(phi)+cos(psi)*cos(phi) cos(psi)*sin(the)*sin(phi)-sin(psi)*cos(phi);
@@ -203,7 +207,7 @@ function sys = mdlDerivatives(t,x,u, quad)
     dv = (quad.g*e3 + R_Body2World*(1/quad.M)*sum(T,2));
     do = inv(quad.J)*(-cross(o,quad.J*o) + sum(tau,2) + sum(Q,2)); %row sum of torques
     if isnan(do)
-      warning('system rotating NaN!')
+      error('system rotating NaN!')
       do = zeros(size(do));
     end
     sys = [dz;dn;dv;do];                                 %This is the state derivative vector
