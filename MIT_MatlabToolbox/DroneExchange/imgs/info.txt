@@ -1,0 +1,1 @@
+images saved during flight go here (if enabled in data/edu/params/paramsEDU.dat on drone and then downloaded via DroneDownloadImages.sh)

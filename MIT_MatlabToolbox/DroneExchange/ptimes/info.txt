@@ -1,1 +1,1 @@
-files containing processing times of the three threads control, vision, optical flow go here (if enabled in data/edu/params/paramsEDU.dat on drone and the downloaded via DroneDownloadPTimes.sh)
+files containing processing times of the three threads control, vision, optical flow go here (if enabled in data/edu/params/paramsEDU.dat on drone and then downloaded via DroneDownloadPTimes.sh)

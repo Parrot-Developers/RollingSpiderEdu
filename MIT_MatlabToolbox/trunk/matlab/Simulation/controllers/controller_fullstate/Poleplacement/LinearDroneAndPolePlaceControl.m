@@ -6,7 +6,6 @@
 % full-state feedback controls
 % SPECIAL NOTES
 % ===============================
-% Change History
 %  2015/08/25 created
 % ==================================
 
@@ -95,11 +94,13 @@ B = double(matrixAB(1:12,13:16))
 %(see linearizePID2W.m)
 K_pid =  [0 0 0.425862895347363 0 0 0 0 0 0.248420022285962 0 0 0;0 0 0 0.0102792311510984 0 0 0 0 0 0 0 0.00308376934532953;-0.00425177438846976 0 0 0 0.013286794963968 0 -0.00106294359711744 0 0 0 0.0017715726618624 0;0 0.00834853616902657 0 0 0 0.028788055755264 0 0.00259092501797376 0 0.00664339748198401 0 0];
 
-% Generate c-code ready format for copy-paste straight into src-files rsedu_control.c
-K_pid_ccode_string = sprintf('%E,' , K_pid(:));
-K_pid_ccode_string = ['{ ' K_pid_ccode_string(1:end-1) ' }']
-
 %% 2.1) Designing Full-state Feedback Controllers with Simplified Dynamics Model (1.1) via Pole Placement
+
+ %Note: We linearized about hover. This also implies: The control "policy"
+ %to correct a position error, was derived under a yaw-angle of zero!
+ %If your drone yaw-drifts 90 deg and runs into an world-X-error, it will
+ %still believe that pitch is the right answer! You can compensate for this by
+ %rotation the X-Y-error by the current yaw angle.
 
 % Find states to decouple
 [V,J]   = jordan(A);
@@ -123,6 +124,13 @@ A_dec_yaw   = ...
 B_dec_yaw   = ...
 
 % Now place your own poles for the decoupled subsystems separately
+
+xpoles      = [-9+6i;-9-6i;-0.18+1.8i;-0.18-1.8i];
+ypoles      = [-60;-4;-0.1+2i;-0.1-2i];     
+yawpoles    = [-3;-3.1];
+zpoles      = [-2;-2.1];               % Play around with poles here: Slow poles [-2;-2.1], Fast poles [-5;-5.1];
+%zpoles     = [-5;-5.1];               % Play around with poles here: Slow poles [-2;-2.1], Fast poles [-5;-5.1];
+
 K_dec_x = ...
 K_dec_z = ...
 K_dec_y = ...    
@@ -131,23 +139,5 @@ K_dec_yaw = ...
 % Compute Full-state feedback for 'original' system
 K_poleplace = [K_dec_x K_dec_z K_dec_y K_dec_yaw]*inv(Veig_nrm);
 K_poleplace(abs(K_poleplace)<1e-10)=0;
-
-% Generate c-code ready format for copy-paste straight into src-files rsedu_control.c
-% K_poleplace_string = sprintf('%E,' , K_poleplace(:));
-% K_poleplace_string = ['{ ' K_poleplace_string(1:end-1) ' }']
-
-
-
-%% 2.2) Designing Full-state Feedback Controllers with Simplified Dynamics Model (1.1) via LQR
-
-%CODE MISSING
-
-K_lqr(abs(K_lqr)<(1e-10))=0;  %set small values zero
-K_lqr(2,:) = K_poleplace(2,:); %LQR does not work well on yaw as LQR places much weight on yaw-rate (which is quite noisy)
-
-% Generate c-code ready format for copy-paste to src-files.
-K_lqr_ccode_string = sprintf('%E,' , K_lqr(:));
-K_lqr_ccode_string = ['{ ' K_lqr_ccode_string(1:end-1) ' }']
-
 
 

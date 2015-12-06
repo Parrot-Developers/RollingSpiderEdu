@@ -23,22 +23,24 @@ end;
 
 %% Plot
 
-figure;
+figure('Position',[100 100 700 150]);
 
 inouttimes_control = getInOutTimes(ptimes_control);
 inouttimes_ip = getInOutTimes(ptimes_ip);
 inouttimes_of = getInOutTimes(ptimes_of);
 
- stairs(inouttimes_ip(:,1),1.000002*inouttimes_ip(:,2),'g'); hold all;
+ stairs(inouttimes_ip(:,1),1.00000002*inouttimes_ip(:,2),'g'); hold all;
 %fill([xb;xb(end)],[yb; yb(1)],'g','LineStyle','none') 
 
- stairs(inouttimes_of(:,1),1.000001*inouttimes_of(:,2),'b'); hold all;
+ stairs(inouttimes_of(:,1),1.00000001*inouttimes_of(:,2),'b'); hold all;
 %fill([xb;xb(end)],[yb; yb(1)],'b','LineStyle','none') 
 
   stairs(inouttimes_control(:,1),inouttimes_control(:,2),'r');
 %fill([xb;xb(end)],[yb; yb(1)],'r','LineStyle','none')  
 
 legend 'image processing' 'optical flow' 'control'
-ylim([0.999999 1.000005])
+ylim([0.99999999 1.000000025])
 xlim([0 1500])
 xlabel 't [ms]'
+set(gca,'ytick',[])
+set(gca,'yticklabel',[])
