@@ -32,7 +32,7 @@ printf("C-files are being packed...\n");
 char rtwFilesFolder[100], embFolder[100], rtwmainFileName[20], rtwmainFilePath_inemb[300], rscontrolcopyFilePath_inemb[300], str[300];
 
 sprintf(embFolder,"%s","../../trunk/embcode");
-sprintf(rtwFilesFolder,"%s","../../trunk/matlab/Simulation/DroneRS_Compensator_ert_shrlib_rtw");
+sprintf(rtwFilesFolder,"%s","../../trunk/matlab/Simulation/Drone_Compensator_ert_shrlib_rtw");
 sprintf(rtwmainFileName,"%s","ert_main.c");
 sprintf(str,"%s/%s",rtwFilesFolder,rtwmainFileName);
 

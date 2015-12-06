@@ -7,6 +7,7 @@ function [sys,x0,str,ts] = quadrotor_dynamics(t,x,u,flag, quad)
     % version 4.0 4/2/10, fixed rotor flapping rotation matrix bug, mirroring
     % version 5.0 8/8/11, simplified and restructured
    % version 6.0 25/10/13, fixed rotation matrix/inverse wronskian definitions, flapping cross-product bug
+   % minor edits 10/11/15 to adapt to MIT_ROSMAT (Fabian Riether)
     
     warning off MATLAB:divideByZero
     
@@ -124,15 +125,9 @@ function sys = mdlDerivatives(t,x,u, quad)
     S = 3;                      %   E       'East'                              1x1
     W = 4;                      %   W       'West'                              1x1
     
-    
-%     D(:,1) = [quad.d;0;quad.h];          %   Di      Rotor hub displacements             1x3
-%     D(:,2) = [0;quad.d;quad.h];
-%     D(:,3) = [-quad.d;0;quad.h];
-%     D(:,4) = [0;-quad.d;quad.h];
-
     d=sqrt(2)/2*quad.d;
     
-    D(:,1) = [ d;-d;quad.h];          %   Di      Rotor hub displacements             1x3
+    D(:,1) = [ d;-d;quad.h];    %   Di      Rotor hub displacements             1x3
     D(:,2) = [ d; d;quad.h];
     D(:,3) = [-d; d;quad.h];
     D(:,4) = [-d;-d;quad.h]; 
@@ -157,7 +152,7 @@ function sys = mdlDerivatives(t,x,u, quad)
     psi = n(3);    % roll
     
     % rotz(phi)*roty(the)*rotx(psi)
-    R = [cos(the)*cos(phi) sin(psi)*sin(the)*cos(phi)-cos(psi)*sin(phi) cos(psi)*sin(the)*cos(phi)+sin(psi)*sin(phi);   %BBF > Inertial rotation matrix
+    R_Body2World = [cos(the)*cos(phi) sin(psi)*sin(the)*cos(phi)-cos(psi)*sin(phi) cos(psi)*sin(the)*cos(phi)+sin(psi)*sin(phi);
          cos(the)*sin(phi) sin(psi)*sin(the)*sin(phi)+cos(psi)*cos(phi) cos(psi)*sin(the)*sin(phi)-sin(psi)*cos(phi);
          -sin(the)         sin(psi)*cos(the)                            cos(psi)*cos(the)];
     
@@ -169,7 +164,7 @@ function sys = mdlDerivatives(t,x,u, quad)
     %     R = Q3*Q2*Q1    %Rotation matrix
     %
     %    RZ * RY * RX
-    iW = [0        sin(psi)          cos(psi);             %inverted Wronskian (body rates p-q-r to euler rates yaw pitch roll)
+    iW = [0        sin(psi)          cos(psi);
           0        cos(psi)*cos(the) -sin(psi)*cos(the);
           cos(the) sin(psi)*sin(the) cos(psi)*sin(the)] / cos(the);
     
@@ -200,18 +195,18 @@ function sys = mdlDerivatives(t,x,u, quad)
         %tau(:,i) = cross(T(:,i),D(:,i));                %Torque due to rotor thrust
         tau(:,i) = cross(D(:,i),T(:,i));                 %changed sign (F)
     end
-    sum(tau,2)
+
     %RIGID BODY DYNAMIC MODEL
     dz = v;
     dn = iW*o;
     
-    dv = (quad.g*e3 + R*(1/quad.M)*sum(T,2));
+    dv = (quad.g*e3 + R_Body2World*(1/quad.M)*sum(T,2));
     do = inv(quad.J)*(-cross(o,quad.J*o) + sum(tau,2) + sum(Q,2)); %row sum of torques
     if isnan(do)
-      warning('system rotating too fast!')
+      warning('system rotating NaN!')
       do = zeros(size(do));
     end
-    sys = [dz;dn;dv;do];                                         %This is the state derivative vector
+    sys = [dz;dn;dv;do];                                 %This is the state derivative vector
 end % End of mdlDerivatives.
 
 
@@ -243,26 +238,25 @@ function sys = mdlOutputs(t,x, quad)
     %   n      Attitude                         3x1   (Y,P,R)
     %   o      Angular velocity                 3x1   (Yd,Pd,Rd)
     
-    n = x(4:6);   % RPY angles
+    n = x(4:6);    % RPY angles
     phi = n(1);    % yaw
     the = n(2);    % pitch
     psi = n(3);    % roll
     
     
     % rotz(phi)*roty(the)*rotx(psi)
-    R = [cos(the)*cos(phi) sin(psi)*sin(the)*cos(phi)-cos(psi)*sin(phi) cos(psi)*sin(the)*cos(phi)+sin(psi)*sin(phi);   %BBF > Inertial rotation matrix
-         cos(the)*sin(phi) sin(psi)*sin(the)*sin(phi)+cos(psi)*cos(phi) cos(psi)*sin(the)*sin(phi)-sin(psi)*cos(phi);
-         -sin(the)         sin(psi)*cos(the)                            cos(psi)*cos(the)];
+    R_Body2World = [cos(the)*cos(phi) sin(psi)*sin(the)*cos(phi)-cos(psi)*sin(phi) cos(psi)*sin(the)*cos(phi)+sin(psi)*sin(phi);   %BBF > Inertial rotation matrix
+                    cos(the)*sin(phi) sin(psi)*sin(the)*sin(phi)+cos(psi)*cos(phi) cos(psi)*sin(the)*sin(phi)-sin(psi)*cos(phi);
+                    -sin(the)         sin(psi)*cos(the)                            cos(psi)*cos(the)];
     
     iW = [0        sin(psi)          cos(psi);             %inverted Wronskian
           0        cos(psi)*cos(the) -sin(psi)*cos(the);
           cos(the) sin(psi)*sin(the) cos(psi)*sin(the)] / cos(the);
     
     % return velocity in the body frame
-    sys = [ x(1:6);             %output global pos and euler angles
-            inv(R)*x(7:9);      %translational velocity mapped to body frame -> i.e. output v in bodyframe! (F)
-            x(10:12)];%iW*x(10:12)];    % RPY rates mapped to body frame ->     i.e. : this outputed euler rates!, now in bodyrates pqr (F)
-    %sys = [x(1:6); iW*x(7:9);  iW*x(10:12)];
-    %sys = x;
+    sys = [ x(1:6);                         % output global pos and euler angles
+            inv(R_Body2World)*x(7:9);       % translational velocity mapped to body frame -> i.e. output v in bodyframe!
+            x(10:12)];                     % RPY rates mapped to body frame ->     i.e. : this outputed euler rates!, now in bodyrates pqr (F)
+        
 end
 % End of mdlOutputs.

@@ -8,13 +8,15 @@
 * ==================================
 */
 
-//frameworkparameter
-#ifndef RSEDU_PARAMS_H_
-#include "rsedu_params.h"
-#endif
+#ifndef RSEDU_VIS_H_
+#define RSEDU_VIS_H_
 
-#ifndef RSEDU_IMAGE_H_
-#define RSEDU_IMAGE_H_
+
+//frameworkparameter
+#include "rsedu_vis_helpers.h"
+
+#include "rsedu_globalparams.h"
+
 
 //communication
 #include <sys/stat.h>
@@ -46,8 +48,7 @@ typedef struct {
 } __attribute__((packed)) lndmrk_t;  /* Defines a 3D real-world landmark */
 
 
-//function declarations
-void reconstructCameraPose(float camerapos[3],float *camerayaw,float feature_pps[3][4],double reconrightMatrix[4][4],double iPMHF[3][3]);
+
 
 //void RSEDU_vision(void * buffer);
 void RSEDU_image_processing(void * buffer);

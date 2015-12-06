@@ -11,84 +11,6 @@
 */
 #include "rsedu_vis.h"
 
-/*
- * reconstruct camera pose
- */
-void reconstructCameraPose(float camerapos[3], float *camerayaw, float feature_pps[3][4], double reconrightMatrix[4][4], double intrMatrx_inv[3][3])
-{
-    double LiMatrix[3][4];
-    double LiiMatrix[3][4];
-    double scalefactor;
-    int c, d, k;
-    int m = 3;
-    int q = 4;
-    int p = 4;
-    double sum = 0.0;
-
-    for(c = 0; c < m; c++)
-    {
-        for(d = 0; d < q; d++)
-        {
-            for(k = 0; k < p; k++)
-            {
-                sum = sum + feature_pps[c][k] * reconrightMatrix[k][d];
-            }
-            LiMatrix[c][d] = sum;
-            sum = 0;
-        }
-    }
-
-    for(c = 0; c < m; c++)
-    {
-        for(d = 0; d < q; d++)
-        {
-
-            for(k = 0; k < m; k++)
-            {
-                sum = sum + intrMatrx_inv[c][k] * LiMatrix[k][d];
-            }
-            LiiMatrix[c][d] = sum;
-            sum = 0;
-        }
-    }
-
-
-
-    scalefactor = 1 / sqrt(pow(LiiMatrix[0][0], 2) + pow(LiiMatrix[0][1], 2));
-
-    camerapos[0] = (float)(LiiMatrix[1][3] * scalefactor);
-    camerapos[1] = (float)(-LiiMatrix[0][3] * scalefactor);
-    camerapos[2] = (float)(LiiMatrix[2][3] * scalefactor);
-
-    //Yaw: correct to output x-axis(RS)alignment iwth x-axis landmarkfield. z-axis facing down, rotation +-pi
-    float cosa = (LiiMatrix[0][0]) * scalefactor;
-    float sina = -(LiiMatrix[0][1]) * scalefactor;
-    if(cosa > 0)
-    {
-        if(sina < 0)
-        {
-            *camerayaw    = (float)(acos(cosa) - 1.571);
-        }
-        else
-        {
-            *camerayaw    = (float)(-acos(cosa) - 1.571);
-        };
-
-    }
-    else
-    {
-        if(sina < 0)
-        {
-            *camerayaw    = (float)(acos(cosa) - 1.571);
-        }
-        else
-        {
-            *camerayaw    = (float)(-acos(cosa) + 1.571 * 3);
-        };
-    };
-
-
-}
 
 
 //----------------------------------
@@ -134,18 +56,7 @@ void RSEDU_image_processing(void * buffer)
     int lndmrk_nr = 5, lndmrk_best = 0;
     static lndmrk_t lndmrks[5];
     //matrices for reconstructing camera pose by intrMatrx_inv*landmark-pixellocation*ldnmrk_pinv
-    static double ldnmrk_pinv[4][4] =
-    {
-        { -3.093396787626414,   2.082093991671625                   , 0,   0.766805472932779},
-        {2.320047590719810 ,  3.438429506246282    ,               0  , 0.174895895300416},
-        { -1.737061273051754 , -2.676977989292088    ,               0  , 0.299821534800714},
-        {2.510410469958359 , -2.843545508625819     ,              0 , -0.241522903033909}
-    };
 
-    static double intrMatrx_inv[3][3] =       {{ 0.006551831768882                   , 0,  -0.550082487527771},
-        {0,   0.006546559888686,  -0.399495805347318},
-        {0,                   0,   1.000000000000000}
-    };
 
     //wait on first call
     if(counter == 1)
@@ -233,7 +144,7 @@ void RSEDU_image_processing(void * buffer)
     //landmark detection
     //------------
 
-    //1 cycle through image, convert each pixel to hsv, threshold by s and v to find colored balls, match h value to color-closest in "database" (use precomputed lookup), save weighted average pixellocation with database-lndmrkID
+    //1 cycle through image, convert each pixel to hsv, threshold by s and v to find colored balls, match h value to color-closest in "database" (use precomputed lookup for all these steps), save weighted average pixellocation with database-lndmrkID
     //2 reconstruct pose of camera (3D-position with yaw)
 
 
@@ -282,7 +193,7 @@ void RSEDU_image_processing(void * buffer)
                 if(lndmrk_best > 0)
                 {
                     //increase weight if close to an existing, highly weighted cluster
-                    if((lndmrks[lndmrk_best].weights > 15) && (abs((col + 1) - lndmrks[lndmrk_best].px) < 20) && (abs((row + 1) - lndmrks[lndmrk_best].py) < 20))
+                    if((lndmrks[lndmrk_best].weights > 15) && (fabs((col + 1) - lndmrks[lndmrk_best].px) < 20) && (fabs((row + 1) - lndmrks[lndmrk_best].py) < 20))
                     {
                         weight = 8;
                     }
@@ -404,11 +315,8 @@ void RSEDU_image_processing(void * buffer)
         FILE* data;
         char filename[15];
 
-        //sprintf(filename,"/data/edu/imgs/img%i.bin",counter);
         sprintf(filename, "/tmp/edu/imgs/img%i.bin", counter);
-        //sprintf(filename,"/tmp/imgs/img.bin");
-        //printf("image_proc(): img name: %s \n",filename);
-
+    
         mkdir("/tmp/edu", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         mkdir("/tmp/edu/imgs", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         if((data = fopen(filename, "wb")) == NULL)

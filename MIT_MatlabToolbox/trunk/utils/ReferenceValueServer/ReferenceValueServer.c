@@ -71,9 +71,9 @@ char recvBuff[100];
 char keybch;
 static int 	  yes = 1;
 
-static double SATU_angle = 0.5;
-static double SATU_he_min = -1.1;
-static double SATU_he_max = -2.7;
+static double SATU_angle   = 0.5;
+static double SATU_alt_min = -0.6;
+static double SATU_alt_max = -2.7;
 int runcmd = 1;
 
 double roll_ref_RS, pitch_ref_RS;
@@ -113,7 +113,7 @@ if  (listen(listenfd, 10)<0)
 connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
 setsockopt(connfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
 
-printf("Fly drone with w-s-a-d :: i-k-j-l :: e(xit)! \n");
+printf("Fly drone with w-s-a-d :: i-k-j-l :: r(eset angles) :: e(xit)! \n");
 
 
 while(runcmd==1)
@@ -136,6 +136,7 @@ while(runcmd==1)
   	  case 'h': alt_ref += 0.6; break;
   	  case 'j': yaw_ref -= 0.2; break;
   	  case 'l': yaw_ref += 0.2; break;
+	  case 'r': pitch_ref = 0.0; roll_ref = 0.0; break;
   	  case 'e': runcmd = 0; break;
   }
 
@@ -148,8 +149,8 @@ while(runcmd==1)
 	  if (pitch_ref_RS > SATU_angle) pitch_ref_RS = SATU_angle;
 	  if (pitch_ref_RS < -SATU_angle) pitch_ref_RS = -SATU_angle;
 
-	  if (alt_ref > SATU_he_min) alt_ref = SATU_he_min;
-	  if (alt_ref < SATU_he_max) alt_ref = SATU_he_max;
+	  if (alt_ref > SATU_alt_min) alt_ref = SATU_alt_min;
+	  if (alt_ref < SATU_alt_max) alt_ref = SATU_alt_max;
 
 
 	  sprintf(sendBuff,"%i %i %i %i %i",runcmd,(int)(pitch_ref_RS*1000 + 10000),(int)(roll_ref_RS*1000 + 10000), (int)(yaw_ref*1000 + 10000), (int)(alt_ref*100.0));

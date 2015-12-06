@@ -14,19 +14,7 @@
 //#include "HAL.h"
 #include "image_module.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <time.h>
-#include <math.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
 
-
-typedef signed char s8;
-typedef unsigned char u8;
 
 #define NANOS 1000000000LL
 
@@ -43,6 +31,289 @@ int pxls_ftr_min = 5;		//minimum required nr of detected pixels per landmark
 //----------------------------------
 // Image processing helpers
 //----------------------------------
+
+
+/*
+ * helper functions
+ */
+
+//allocates storage for matrix of size nx * ny
+void alloc_matrix
+
+     (float ***matrix,  /* matrix */
+      long  nx,         /* size in x-direction */
+      long  ny)         /* size in y-direction */
+
+{
+long i;
+
+*matrix = (float **) malloc (nx * sizeof(float *));
+if (*matrix == NULL)
+   {
+   printf("alloc_matrix: not enough storage available\n");
+   exit(1);
+   }
+for (i=0; i<nx; i++)
+    {
+    (*matrix)[i] = (float *) malloc (ny * sizeof(float));
+    if ((*matrix)[i] == NULL)
+       {
+       printf("alloc_matrix: not enough storage available\n");
+       exit(1);
+       }
+    }
+return;
+}
+
+//disallocates storage for matrix of size nx * ny
+void disalloc_matrix
+
+     (float **matrix,   /* matrix */
+      long  nx,         /* size in x-direction */
+      long  ny)         /* size in y-direction */
+
+{
+long i;
+for (i=0; i<nx; i++)
+    free(matrix[i]);
+free(matrix);
+return;
+}
+
+
+//calculates minimum, maximum, mean and variance of a RGB image
+void analyse_matrix
+
+     (float  **myMatrix,          /* Red channel of RGB image */
+      long    nx,          /* pixel number in x-direction */
+      long    ny)
+
+
+{
+long    i, j;       /* loop variables */
+float   help;       /* auxiliary variable */
+double  help2;      /* auxiliary variable */
+double min, max;
+
+min  = myMatrix[1][1];
+max  = myMatrix[1][1];
+
+
+
+for (i=0; i<nx; i++)
+ for (j=0; j<ny; j++)
+     {
+     if (myMatrix[i][j] < min) min = myMatrix[i][j];
+     if (myMatrix[i][j] > max) max = myMatrix[i][j];
+     }
+
+printf("min: %f, max: %f \n",min,max);
+
+return;
+
+}
+
+//rgb to yuv conversion of image
+void RGB_to_YUV
+
+     (float  **R,          /* Red channel of RGB image */
+      float  **G,          /* Green channel of RGB image */
+      float  **B,          /* Blue channel of RGB image */
+      float  **Y,          /* Y channel of YCbCr image */
+      float  **U,         /* Cb channel of YCbCr image */
+      float  **V,         /* Cr channel of YCbCr image */
+      long    nx,          /* pixel number in x-direction */
+      long    ny)          /* pixel number in y-direction */
+
+{
+long    i, j;        /* loop variables */
+
+for (j=0;j<ny;j++)
+  for (i=0;i<nx;i++)
+  {		
+	      /*		
+	      Y[i][j] =        (0.1277   * R[i][j]
+	                   +   0.5212   * G[i][j]
+	                   +   0.21   * B[i][j]) + 16.0;
+
+	      U[i][j] =   ((-0.0737 * R[i][j] - 0.3007 * G[i][j] + 0.3744 * B[i][j])) + 128.0;
+	      V[i][j] =   (( 0.5334 * R[i][j] - 0.3802 * G[i][j] - 0.1532 * B[i][j])) + 128.0;
+	      */
+	       
+	      Y[i][j] =        (0.1509   * R[i][j]
+	                   +   0.6052   * G[i][j]
+	                   +   0.2439   * B[i][j]);
+
+	      U[i][j] =   ((-0.0748 * R[i][j] - 0.3000 * G[i][j] + 0.3748 * B[i][j])) + 128.0;
+	      V[i][j] =   (( 0.5320 * R[i][j] - 0.3792 * G[i][j] - 0.1528 * B[i][j])) + 128.0;
+	      	
+
+  }
+ return;
+}
+
+
+// yuv to hsv. conversion 0<h<360
+
+void YUV_to_HSVimg(float  **Y,
+	      float  **U,
+	      float  **V,
+	      float  **H,
+	      float  **S,
+	      float  **Va,
+	      long    nx,          /* pixel number in x-direction */
+	      long    ny)          /* pixel number in y-direction */
+{
+
+float red,green,blue;
+float rgbmin,rgbmax;
+long    i, j;        /* loop variables */
+float yuv[3], rgb[3], hsv[3];
+
+for (j=0;j<ny;j++)
+  for (i=0;i<nx;i++)
+  {
+
+	yuv[0] = Y[i][j];
+	yuv[1] = U[i][j];
+	yuv[2] = V[i][j];
+
+
+    YUVtoHSV(&(yuv[0]),&(rgb[0]),&(hsv[0]));
+
+
+  }
+
+    H[i][j] = hsv[0];
+    S[i][j] = hsv[1];
+    Va[i][j] = hsv[2];
+
+}
+
+
+//write image
+void writeImgChannelstoFile(char *outfilename, float **C1,float**C2,float **C3,int nx,int ny,char *in)
+{
+	int i,j;
+	unsigned char byte;
+
+	FILE * outimage = fopen (outfilename, "w");
+	fprintf (outimage, "P6 \n");
+	fprintf (outimage, "# Filtered Image\n");
+	fprintf (outimage, "# initial image:  %s\n", in);
+	fprintf (outimage, "%ld %ld \n255\n", nx, ny);
+
+	// channels as RGB channels
+	for (j=0; j<ny; j++)
+	 for (i=0; i<nx; i++)
+		 {
+
+
+		 byte = (unsigned char)(C1[i][j]);
+		 //byte = (unsigned char)(matchResult[i][j]);
+		 //byte = (unsigned char)(H[i][j]/360*255);
+		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 byte = (unsigned char)(C2[i][j]);
+		 //byte = (unsigned char)(S[i][j]*255);
+		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 byte = (unsigned char)(C3[i][j]);
+		 //byte = (unsigned char)(V[i][j]*255);
+		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+
+		 //  if (H[i][j] < 0.0)
+		 //byte = (unsigned char)(0.0);
+		 //  else if (H[i][j] > 360.0)
+		 //byte = (unsigned char)(255.0);
+		 //  else
+		 //byte = (unsigned char)(H[i][j]/360*255);
+		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 //  if (S[i][j] < 0.0)
+		 //byte = (unsigned char)(0.0);
+		 //  else if (S[i][j] > 1.0)
+		 //byte = (unsigned char)(1.0*255);
+		 //  else
+		 //byte = (unsigned char)(S[i][j]*255);
+		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 //  if (Va[i][j] < 0.0)
+		 //byte = (unsigned char)(0.0);
+		 //  else if (Va[i][j] > 1.0)
+		 //byte = (unsigned char)(1.0*255.0);
+		 //  else
+		 //byte = (unsigned char)(Va[i][j]*255);
+		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 }
+	fclose(outimage);
+	printf("output image %s successfully written\n\n", outfilename);
+}
+
+//write matching result as image
+void writeIntArrtoFile(char *outfilename, int C1[80][120],int C2[80][120],int C3[80][120],int nx,int ny,char *in)
+{
+	int i,j;
+	unsigned char byte;
+
+	FILE * outimage = fopen (outfilename, "w");
+	fprintf (outimage, "P6 \n");
+	fprintf (outimage, "# Filtered Image\n");
+	fprintf (outimage, "# initial image:  %s\n", in);
+	fprintf (outimage, "%ld %ld \n255\n", nx, ny);
+
+	// channels as RGB channels
+	for (j=0; j<ny; j++)
+	 for (i=0; i<nx; i++)
+		 {
+
+
+		 byte = (unsigned char)(C1[i][j]);
+		 //byte = (unsigned char)(matchResult[i][j]);
+		 //byte = (unsigned char)(H[i][j]/360*255);
+		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 byte = (unsigned char)(C2[i][j]);
+		 //byte = (unsigned char)(S[i][j]*255);
+		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 byte = (unsigned char)(C3[i][j]);
+		 //byte = (unsigned char)(V[i][j]*255);
+		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+
+		 //  if (H[i][j] < 0.0)
+		 //byte = (unsigned char)(0.0);
+		 //  else if (H[i][j] > 360.0)
+		 //byte = (unsigned char)(255.0);
+		 //  else
+		 //byte = (unsigned char)(H[i][j]/360*255);
+		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 //  if (S[i][j] < 0.0)
+		 //byte = (unsigned char)(0.0);
+		 //  else if (S[i][j] > 1.0)
+		 //byte = (unsigned char)(1.0*255);
+		 //  else
+		 //byte = (unsigned char)(S[i][j]*255);
+		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 //  if (Va[i][j] < 0.0)
+		 //byte = (unsigned char)(0.0);
+		 //  else if (Va[i][j] > 1.0)
+		 //byte = (unsigned char)(1.0*255.0);
+		 //  else
+		 //byte = (unsigned char)(Va[i][j]*255);
+		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
+
+		 }
+	fclose(outimage);
+	printf("output image %s successfully written\n\n", outfilename);
+}
+
+
 
 
 /*
@@ -134,7 +405,7 @@ float featuredist(float* descr_hsv, float* descr_rgb, float* descr_lndmark)
 // Create lookup-table for pixel-to-marker matching
 //----------------------------------
 
-void createMatchLookup()
+void createMatchLookup(lndmrk_t* lndmrks,int lndmrk_nr)
 {
 	int i,j,k;
 	float yuv[3],rgb[3],hsv[3];
@@ -143,48 +414,11 @@ void createMatchLookup()
 	//matching-Thresholds, global
 
 	//landmarks
-	int lndmrk_nr = 5,lndmrk_best=0,lndmrk_cnd=0;
+	int lndmrk_best=0,lndmrk_cnd=0;
 	float featuredist_best = featdist_thrshld;
 	float featuredist_cnd = featdist_thrshld;
-	static lndmrk_t *lndmrks;
 
-	//Init landmarks
-	lndmrks = malloc(lndmrk_nr*sizeof(lndmrk_t));
-
-	//yellow - not used for localization
-	lndmrks[0].X = 0.0;
-	lndmrks[0].Y = 0.0;
-	lndmrks[0].descr[0] = 70.0;	//HUE
-	lndmrks[0].descr[1] = 170.0;	//green
-	lndmrks[0].descr[2] = 100.0;	//blue
-
-	//green
-	lndmrks[1].X = 0.0;
-	lndmrks[1].Y = 0.3;
-	lndmrks[1].descr[0] = 130.0;
-	lndmrks[1].descr[1] = 160.0;
-	lndmrks[1].descr[2] = 110.0;
-
-	//pink
-	lndmrks[2].X = 0.5;
-	lndmrks[2].Y = 0.28;
-	lndmrks[2].descr[0] = 345.0;
-	lndmrks[2].descr[1] = 100.0;
-	lndmrks[2].descr[2] = 135.0;
-
-	//red
-	lndmrks[3].X = 0.25;
-	lndmrks[3].Y = 0.20;
-	lndmrks[3].descr[0] = 25.0;
-	lndmrks[3].descr[1] = 80.0;
-	lndmrks[3].descr[2] = 70.0;
-
-	//blue
-	lndmrks[4].X = 0.5;
-	lndmrks[4].Y = 0.0;
-	lndmrks[4].descr[0] = 220.0;
-	lndmrks[4].descr[1] = 120.0;
-	lndmrks[4].descr[2] = 160.0;
+	
 
 	//create table
 
@@ -247,79 +481,6 @@ void createMatchLookup()
 
 
 //----------------------------------
- // reconstruct camera pose
- //----------------------------------
-
-void reconstructCameraPose(float camerapos[3],float *camerayaw,float feature_pps[3][4],double reconrightMatrix[4][4],double intrMatrx_inv[3][3])
-{
-    double LiMatrix[3][4];
-    double LiiMatrix[3][4];
-    double scalefactor;
-    int c,d,k;
-    int m=3;
-    int q=4;
-    int p=4;
-    double sum=0.0;
-
-    for (c = 0; c < m; c++)
-   {
-      for (d = 0; d < q; d++)
-      {
-        for (k = 0; k < p; k++)
-        {
-          sum = sum + feature_pps[c][k]*reconrightMatrix[k][d];
-        }
-        LiMatrix[c][d] = sum;
-        sum = 0;
-      }
-    }
-
-    for (c = 0; c < m; c++)
-   {
-      for (d = 0; d < q; d++)
-      {
-
-        for (k = 0; k < m; k++)
-        {
-          sum = sum + intrMatrx_inv[c][k]*LiMatrix[k][d];
-        }
-        LiiMatrix[c][d] = sum;
-        sum = 0;
-      }
-    }
-
-
-
-
-   scalefactor = 1/sqrt(pow(LiiMatrix[0][0],2)+pow(LiiMatrix[0][1],2));
-
-   camerapos[0] = (float)(LiiMatrix[1][3]*scalefactor);
-   camerapos[1] = (float)(-LiiMatrix[0][3]*scalefactor);
-   camerapos[2] = (float)(LiiMatrix[2][3]*scalefactor);
-
-   //Yaw: corrected to output x-axis(RS)alignment with x-axis of landmark field. z-axis facing down, rotation +-pi
-   float cosa = (LiiMatrix[0][0])*scalefactor;
-   float sina = -(LiiMatrix[0][1])*scalefactor;
-   if (cosa>0)
-   {
-	   if (sina<0) {*camerayaw    = (float)(acos(cosa)-1.571);}
-	   else 	   {*camerayaw    = (float)(-acos(cosa)-1.571);};
-
-   }
-   else
-   {
-	   if (sina<0) {*camerayaw    = (float)(acos(cosa)-1.571);}
-	   else 	   {*camerayaw    = (float)(-acos(cosa)+1.571*3);};
-   };
-
-
-
-}
-
-
-
-
-//----------------------------------
 // Image processing / Vision-based pose estimation
 //----------------------------------
 /*
@@ -328,7 +489,7 @@ void reconstructCameraPose(float camerapos[3],float *camerayaw,float feature_pps
  *
  */
 
-void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int kimg)
+void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int kimg,lndmrk_t *lndmrks,int lndmrk_nr)
 {
 
 	struct timeval now;
@@ -351,19 +512,9 @@ void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int
 	//matching-Thresholds, global
 
 	//Landmarks
-	int lndmrk_nr = 5,lndmrk_best=0,lndmrk_cnd=0;
+	int lndmrk_best=0,lndmrk_cnd=0;
 	float featuredist_best = featdist_thrshld;
 	float featuredist_cnd = featdist_thrshld;
-	static lndmrk_t *lndmrks;
-	static double ldnmrk_pinv[4][4] =
-			 {{-3.093396787626414,   2.082093991671625                   ,0,   0.766805472932779},
-			   {2.320047590719810 ,  3.438429506246282    ,               0  , 0.174895895300416},
-			  {-1.737061273051754 , -2.676977989292088    ,               0  , 0.299821534800714},
-			   {2.510410469958359 , -2.843545508625819     ,              0 , -0.241522903033909}}; //watch out: dimensions x-y switched compared to image matrices!
-
-	static double intrMatrx_inv[3][3] =       {{ 0.006551831768882                   ,0,  -0.550082487527771},
-            {0,   0.006546559888686,  -0.399495805347318},
-            {0,                   0,   1.000000000000000}};
 
 	//communication
 	pixel2_t *image = buffer;  /* Picture is a 160x120 pixels, stored in YUV422 interlaced format - TO BE CHECKED */
@@ -386,46 +537,6 @@ void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int
 	
 	if (counter==1)
 	{
-		//setup landmark database
-		lndmrks = malloc(lndmrk_nr*sizeof(lndmrk_t));
-
-		//yellow - not used for localization
-		lndmrks[0].X = 0.0;
-		lndmrks[0].Y = 0.0;
-		lndmrks[0].descr[0] = 70.0;		//hue
-		lndmrks[0].descr[1] = 170.0;	//green
-		lndmrks[0].descr[2] = 100.0;	//blue
-
-		//green
-		lndmrks[1].X = 0.0;
-		lndmrks[1].Y = 0.3;
-		lndmrks[1].descr[0] = 130.0;
-		lndmrks[1].descr[1] = 160.0;
-		lndmrks[1].descr[2] = 110.0;
-
-		//pink
-		lndmrks[2].X = 0.5;
-		lndmrks[2].Y = 0.28;
-		lndmrks[2].descr[0] = 345.0;
-		lndmrks[2].descr[1] = 100.0;
-		lndmrks[2].descr[2] = 135.0;
-
-		//red
-		lndmrks[3].X = 0.25;
-		lndmrks[3].Y = 0.20;
-		lndmrks[3].descr[0] = 25.0;
-		lndmrks[3].descr[1] = 80.0;
-		lndmrks[3].descr[2] = 70.0;
-
-		//blue
-		lndmrks[4].X = 0.5;
-		lndmrks[4].Y = 0.0;
-		lndmrks[4].descr[0] = 220.0;
-		lndmrks[4].descr[1] = 120.0;
-		lndmrks[4].descr[2] = 160.0;
-
-
-
 		//reset posefile
 	  	mkdir("../../DroneExchange/imgs/",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		mkdir("../../DroneExchange/imgs/processed/",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -526,7 +637,7 @@ void RSEDU_image_processing_OFFBOARD(void * buffer, int matchResult[80][120],int
 				 if (lndmrk_best>0)
 						 {
 						 //increase weight if close to an existing, highly weighted cluster
-						 if ( (lndmrks[lndmrk_best].weights>15) && (abs((col+1)-lndmrks[lndmrk_best].px)<20) && (abs((row+1)-lndmrks[lndmrk_best].py)<20))
+						 if ( (lndmrks[lndmrk_best].weights>15) && (fabs((col+1)-lndmrks[lndmrk_best].px)<20) && (fabs((row+1)-lndmrks[lndmrk_best].py)<20))
 								{
 								 weight=8;
 								}

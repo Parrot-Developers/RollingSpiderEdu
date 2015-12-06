@@ -61,12 +61,7 @@ void RSEDU_optical_flow(float vx, float vy, float vz, int defined, float quality
     //Setup thread communication
     if(counter == 1)
     {
-        //create fifo to transmit optical flow to control code - now done by shell-script that starts a flight
-        /*if ((status = mkfifo("/tmp/of_fifo", S_IRWXU)) < 0) {
-        	//printf("optical_flow(): ERROR makingf fifo!\n");
 
-        }
-        */
 
         if(access("/tmp/of_fifo", F_OK) != -1)
         {

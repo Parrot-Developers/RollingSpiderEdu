@@ -1,7 +1,8 @@
 %% Find Parameters and Matrices needed for reconstructing camera pose on the fly
 
 %% Landmarkpositions
-lndmrk_pos = [0 .225 .05 0.225; 0 .05 -.15 -.15; 0 0 0 0 ; 1 1 1 1 ]; %green-pink-red-blue, green origin; 3d landmarkpositions in homogenous coordinates
+%lndmrk_pos = [0 .225 .05 0.225; 0 .05 -.15 -.15; 0 0 0 0 ; 1 1 1 1 ]; %green-pink-red-blue, green origin; 3d landmarkpositions X;Y;Z;1 in homogenous coordinates
+lndmrk_pos = [-0.24 .145 -0.24 0.135; 0.14 .13 -.23 -.22; 0 0 0 0 ; 1 1 1 1 ]; %green-pink-red-blue, green origin; 3d landmarkpositions in homogenous coordinates
 
 
 

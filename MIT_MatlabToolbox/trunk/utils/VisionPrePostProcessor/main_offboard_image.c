@@ -11,293 +11,11 @@
 * ==================================
 */
 
+
+
 #include <stdio.h>
-#include "image_module.h"
 #include <stdlib.h>
-
-
-/*
- * helper functions
- */
-
-//allocates storage for matrix of size nx * ny
-void alloc_matrix
-
-     (float ***matrix,  /* matrix */
-      long  nx,         /* size in x-direction */
-      long  ny)         /* size in y-direction */
-
-{
-long i;
-
-*matrix = (float **) malloc (nx * sizeof(float *));
-if (*matrix == NULL)
-   {
-   printf("alloc_matrix: not enough storage available\n");
-   exit(1);
-   }
-for (i=0; i<nx; i++)
-    {
-    (*matrix)[i] = (float *) malloc (ny * sizeof(float));
-    if ((*matrix)[i] == NULL)
-       {
-       printf("alloc_matrix: not enough storage available\n");
-       exit(1);
-       }
-    }
-return;
-}
-
-//disallocates storage for matrix of size nx * ny
-void disalloc_matrix
-
-     (float **matrix,   /* matrix */
-      long  nx,         /* size in x-direction */
-      long  ny)         /* size in y-direction */
-
-{
-long i;
-for (i=0; i<nx; i++)
-    free(matrix[i]);
-free(matrix);
-return;
-}
-
-
-//calculates minimum, maximum, mean and variance of a RGB image
-void analyse_matrix
-
-     (float  **myMatrix,          /* Red channel of RGB image */
-      long    nx,          /* pixel number in x-direction */
-      long    ny)
-
-
-{
-long    i, j;       /* loop variables */
-float   help;       /* auxiliary variable */
-double  help2;      /* auxiliary variable */
-double min, max;
-
-min  = myMatrix[1][1];
-max  = myMatrix[1][1];
-
-
-
-for (i=0; i<nx; i++)
- for (j=0; j<ny; j++)
-     {
-     if (myMatrix[i][j] < min) min = myMatrix[i][j];
-     if (myMatrix[i][j] > max) max = myMatrix[i][j];
-     }
-
-printf("min: %f, max: %f \n",min,max);
-
-return;
-
-}
-
-//rgb to yuv conversion of image
-void RGB_to_YUV
-
-     (float  **R,          /* Red channel of RGB image */
-      float  **G,          /* Green channel of RGB image */
-      float  **B,          /* Blue channel of RGB image */
-      float  **Y,          /* Y channel of YCbCr image */
-      float  **U,         /* Cb channel of YCbCr image */
-      float  **V,         /* Cr channel of YCbCr image */
-      long    nx,          /* pixel number in x-direction */
-      long    ny)          /* pixel number in y-direction */
-
-{
-long    i, j;        /* loop variables */
-
-for (j=0;j<ny;j++)
-  for (i=0;i<nx;i++)
-  {		
-	      /*		
-	      Y[i][j] =        (0.1277   * R[i][j]
-	                   +   0.5212   * G[i][j]
-	                   +   0.21   * B[i][j]) + 16.0;
-
-	      U[i][j] =   ((-0.0737 * R[i][j] - 0.3007 * G[i][j] + 0.3744 * B[i][j])) + 128.0;
-	      V[i][j] =   (( 0.5334 * R[i][j] - 0.3802 * G[i][j] - 0.1532 * B[i][j])) + 128.0;
-	      */
-	       
-	      Y[i][j] =        (0.1509   * R[i][j]
-	                   +   0.6052   * G[i][j]
-	                   +   0.2439   * B[i][j]);
-
-	      U[i][j] =   ((-0.0748 * R[i][j] - 0.3000 * G[i][j] + 0.3748 * B[i][j])) + 128.0;
-	      V[i][j] =   (( 0.5320 * R[i][j] - 0.3792 * G[i][j] - 0.1528 * B[i][j])) + 128.0;
-	      	
-
-  }
- return;
-}
-
-
-// yuv to hsv. conversion 0<h<360
-
-void YUV_to_HSVimg(float  **Y,
-	      float  **U,
-	      float  **V,
-	      float  **H,
-	      float  **S,
-	      float  **Va,
-	      long    nx,          /* pixel number in x-direction */
-	      long    ny)          /* pixel number in y-direction */
-{
-
-float red,green,blue;
-float rgbmin,rgbmax;
-long    i, j;        /* loop variables */
-float yuv[3], rgb[3], hsv[3];
-
-for (j=0;j<ny;j++)
-  for (i=0;i<nx;i++)
-  {
-
-	yuv[0] = Y[i][j];
-	yuv[1] = U[i][j];
-	yuv[2] = V[i][j];
-
-
-    YUVtoHSV(&(yuv[0]),&(rgb[0]),&(hsv[0]));
-
-
-  }
-
-    H[i][j] = hsv[0];
-    S[i][j] = hsv[1];
-    Va[i][j] = hsv[2];
-
-}
-
-
-//write image
-void writeImgChannelstoFile(char *outfilename, float **C1,float**C2,float **C3,int nx,int ny,char *in)
-{
-	int i,j;
-	unsigned char byte;
-
-	FILE * outimage = fopen (outfilename, "w");
-	fprintf (outimage, "P6 \n");
-	fprintf (outimage, "# Filtered Image\n");
-	fprintf (outimage, "# initial image:  %s\n", in);
-	fprintf (outimage, "%ld %ld \n255\n", nx, ny);
-
-	// channels as RGB channels
-	for (j=0; j<ny; j++)
-	 for (i=0; i<nx; i++)
-		 {
-
-
-		 byte = (unsigned char)(C1[i][j]);
-		 //byte = (unsigned char)(matchResult[i][j]);
-		 //byte = (unsigned char)(H[i][j]/360*255);
-		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 byte = (unsigned char)(C2[i][j]);
-		 //byte = (unsigned char)(S[i][j]*255);
-		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 byte = (unsigned char)(C3[i][j]);
-		 //byte = (unsigned char)(V[i][j]*255);
-		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-
-		 //  if (H[i][j] < 0.0)
-		 //byte = (unsigned char)(0.0);
-		 //  else if (H[i][j] > 360.0)
-		 //byte = (unsigned char)(255.0);
-		 //  else
-		 //byte = (unsigned char)(H[i][j]/360*255);
-		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 //  if (S[i][j] < 0.0)
-		 //byte = (unsigned char)(0.0);
-		 //  else if (S[i][j] > 1.0)
-		 //byte = (unsigned char)(1.0*255);
-		 //  else
-		 //byte = (unsigned char)(S[i][j]*255);
-		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 //  if (Va[i][j] < 0.0)
-		 //byte = (unsigned char)(0.0);
-		 //  else if (Va[i][j] > 1.0)
-		 //byte = (unsigned char)(1.0*255.0);
-		 //  else
-		 //byte = (unsigned char)(Va[i][j]*255);
-		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 }
-	fclose(outimage);
-	printf("output image %s successfully written\n\n", outfilename);
-}
-
-//write matching result as image
-void writeIntArrtoFile(char *outfilename, int C1[80][120],int C2[80][120],int C3[80][120],int nx,int ny,char *in)
-{
-	int i,j;
-	unsigned char byte;
-
-	FILE * outimage = fopen (outfilename, "w");
-	fprintf (outimage, "P6 \n");
-	fprintf (outimage, "# Filtered Image\n");
-	fprintf (outimage, "# initial image:  %s\n", in);
-	fprintf (outimage, "%ld %ld \n255\n", nx, ny);
-
-	// channels as RGB channels
-	for (j=0; j<ny; j++)
-	 for (i=0; i<nx; i++)
-		 {
-
-
-		 byte = (unsigned char)(C1[i][j]);
-		 //byte = (unsigned char)(matchResult[i][j]);
-		 //byte = (unsigned char)(H[i][j]/360*255);
-		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 byte = (unsigned char)(C2[i][j]);
-		 //byte = (unsigned char)(S[i][j]*255);
-		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 byte = (unsigned char)(C3[i][j]);
-		 //byte = (unsigned char)(V[i][j]*255);
-		 fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-
-		 //  if (H[i][j] < 0.0)
-		 //byte = (unsigned char)(0.0);
-		 //  else if (H[i][j] > 360.0)
-		 //byte = (unsigned char)(255.0);
-		 //  else
-		 //byte = (unsigned char)(H[i][j]/360*255);
-		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 //  if (S[i][j] < 0.0)
-		 //byte = (unsigned char)(0.0);
-		 //  else if (S[i][j] > 1.0)
-		 //byte = (unsigned char)(1.0*255);
-		 //  else
-		 //byte = (unsigned char)(S[i][j]*255);
-		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 //  if (Va[i][j] < 0.0)
-		 //byte = (unsigned char)(0.0);
-		 //  else if (Va[i][j] > 1.0)
-		 //byte = (unsigned char)(1.0*255.0);
-		 //  else
-		 //byte = (unsigned char)(Va[i][j]*255);
-		 //  fwrite (&byte, sizeof(unsigned char), 1, outimage);
-
-		 }
-	fclose(outimage);
-	printf("output image %s successfully written\n\n", outfilename);
-}
-
-
-
+#include "image_module.h"
 
 
 
@@ -349,7 +67,46 @@ long   i, j;                 /* loop variables */
 int lastImg;
 int programMode;
 
+//Init landmarks
+int lndmrk_nr = 5;
 
+
+lndmrk_t* lndmrks = malloc(lndmrk_nr*sizeof(lndmrk_t));
+
+//yellow - not used for localization
+lndmrks[0].X = 0.0; 		//landmark positions not needed here; see MATLAB script findPoseReconstructionParameters, it is needed there;
+lndmrks[0].Y = 0.0;
+lndmrks[0].descr[0] = 70.0;	//HUE
+lndmrks[0].descr[1] = 170.0;	//green
+lndmrks[0].descr[2] = 100.0;	//blue
+
+//green
+lndmrks[1].X = 0.0;
+lndmrks[1].Y = 0.0;
+lndmrks[1].descr[0] = 130.0;
+lndmrks[1].descr[1] = 160.0;
+lndmrks[1].descr[2] = 110.0;
+
+//pink
+lndmrks[2].X = 0.0;
+lndmrks[2].Y = 0.0;
+lndmrks[2].descr[0] = 345.0;
+lndmrks[2].descr[1] = 100.0;
+lndmrks[2].descr[2] = 135.0;
+
+//red
+lndmrks[3].X = 0.0;
+lndmrks[3].Y = 0.0;
+lndmrks[3].descr[0] = 25.0;
+lndmrks[3].descr[1] = 80.0;
+lndmrks[3].descr[2] = 70.0;
+
+//blue
+lndmrks[4].X = 0.0;
+lndmrks[4].Y = 0.0;
+lndmrks[4].descr[0] = 220.0;
+lndmrks[4].descr[1] = 120.0;
+lndmrks[4].descr[2] = 160.0;
 
 
 
@@ -362,7 +119,7 @@ scanf("%i", &programMode);
 if ((programMode==1) || (programMode==3))
 {
 	printf("Generate lookup...\n");
-	createMatchLookup();
+	createMatchLookup(lndmrks,lndmrk_nr);
 	printf("Generate lookup... DONE \n");
 }
 
@@ -558,7 +315,7 @@ for (kimg=6;kimg<=lastImg;kimg=kimg+6)
 
 	if ((nx==80) || (ny==120))
 	{
-		RSEDU_image_processing_OFFBOARD(bufferimage,matchResult,kimg);
+		RSEDU_image_processing_OFFBOARD(bufferimage,matchResult,kimg,lndmrks,lndmrk_nr);
 	}
 	
 
@@ -590,14 +347,7 @@ for (kimg=6;kimg<=lastImg;kimg=kimg+6)
 
 } //end for over multiple images
 
-//Run dummy 60Hz call of oc loop
-/* while (1)
-{
- //RSEDU_optical_flow(vx, vy, vz,defined,qualityIndicator);
- RSEDU_image_processing(bufferimage);
- usleep(16700);
-}
-*/
+
 }
  return 0;
 

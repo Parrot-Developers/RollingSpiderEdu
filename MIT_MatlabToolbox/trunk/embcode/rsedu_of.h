@@ -4,18 +4,17 @@
 * CREATE DATE 2015/08/25
 * SPECIAL NOTES: don't need to update this (Fabian)
 * ===============================
-* Change History
 * 2015/08/25 created
 * ==================================
 */
 
-//frameworkparameters
-#ifndef RSEDU_PARAMS_H_
-#include "rsedu_params.h"
-#endif
-
 #ifndef RSEDU_OF_H_
 #define RSEDU_OF_H_
+
+//frameworkparameters
+#ifndef RSEDU_PARAMS_H_
+#include "rsedu_globalparams.h"
+#endif
 
 
 //communication

@@ -4,16 +4,21 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../../../embcode/rsedu_vis_helpers.c \
 ../image_module.c \
-../main_offboard_image.c 
+../main_offboard_image.c
+
 
 OBJS += \
+../../../embcode/rsedu_vis_helpers.o \
 ./image_module.o \
-./main_offboard_image.o 
+./main_offboard_image.o
+
 
 C_DEPS += \
+../../../embcode/rsedu_vis_helpers.d \
 ./image_module.d \
-./main_offboard_image.d 
+./main_offboard_image.d
 
 
 # Each subdirectory must supply rules for building sources it contributes

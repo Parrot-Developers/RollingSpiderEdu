@@ -1,0 +1,10 @@
+{
+global:
+Drone_Compensator_initialize;
+Drone_Compensator_step;
+
+  rt_StopDataLogging;
+
+local:
+		*;
+};

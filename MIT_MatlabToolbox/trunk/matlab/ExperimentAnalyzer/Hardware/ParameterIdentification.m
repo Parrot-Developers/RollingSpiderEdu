@@ -7,7 +7,6 @@
 % the EducationalDroneToolbox
 % SPECIAL NOTES
 % ===============================
-% Change History
 %  2015/08/25 created
 % ==================================
 
@@ -34,8 +33,3 @@ dx = 0.043;
 dy = 0.043;
 
 inertia_total = inertia_batt + inertia_frame + inertia_strut + 4*( (inertia_motor) +mass_motor*[dy^2; dx^2; dx^2+dy^2]) + 2*(inertia_wheel + mass_wheel*[0;0;dy^2]);
-
-%% Sensornoise
-load('recordings/noisedata.mat');
-noise_ddx_da_std = std(noisedata(:,1:6));  
-noiseStatesSensed_std = [1 1 1 1 1 1 noise_ddx_da_std];
