@@ -34,7 +34,7 @@ if ( size(rt_yout.signals,2)>24)
         RSrun_states_estim = [RSrun_states_estim rt_yout.signals(i).values];
     end;
     
-    if (size(rt_yout.signals,2)==28)
+    if (size(rt_yout.signals,2)>27)
         RSrun_batteryStatus = [rt_yout.time,rt_yout.signals(28).values];   
     end;
     
