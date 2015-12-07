@@ -830,6 +830,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
     float vis_data[4];
     //float ofDefined;
     float ofQuality;
+    static bool pressureSensorOk = false;
 
     //communication
     static char serverIP[16];
@@ -1108,6 +1109,8 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         sensorCal[5] = sensorCal[5] * (counter - 1) / counter + in->HAL_gyro_SI.z / counter;
         sensorCal[6] = sensorCal[6] * (counter - 1) / counter + in->HAL_pressure_SI.pressure / counter;
 
+        if(in->HAL_pressure_SI.pressure != 0) pressureSensorOk = true;
+
         battLevelAvg = battLevelAvg * (counter - 1) / counter + (double)((int)in->HAL_vbat_SI.vbat_percentage) / counter;
 
         //keep fifos empty
@@ -1135,6 +1138,18 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         {
             run_flag = 0;
             printf("ERROR: Please take off from a level surface! \n");
+            out->motors_speed[0] = 0;
+            out->motors_speed[1] = 0;
+            out->motors_speed[2] = 0;
+            out->motors_speed[3] = 0;
+            out->command = BLDC_CMD_STOP;
+            return;
+        }
+
+        if(!pressureSensorOk)
+        {
+            run_flag = 0;
+            printf("ERROR: Pressure sensor appears damaged! \n");
             out->motors_speed[0] = 0;
             out->motors_speed[1] = 0;
             out->motors_speed[2] = 0;
