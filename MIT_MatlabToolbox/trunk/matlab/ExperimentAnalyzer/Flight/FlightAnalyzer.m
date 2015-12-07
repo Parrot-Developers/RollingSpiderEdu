@@ -17,63 +17,87 @@
 %Load all parameters
 parameters_estimationcontrol;
 
-%Aug31rst+ recordings file version
-if ( size(rt_yout.signals,2)>24)
-    RSrun_motorcommands = [rt_yout.time rt_yout.signals(1).values];
-    RSrun_controlMode   = [rt_yout.time,rt_yout.signals(14).values];
-    RSrun_orient_ref     = [rt_yout.time,rt_yout.signals(15).values(:,4:6)];
-    RSrun_pos_ref       = [rt_yout.time,rt_yout.signals(15).values(:,1:3)];
-    RSrun_sensordata    = [rt_yout.time rt_yout.signals(16).values rt_yout.signals(17).values rt_yout.signals(18).values rt_yout.signals(19).values rt_yout.signals(20).values permute(rt_yout.signals(21).values,[ 1 2 3]) permute(rt_yout.signals(22).values,[1 2 3]) rt_yout.signals(23).values ];    
-    RSrun_opticalFlow   = [rt_yout.time,rt_yout.signals(24).values];
-    RSrun_sensordataCalib  = [rt_yout.signals(25).values(1,:)];
-    RSrun_posVIS        = [rt_yout.time,rt_yout.signals(26).values];   
-    RSrun_usePosVIS     = [rt_yout.time,rt_yout.signals(27).values];
+%Choose which data to plot
+if ( exist('rt_yout','var') && exist('rt_yout_sim','var') )
+    [s,v] = listdlg('PromptString','Select data to plot:',...
+                'SelectionMode','single',...
+                'ListString',{'recorded','simulated'});
+    if (v==0)
+        disp('No selection made, plotting recorded data');
+    else
+      if (s==1)
+        results = rt_yout;
+      else
+        results = rt_yout_sim;  
+      end;
+    end;
+            
+elseif exist('rt_yout','var')
+    results = rt_yout;
+elseif exist('rt_yout_sim','var')
+    results = rt_yout_sim;        
+else
+    disp('No data to plot');
+    return;
+end;
 
-    RSrun_states_estim  = rt_yout.time;
+%Aug31rst+ recordings file version
+if ( size(results.signals,2)>24)
+    RSrun_motorcommands = [results.time results.signals(1).values];
+    RSrun_controlMode   = [results.time,results.signals(14).values];
+    RSrun_orient_ref     = [results.time,results.signals(15).values(:,4:6)];
+    RSrun_pos_ref       = [results.time,results.signals(15).values(:,1:3)];
+    RSrun_sensordata    = [results.time results.signals(16).values results.signals(17).values results.signals(18).values results.signals(19).values results.signals(20).values permute(results.signals(21).values,[ 1 2 3]) permute(results.signals(22).values,[1 2 3]) results.signals(23).values ];    
+    RSrun_opticalFlow   = [results.time,results.signals(24).values];
+    RSrun_sensordataCalib  = [results.signals(25).values(1,:)];
+    RSrun_posVIS        = [results.time,results.signals(26).values];   
+    RSrun_usePosVIS     = [results.time,results.signals(27).values];
+
+    RSrun_states_estim  = results.time;
     for i=2:13
-        RSrun_states_estim = [RSrun_states_estim rt_yout.signals(i).values];
+        RSrun_states_estim = [RSrun_states_estim results.signals(i).values];
     end;
     
-    if (size(rt_yout.signals,2)>27 && strcmp(rt_yout.signals(29).blockName,'Drone_Compensator/batteryStatus_datout')) 
-        RSrun_batteryStatus = [rt_yout.time,rt_yout.signals(28).values];   
+    if (size(results.signals,2)>27) 
+        RSrun_batteryStatus = [results.time,results.signals(28).values];   
     end;
     
 %takeoff flag added!    
-if ( size(rt_yout.signals,2)>28 && strcmp(rt_yout.signals(29).blockName,'Drone_Compensator/takeoff_flagout') )
-    RSrun_takeoff_flag = [rt_yout.time,rt_yout.signals(29).values];   
+if ( size(results.signals,2)>28)
+    RSrun_takeoff_flag = [results.time,results.signals(29).values];   
 end;
 
 %--old recordings-file-version
-elseif (size(rt_yout.signals(2).values,2)==1)
+elseif (size(results.signals(2).values,2)==1)
 
-    RSrun_sensordata    = [rt_yout.time rt_yout.signals(2).values rt_yout.signals(3).values rt_yout.signals(4).values rt_yout.signals(5).values rt_yout.signals(6).values permute(rt_yout.signals(7).values,[ 1 2 3]) permute(rt_yout.signals(8).values,[1 2 3]) rt_yout.signals(9).values ];
-    RSrun_orient_ref    = [rt_yout.time,rt_yout.signals(22).values(:,4:6)];
-    RSrun_pos_ref       = [rt_yout.time,rt_yout.signals(22).values(:,1:3)];
-    RSrun_controlMode   = [rt_yout.time,((RSrun_pos_ref(:,1)~=0) & (RSrun_pos_ref(:,2)~=0))];
-    RSrun_motorcommands = [rt_yout.time rt_yout.signals(1).values];
-    RSrun_opticalFlow = [rt_yout.time,rt_yout.signals(23).values];
-    RSrun_posVIS        = [rt_yout.time,rt_yout.signals(24).values];
+    RSrun_sensordata    = [results.time results.signals(2).values results.signals(3).values results.signals(4).values results.signals(5).values results.signals(6).values permute(results.signals(7).values,[ 1 2 3]) permute(results.signals(8).values,[1 2 3]) results.signals(9).values ];
+    RSrun_orient_ref    = [results.time,results.signals(22).values(:,4:6)];
+    RSrun_pos_ref       = [results.time,results.signals(22).values(:,1:3)];
+    RSrun_controlMode   = [results.time,((RSrun_pos_ref(:,1)~=0) & (RSrun_pos_ref(:,2)~=0))];
+    RSrun_motorcommands = [results.time results.signals(1).values];
+    RSrun_opticalFlow = [results.time,results.signals(23).values];
+    RSrun_posVIS        = [results.time,results.signals(24).values];
 
-    RSrun_states_estim  = rt_yout.time;
+    RSrun_states_estim  = results.time;
 
     for i=10:21
-        RSrun_states_estim = [RSrun_states_estim rt_yout.signals(i).values];
+        RSrun_states_estim = [RSrun_states_estim results.signals(i).values];
     end;
     
 %--Aug 14-Aug 31rst recordings-file-version
 else
  
-    RSrun_sensordata    = [rt_yout.time rt_yout.signals(3).values rt_yout.signals(4).values rt_yout.signals(5).values rt_yout.signals(6).values rt_yout.signals(7).values permute(rt_yout.signals(8).values,[ 1 2 3]) permute(rt_yout.signals(9).values,[1 2 3]) rt_yout.signals(10).values ];
-    RSrun_motorcommands = [rt_yout.time rt_yout.signals(1).values];
-    RSrun_opticalFlow   = [rt_yout.time,rt_yout.signals(23).values];
-    RSrun_posVIS        = [rt_yout.time,rt_yout.signals(24).values];
-    RSrun_orient_ref    = [rt_yout.time,rt_yout.signals(2).values(:,4:6)];
-    RSrun_pos_ref       = [rt_yout.time,rt_yout.signals(2).values(:,1:3)];
-    RSrun_controlMode   = [rt_yout.time,((RSrun_pos_ref(:,1)~=0) & (RSrun_pos_ref(:,2)~=0))];
+    RSrun_sensordata    = [results.time results.signals(3).values results.signals(4).values results.signals(5).values results.signals(6).values results.signals(7).values permute(results.signals(8).values,[ 1 2 3]) permute(results.signals(9).values,[1 2 3]) results.signals(10).values ];
+    RSrun_motorcommands = [results.time results.signals(1).values];
+    RSrun_opticalFlow   = [results.time,results.signals(23).values];
+    RSrun_posVIS        = [results.time,results.signals(24).values];
+    RSrun_orient_ref    = [results.time,results.signals(2).values(:,4:6)];
+    RSrun_pos_ref       = [results.time,results.signals(2).values(:,1:3)];
+    RSrun_controlMode   = [results.time,((RSrun_pos_ref(:,1)~=0) & (RSrun_pos_ref(:,2)~=0))];
 
-    RSrun_states_estim  = rt_yout.time;
+    RSrun_states_estim  = results.time;
     for i=11:22
-        RSrun_states_estim = [RSrun_states_estim rt_yout.signals(i).values];
+        RSrun_states_estim = [RSrun_states_estim results.signals(i).values];
     end;
 end;
 
