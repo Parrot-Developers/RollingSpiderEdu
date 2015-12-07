@@ -11,6 +11,8 @@
 */
 
 #include "rsedu_of.h"
+#include <errno.h>
+#include <string.h>
 
 //----------------------------------
 // OPTICAL FLOW
@@ -84,9 +86,13 @@ void RSEDU_optical_flow(float vx, float vy, float vz, int defined, float quality
     of_fifo = open("/tmp/of_fifo", O_WRONLY);
     if(of_fifo)
     {
-        write(of_fifo, (float*)(&of_data), sizeof(of_data));
+        int ok = write(of_fifo, (float*)(&of_data), sizeof(of_data));
+        if (ok == -1)
+            printf("rsedu_of(): ERROR writing to optical flow-fifo: %s!\n", strerror(errno));
         close(of_fifo);
     }
+    else
+         printf("rsedu_of(): ERROR  opening optical flow-fifo: %s!\n", strerror(errno));
 
 
     usleep(4000);
