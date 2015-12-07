@@ -10,6 +10,7 @@
 * ==================================
 */
 #include "rsedu_vis.h"
+#include <stdbool.h>
 
 
 
@@ -42,6 +43,7 @@ void RSEDU_image_processing(void * buffer)
     float yuv[3];
     int nx = 80, ny = 120;
     float feature_pps[3][4];
+    static bool matchLookupLoaded = false;
     static unsigned char matchLookup[128][128][128];
 
     //camera variables
@@ -131,12 +133,13 @@ void RSEDU_image_processing(void * buffer)
             {
                 printf("rsedu_vis(): ERROR opening lookupfile \n");
             }
-
-            fread(matchLookup, sizeof(matchLookup), 1, data);
-            fclose(data);
+            else
+            {
+                fread(matchLookup, sizeof(matchLookup), 1, data);
+                matchLookupLoaded = true;
+                fclose(data);
+            }
         }
-
-
     }
 
 
@@ -148,7 +151,7 @@ void RSEDU_image_processing(void * buffer)
     //2 reconstruct pose of camera (3D-position with yaw)
 
 
-    if((FEAT_POSVIS_RUN) && ((counter % 15) == 0) && (NULL != image)) //@pseudo4Hz
+    if(matchLookupLoaded && (FEAT_POSVIS_RUN) && ((counter % 15) == 0) && (NULL != image)) //@pseudo4Hz
     {
         //reset landmark matching data
         for(i = 0; i < lndmrk_nr; i++)
