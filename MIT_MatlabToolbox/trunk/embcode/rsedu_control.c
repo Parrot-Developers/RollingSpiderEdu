@@ -792,11 +792,12 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
     //data handling
     static double sensorCal[7];
     static double battLevelAvg;
-    float of_data[5];
+    static float of_data[5];
     float vis_data[4];
+
     //float ofDefined;
-    float ofQuality;
     static bool pressureSensorOk = false;
+    static float ofQuality;
 
     //communication
     static char serverIP[16];
@@ -1376,7 +1377,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         }
 
         //safety abort for high mismatch OF vs state velocities
-        if(
+        if(ofQuality > 0 &&
             (counter > (calibCycles + takeoffCycles))
             &&
             (
@@ -1387,7 +1388,11 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         )
         {
             run_flag = 0;
-            printf("Flight crash about to happen, mismatch optical flow and state estimate, dx: %f, dy: %f. Shutting down motors now\n", fabs(20 * of_data[0] - Drone_Compensator_Y_dx), fabs(20 * of_data[1] - Drone_Compensator_Y_dy));
+            printf("Flight crash about to happen, mismatch optical flow (%f, %f) and state estimate (%f, %f): shutting down motors now\n",
+              20 * of_data[0],
+              20 * of_data[1],
+              DroneRS_Compensator_Y_dx,
+              DroneRS_Compensator_Y_dy);
             out->motors_speed[0] = 0;
             out->motors_speed[1] = 0;
             out->motors_speed[2] = 0;
