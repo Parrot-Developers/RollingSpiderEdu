@@ -826,10 +826,10 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
     //data handling
     static double sensorCal[7];
     static double battLevelAvg;
-    float of_data[5];
+    static float of_data[5];
     float vis_data[4];
     //float ofDefined;
-    float ofQuality;
+    static float ofQuality;
 
     //communication
     static char serverIP[16];
