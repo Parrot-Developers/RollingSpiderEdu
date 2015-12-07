@@ -11,6 +11,7 @@
 
 
 #include "rsedu_control.h"
+#include <stdbool.h>
 
 
 
@@ -1303,37 +1304,32 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         //---------------------
 
         //safety abort for high accelerations or position
-        if(((!FEAT_NOSAFETY) && ((fabs(in->HAL_acc_SI.x) > MAX_ACCELL) || (fabs(in->HAL_acc_SI.y) > MAX_ACCELL) || (in->HAL_acc_SI.z > 0)))
-                ||
-                ((FEAT_NOSAFETY) && ((fabs(in->HAL_acc_SI.x) > MAX_ACCELL * 3) || (fabs(in->HAL_acc_SI.y) > MAX_ACCELL * 3)))
-                ||
-                ((fabs(Drone_Compensator_Y_X) > MAX_RANGE) || (fabs(Drone_Compensator_Y_Y) > MAX_RANGE))
-          )
-        {
-            run_flag = 0;
-            if(((fabs(Drone_Compensator_Y_X) > MAX_RANGE) || (fabs(Drone_Compensator_Y_Y) > MAX_RANGE))) printf("Drone out of range: shutting down motors now\n");
-            else printf("Flight crash detected (accelerometer): shutting down motors now\n");
+        bool crash_detected;
+        if(!FEAT_NOSAFETY)
+          crash_detected = (fabs(in->HAL_acc_SI.x) > MAX_ACCELL) || (fabs(in->HAL_acc_SI.y) > MAX_ACCELL) || (in->HAL_acc_SI.z > 0);
+        else
+          crash_detected = (fabs(in->HAL_acc_SI.x) > MAX_ACCELL * 3) || (fabs(in->HAL_acc_SI.y) > MAX_ACCELL * 3);
 
-            out->motors_speed[0] = 0;
-            out->motors_speed[1] = 0;
-            out->motors_speed[2] = 0;
-            out->motors_speed[3] = 0;
-            out->command = BLDC_CMD_STOP;
-            return;
+
+        bool out_of_range = (fabs(Drone_Compensator_Y_X) > MAX_RANGE) || (fabs(Drone_Compensator_Y_Y) > MAX_RANGE);
+
+        bool battery_low = (Drone_Compensator_U_batteryStatus_datin[1] < MIN_BATT) && (Drone_Compensator_U_batteryStatus_datin[1] > 1.0);
+
+        // log any exit reasons
+        if(crash_detected) printf("Flight crash detected (accelerometer): shutting down motors now\n");
+        if(out_of_range)   printf("Drone out of range: shutting down motors now\n");
+        if(battery_low)    printf("Flight aborted due to low voltage (%f %%): shutting down motors now, charge battery!\n", DroneRS_Compensator_U_batteryStatus_datin[1]);
+
+        // and stop the drone
+        if(crash_detected || battery_low || out_of_range) {
+          run_flag = 0;
+          out->motors_speed[0] = 0;
+          out->motors_speed[1] = 0;
+          out->motors_speed[2] = 0;
+          out->motors_speed[3] = 0;
+          out->command = BLDC_CMD_STOP;
+          return;
         }
-        //safety abort due to low battery in flight
-        if((Drone_Compensator_U_batteryStatus_datin[1] < MIN_BATT) && (Drone_Compensator_U_batteryStatus_datin[1] > 1.0))
-        {
-            run_flag = 0;
-            printf("Flight aborted due to low voltage (%f %%): shutting down motors now, charge battery!\n", Drone_Compensator_U_batteryStatus_datin[1]);
-            out->motors_speed[0] = 0;
-            out->motors_speed[1] = 0;
-            out->motors_speed[2] = 0;
-            out->motors_speed[3] = 0;
-            out->command = BLDC_CMD_STOP;
-            return;
-        };
-
 
         //Input to Model: optical flow computations (setup as zero-order hold: no updates on static var when nothing new in fifo)
         if((FEAT_OF_ACTIVE) && (of_fifo > 0))
