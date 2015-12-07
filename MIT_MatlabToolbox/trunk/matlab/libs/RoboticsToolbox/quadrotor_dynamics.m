@@ -177,7 +177,7 @@ function sys = mdlDerivatives(t,x,u, quad)
     for i=[N E S W] %for each rotor
         %Relative motion
         
-        Vr = cross(o,D(:,i)) + v;
+        Vr = cross(o,D(:,i)) + inv(R)*v;
         mu = sqrt(sum(Vr(1:2).^2)) / (abs(w(i))*quad.r);  %Magnitude of mu, planar components
         lc = Vr(3) / (abs(w(i))*quad.r);                  %Non-dimensionalised normal inflow
         li = mu;                                          %Non-dimensionalised induced velocity approximation
