@@ -799,6 +799,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 
     //communication
     static char serverIP[16];
+    strncpy(serverIP, "192.168.1.2", 16);
     static int sockfd = 0;
     static char recvBuff[100];
     static struct sockaddr_in serv_addr;
