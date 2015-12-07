@@ -35,8 +35,8 @@ function [sys,x0,str,ts] = quadrotor_dynamics(t,x,u,flag, quad)
     %   NSEW motor commands                     1x4
     
     %CONTINUOUS STATES
-    %   z      Position                         3x1   (x,y,z)
-    %   v      Velocity                         3x1   (xd,yd,zd)
+    %   z      Position                         3x1   (X,Y,Z)
+    %   v      Velocity                         3x1   (dX,dY,dZ)
     %   n      Attitude                         3x1   (Y,P,R)
     %   o      Angular velocity                 3x1   (wx,wy,wz)
     %   w      Rotor angular velocity           4x1
@@ -144,7 +144,7 @@ function sys = mdlDerivatives(t,x,u, quad)
     z = x(1:3);   % position in {W}
     n = x(4:6);   % RPY angles {W}
     v = x(7:9);   % velocity in {W}
-    o = x(10:12); % angular velocity in {W} (body pqr? (F))
+    o = x(10:12); % angular velocity in {B} (wx,wy,wz) (FR)
     
     %PREPROCESS ROTATION AND WRONSKIAN MATRICIES
     phi = n(1);    % yaw
@@ -260,7 +260,7 @@ function sys = mdlOutputs(t,x, quad)
     % return velocity in the body frame
     sys = [ x(1:6);                         % output global pos and euler angles
             inv(R_Body2World)*x(7:9);       % translational velocity mapped to body frame -> i.e. output v in bodyframe!
-            x(10:12)];                     % RPY rates mapped to body frame ->     i.e. : this outputed euler rates!, now in bodyrates pqr (F)
+            x(10:12)];                      % bodyrates pqr (change FR)
         
 end
 % End of mdlOutputs.
