@@ -813,7 +813,7 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
     static int counter_noOF = 0;
 
     static float MAX_ACCELL 	= 6.0;
-    static float MAX_DELTADXY 	= 2.5;
+    static float MAX_DELTADXY 	= 6.0;
     static float MAX_RANGE 		= 10.0;
     static float MIN_BATTTAKEOFF 	= 50.0;
     static float MIN_BATT		= 30.0;
