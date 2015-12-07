@@ -34,7 +34,7 @@ if ( size(rt_yout.signals,2)>24)
         RSrun_states_estim = [RSrun_states_estim rt_yout.signals(i).values];
     end;
     
-    if (size(rt_yout.signals,2)>27)
+    if (size(rt_yout.signals,2)>27 && strcmp(rt_yout.signals(29).blockName,'Drone_Compensator/batteryStatus_datout')) 
         RSrun_batteryStatus = [rt_yout.time,rt_yout.signals(28).values];   
     end;
     
@@ -136,9 +136,9 @@ figure('Name','Altitude');
 % altitude from pressure (for comparison only)
 altPrs = (RSrun_sensordata(:,9) - RSrun_sensordataCalib(1,7))/(quadEDT.altToPrs_gain);    
 hold off;
-plot(rt_tout, altPrs); hold all;    
+plot(RSrun_sensordata(:,1), altPrs); hold all;    
 % altitude from sonar
-plot(rt_tout, -RSrun_sensordata(:,8),'LineWidth',2);
+plot(RSrun_sensordata(:,1), -RSrun_sensordata(:,8),'LineWidth',2);
 
 % altitude from KF
 plot(RSrun_states_estim(:,1),RSrun_states_estim(:,4),'LineWidth',3);
@@ -221,10 +221,12 @@ xlabel({'t [s]'},'Interpreter','latex');
 ylabel({'[m/s]'},'Interpreter','latex');
 
 %% Battery status
-figure('Name','Battery voltage');
+if exist('RSrun_batteryStatus','var')
+    
+    figure('Name','Battery voltage');
 
-plot(RSrun_batteryStatus(:,1),RSrun_batteryStatus(:,3));
-legend('Battery voltage');
-xlabel({'t [s]'},'Interpreter','latex');
-ylabel({'\%'},'Interpreter','latex');
-
+    plot(RSrun_batteryStatus(:,1),RSrun_batteryStatus(:,3));
+    legend('Battery voltage');
+    xlabel({'t [s]'},'Interpreter','latex');
+    ylabel({'\%'},'Interpreter','latex');
+end;
