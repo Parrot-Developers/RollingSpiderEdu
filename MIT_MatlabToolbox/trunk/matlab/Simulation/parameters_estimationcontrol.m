@@ -68,9 +68,6 @@ estimParams.pos.kfvelo.Q            = 0.09.*eye(2);
 estimParams.pos.kfvelo.R            = 5*eye(2);
 estimParams.pos.kfvelo.N            = 0;
 
-%Integrator velocity to position
-estimParams.pos.veloIntegrator_max = 5;
-
 %KF position
 estimParams.pos.kfpos.G            = 0.1*eye(2);
 estimParams.pos.kfpos.H            = 0;
