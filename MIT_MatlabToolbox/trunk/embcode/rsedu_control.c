@@ -1104,17 +1104,18 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
     //s1: Record calibration data
     else if(counter < calibCycles)
     {
-        sensorCal[0] = sensorCal[0] * (counter - 1) / counter + in->HAL_acc_SI.x / counter;
-        sensorCal[1] = sensorCal[1] * (counter - 1) / counter + in->HAL_acc_SI.y / counter;
-        sensorCal[2] = sensorCal[2] * (counter - 1) / counter + in->HAL_acc_SI.z / counter;
-        sensorCal[3] = sensorCal[3] * (counter - 1) / counter + in->HAL_gyro_SI.x / counter;
-        sensorCal[4] = sensorCal[4] * (counter - 1) / counter + in->HAL_gyro_SI.y / counter;
-        sensorCal[5] = sensorCal[5] * (counter - 1) / counter + in->HAL_gyro_SI.z / counter;
-        sensorCal[6] = sensorCal[6] * (counter - 1) / counter + in->HAL_pressure_SI.pressure / counter;
+	int counterCalib = counter - 2; if (counterCalib<=0) printf("error in counter %d for Calibration!\n",counterCalib);
+        sensorCal[0] = sensorCal[0] * (counterCalib - 1) / counterCalib + in->HAL_acc_SI.x / counterCalib;
+        sensorCal[1] = sensorCal[1] * (counterCalib - 1) / counterCalib + in->HAL_acc_SI.y / counterCalib;
+        sensorCal[2] = sensorCal[2] * (counterCalib - 1) / counterCalib + in->HAL_acc_SI.z / counterCalib;
+        sensorCal[3] = sensorCal[3] * (counterCalib - 1) / counterCalib + in->HAL_gyro_SI.x / counterCalib;
+        sensorCal[4] = sensorCal[4] * (counterCalib - 1) / counterCalib + in->HAL_gyro_SI.y / counterCalib;
+        sensorCal[5] = sensorCal[5] * (counterCalib - 1) / counterCalib + in->HAL_gyro_SI.z / counterCalib;
+        sensorCal[6] = sensorCal[6] * (counterCalib - 1) / counterCalib + in->HAL_pressure_SI.pressure / counterCalib;
 
         if(in->HAL_pressure_SI.pressure != 0) pressureSensorOk = true;
 
-        battLevelAvg = battLevelAvg * (counter - 1) / counter + (double)((int)in->HAL_vbat_SI.vbat_percentage) / counter;
+        battLevelAvg = battLevelAvg * (counterCalib - 1) / counterCalib + (double)((int)in->HAL_vbat_SI.vbat_percentage) / counterCalib;
 
         //keep fifos empty
         if(FEAT_OF_ACTIVE)  read(of_fifo, (float*)(&of_data), sizeof(of_data));
