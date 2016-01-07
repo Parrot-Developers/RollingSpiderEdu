@@ -418,12 +418,6 @@ static P_Drone_Compensator_T Drone_Compensator_P = {
     0.0,                               /* Expression: 0
                                         * Referenced by: '<S66>/SimplyIntegrateVelocity'
                                         */
-    5.0,                               /* Expression: estimParams.pos.veloIntegrator_max
-                                        * Referenced by: '<S66>/SimplyIntegrateVelocity'
-                                        */
-    -5.0,                              /* Expression: -estimParams.pos.veloIntegrator_max
-                                        * Referenced by: '<S66>/SimplyIntegrateVelocity'
-                                        */
     0.0,                               /* Expression: 0
                                         * Referenced by: '<S66>/UseIPPosSwitch'
                                         */
@@ -513,6 +507,12 @@ static P_Drone_Compensator_T Drone_Compensator_P = {
        * Referenced by: '<S2>/D_xy'
        */
       { 0.1, -0.1 },
+      3.0,                             /* Expression: 3
+                                        * Referenced by: '<S2>/Saturation'
+                                        */
+      -3.0,                            /* Expression: -3
+                                        * Referenced by: '<S2>/Saturation'
+                                        */
 
       /*  Expression: [-0.24,0.24]
        * Referenced by: '<S2>/P_xy'

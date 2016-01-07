@@ -27,43 +27,40 @@ mdl_quadrotor
 %% 2) Setup Bryson's rule 
 
 %Limits on states
-pos_max     = 1;
-att_max     = 0.35;
+pos_max     = 0.5;
+att_max     = 0.3;
 dpos_max    = 1;
 datt_max    = 1;
 
 %Limit on control input
 motor_max = 500;
 
-%% Cost weights on states
+%% Cost weights on states - sluggish control
 
-pos_x_wght        = 0.25/3;
-pos_y_wght        = 0.25/3;
-pos_z_wght        = 0.25/3*50; %Note that normalization of all the weights to sum to 1 happens in the next section
-orient_ypr_wghts  = 0.175/3; %weights for each of the three angles of orientations(attitude)
-dpos_wghts        = 0.175/3; %weights for each of the three velocities of position
-dorient_pqr_wghts = 0.4  /3; %weights for each of the three angular rates of orientations(attitude)
+pos_x_wght        = 0.2/3;
+pos_y_wght        = 0.2/3;
+pos_z_wght        = 0.2/3;
 
-rho = 0.01;
+orient_ypr_wghts  = 0.2/3;  %weights for each of the three angles of orientations(attitude)
 
-% %% Cost weights on states - expensive control
-% pos_x_wght        = 0.25/3;
-% pos_y_wght        = 0.25/3;
-% pos_z_wght        = 0.25/3; 
-% orient_ypr_wghts  = 0.175/3; %weights for each of the three angles of orientations(attitude)
-% dpos_wghts        = 0.175/3; %weights for each of the three velocities of position
-% dorient_pqr_wghts = 0.4  /3; %weights for each of the three angular rates of orientations(attitude)
-% 
-% rho = 0.05;
+dpos_wghts        = 0.15/3; %weights for each of the three velocities of position
 
-%% Normalize and pack weights and limits
+dorient_pqr_wghts = 0.45/3; %weights for each of the three angular rates of orientations(attitude)
+
+rho = 2;
+
+%% Cost weights on states - faster control
+
+% ... 
+
+%% Normalize and pack weights and limits on state costs
 weights = [pos_x_wght pos_y_wght pos_z_wght orient_ypr_wghts orient_ypr_wghts orient_ypr_wghts dpos_wghts dpos_wghts dpos_wghts dorient_pqr_wghts dorient_pqr_wghts dorient_pqr_wghts];
-weights = weights/sum(weights);
+weights =  weights/sum(weights);         %Make sure weights sum to 1
 maxs    = [pos_max pos_max pos_max att_max att_max att_max dpos_max dpos_max dpos_max datt_max datt_max datt_max];
 
 %% 3) Compute Q and R cost matrices
-Q           = diag(weights./maxs);
-R           = rho*diag(1./[motor_max motor_max motor_max motor_max]);
+Q           = diag((weights.^2)./(maxs.^2));
+R           = rho*diag(1./([motor_max motor_max motor_max motor_max].^2));
 
 %% 4) Compute K_LQR
 K_lqr_toMotorcmd       = lqr(A,B,Q,R);
