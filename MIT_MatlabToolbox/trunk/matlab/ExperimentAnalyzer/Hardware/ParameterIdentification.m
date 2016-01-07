@@ -12,9 +12,9 @@
 
 %% Inertia
 
-inertia_box = @(m,ls) 1/12*m*([ls(1)^2+ls(2)^2;ls(2)^2+ls(3)^2;ls(1)^2+ls(3)^2]);
-inertia_cyl_up = @(m,l,r) [1/4*m*r^2 + 1/12*m*l^2; 1/4*m*r^2 + 1/12*m*l^2; 0.5*m*r^2];
-inertia_tube_rolling = @(m,l,r1,r2) m*[1/12*(3*(r1^2+r2^2) + l^2); (r1^2+r2^2)/2 ;1/12*(3*(r1^2+r2^2) + l^2)];
+inertia_box         = @(m,ls) 1/12*m*([ls(1)^2+ls(2)^2;ls(2)^2+ls(3)^2;ls(1)^2+ls(3)^2]);
+inertia_cyl_up      = @(m,l,r) [1/4*m*r^2 + 1/12*m*l^2; 1/4*m*r^2 + 1/12*m*l^2; 0.5*m*r^2];
+inertia_tube_rolling= @(m,l,r1,r2) m*[1/12*(3*(r1^2+r2^2) + l^2); (r1^2+r2^2)/2 ;1/12*(3*(r1^2+r2^2) + l^2)];
 
 mass_batt  = 0.011;
 mass_frame = 0.033;
