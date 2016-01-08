@@ -37,17 +37,17 @@ motor_max = 500;
 
 %% Cost weights on states - sluggish control
 
-pos_x_wght        = 0.2/3;
-pos_y_wght        = 0.2/3;
-pos_z_wght        = 0.2/3;
+pos_x_wght        = 0.1/3;
+pos_y_wght        = 0.1/3;
+pos_z_wght        = 0.1/3;
 
-orient_ypr_wghts  = 0.2/3;  %weights for each of the three angles of orientations(attitude)
+orient_ypr_wghts  = 0.25/3;  %weights for each of the three angles of orientations(attitude)
 
-dpos_wghts        = 0.15/3; %weights for each of the three velocities of position
+dpos_wghts        = 0.05/3; %weights for each of the three velocities of position
 
-dorient_pqr_wghts = 0.45/3; %weights for each of the three angular rates of orientations(attitude)
+dorient_pqr_wghts = 0.6/3; %weights for each of the three angular rates of orientations(attitude)
 
-rho = 2;
+rho = 15;
 
 %% Cost weights on states - faster control
 
@@ -55,7 +55,7 @@ rho = 2;
 
 %% Normalize and pack weights and limits on state costs
 weights = [pos_x_wght pos_y_wght pos_z_wght orient_ypr_wghts orient_ypr_wghts orient_ypr_wghts dpos_wghts dpos_wghts dpos_wghts dorient_pqr_wghts dorient_pqr_wghts dorient_pqr_wghts];
-weights =  weights/sum(weights);         %Make sure weights sum to 1
+weights =  weights/sqrt(sum(weights.^2));         %Make sure squared weights sum to 1
 maxs    = [pos_max pos_max pos_max att_max att_max att_max dpos_max dpos_max dpos_max datt_max datt_max datt_max];
 
 %% 3) Compute Q and R cost matrices
@@ -64,7 +64,7 @@ R           = rho*diag(1./([motor_max motor_max motor_max motor_max].^2));
 
 %% 4) Compute K_LQR
 K_lqr_toMotorcmd       = lqr(A,B,Q,R);
-K_lqr_toMotorcmd(abs(K_lqr_toMotorcmd)<(1e-8)) = 0;  %set small values zero
+K_lqr_toMotorcmd(abs(K_lqr_toMotorcmd)<(1e-8)) = 0  %set small values zero
 
 
 

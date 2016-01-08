@@ -93,7 +93,7 @@ controlHelperParams.Ts2Q = ...
 controlHelperParams.Q2Ts = inv(controlHelperParams.Ts2Q); 
 
 %% Controllers (generic helpers)
-controlHelperParams.takeoff_gain                = 0.15;   %drone takes off with constant thrust x% above hover thrust
+controlHelperParams.takeoff_gain                = 0.2;   %drone takes off with constant thrust x% above hover thrust
 controlHelperParams.totalThrust_maxRelative     = 0.92;   %relative maximum total thrust that can be used for gaining altitude; rest is buffer for orientation control
 controlHelperParams.motorsThrustperMotor_max    = quadEDT.motors_max*quadEDT.motorcommandToW2_gain*quad.Ct*quad.rho*quad.A*quad.r^2;
 
