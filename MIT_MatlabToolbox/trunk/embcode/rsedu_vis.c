@@ -278,6 +278,8 @@ void RSEDU_image_processing(void * buffer)
     //-----------
 
     /* Enabling image streaming, copies the picture into a named FIFO. Picture can then be sent to a remote Ubuntu computer using standard commands:
+    
+    FEAT_IMSAVE needs to be set to 2 on drone /data/edu/params/paramsEDU.dat (see GettingStarted.pdf)
 
     Run this one-liner in a shell on the RollingSpider (open terminal, log onto drone via telnet 192.168.1.1) :
     (remember to connect via the Bluetooth link, since pluging the USB cable deactivates the camera !!!)

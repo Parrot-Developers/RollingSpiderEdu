@@ -1,0 +1,5 @@
+librsedu.so
+imgs/processed/
+ptimes/pt_RSEDU_control.txt
+ptimes/pt_RSEDU_image_processing.txt
+ptimes/pt_RSEDU_optical_flow.txt

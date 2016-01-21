@@ -1,2 +1,4 @@
 *.asv
 *.autosave
+/Simulation/Animation/DroneWorld.wrl.bak
+/Simulation/sim_quadrotor_sfun.mexa64
