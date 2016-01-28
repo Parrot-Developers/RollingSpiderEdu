@@ -29,4 +29,4 @@ make
 cd $SCRIPTPATH
 echo "Drone: PackEmbeddedCode built!"
 
-echo "Drone: Utilts built!"
+echo "Drone: Utils built!"
