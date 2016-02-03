@@ -162,7 +162,7 @@ static P_Drone_Compensator_T Drone_Compensator_P = {
       -5.6659197210460546, 5.6659197210460546, 5.6659197210460546,
       -5.6659197210460546, 5.6659197210460546, 5.6659197210460546,
       -5.6659197210460546 },
-    0.2,
+    0.12,
     0.92,
     0.32664221335170257
   },                                   /* Variable: controlHelperParams
@@ -1342,8 +1342,10 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
 
         //safety abort for high accelerations or position
         bool crash_detected;
-        if(!FEAT_NOSAFETY)
+	//NOSAFETY  disabled and after takeoff-cycles
+        if( (!FEAT_NOSAFETY) && (counter>(calibCycles + takeoffCycles)))
           crash_detected = (fabs(in->HAL_acc_SI.x) > MAX_ACCELL) || (fabs(in->HAL_acc_SI.y) > MAX_ACCELL) || (in->HAL_acc_SI.z > 0);
+	//If either NOSAFETY enabled or during takeoff, allow greater accelerations without shutting down
         else
           crash_detected = (fabs(in->HAL_acc_SI.x) > MAX_ACCELL * 3) || (fabs(in->HAL_acc_SI.y) > MAX_ACCELL * 3);
 
