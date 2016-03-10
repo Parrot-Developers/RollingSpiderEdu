@@ -8,7 +8,7 @@ lndmrk_pos = [-0.24 .145 -0.24 0.135; 0.14 .13 -.23 -.22; 0 0 0 0 ; 1 1 1 1 ]; %
 
 %% Generate required matrices for 
 %Load camera calibration
-load('calibration/camcalbration.mat');
+load('calibration/camcalibation.mat');
 
 %Compute matrices (use those in embedded code!)
 format long;
@@ -30,9 +30,22 @@ format short
 % %pixel positions of those features
 % feature_pps = [cameraParams.ReprojectedPoints(1:50,:,1)';ones(1,50)];
 % 
-% %reconstruction assuming only yaw angle
+% %Note: reconstruction assumes zero pitch and roll angle and "far enough" features!
+% We would need to optimize tr(feature_pps*Lambda-(R|T)*Xw) with feature_pps
+% being the feature pixel positions, Lambda a diagonal matrix that contains
+% the inverse of the camera-z-coordinates z of each world feature, (R|T) a
+% rotation and translation matrix for 3D points in homogenous coordinates
+% and Xw, the world features in (X;Y;Z;1) representation. If we assume
+% no pitch and roll angles and sufficiently far world features, we may consider the z's similar, so Lambda
+% implodes to a scalar lambda and we can simplify solve
+% A_recon_tmp=lambda*(R|T)=features_pps*pinv(Xw). We know that
+% sqrt(A_rcn_tmp(1,1)^2+A_rcn_tmp(1,2)^2)=lambda so we can compute (R|T)
+% and derive X,Y,Z and yaw. Note that this optimization is highly sensitive to
+% non-zero pitch and roll angles.
+
 % A_rcn_tmp = intrMatrx_it*feature_pps*pinv(Xw);
-% A_rcn = A_rcn_tmp/sqrt(A_rcn_tmp(1,1)^2+A_rcn_tmp(1,2)^2);
+% A_rcn = A_rcn_tmp/sqrt(A_rcn_tmp(1,1)^2+A_rcn_tmp(1,2)^2); %This could
+% approach zero and cause numerical issues!
 % 
 % X=A_rcn(1,4)
 % Y=A_rcn(2,4)

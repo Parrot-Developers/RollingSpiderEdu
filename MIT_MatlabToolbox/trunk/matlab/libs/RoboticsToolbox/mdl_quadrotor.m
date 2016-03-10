@@ -138,8 +138,7 @@ quadEDT.thrustToMotorcommand        = 1/(quadEDT.w2ToThrust_gain*quadEDT.motorco
 
 %% Sensors
 %Noise on all states from simulation
-quadEDT.noiseStatesSensed_std       = [1 1 1 1 1 1 0.0165195073635001 0.0152648883285633 0.0215786550496705 0.000652733165165932 0.000721701528439517 0.000690781425279554];
-quadEDT.noiseStatesSensed_weights   = [0 0 0 0 0 0 0.05 0.05 0.05 1 1 1];
+quadEDT.noiseSensed_var       = diag([0.3 0.3 0.5 0.002 0.002 0.002 0.001 50]);
 
 %Delay (all sensor data)
 quadEDT.sensordelay                 = 1; %in samples of 200Hz;
@@ -173,9 +172,9 @@ quadEDT.yawStep_amplitude           = 0.1;
 quadEDT.yawStep_time                = 5.5;
 quadEDT.yawStep_duration            = 2.5;
 %pitch
-quadEDT.pitchStep_amplitude         = 0.1; %0.1
+quadEDT.pitchStep_amplitude         = 0.2; %0.1
 quadEDT.pitchStep_time              = 3;
-quadEDT.pitchStep_duration          = 1;
+quadEDT.pitchStep_duration          = 1.5;
 %roll
 quadEDT.rollStep_amplitude          = 0.0; %0.1
 quadEDT.rollStep_time               = 3; 
