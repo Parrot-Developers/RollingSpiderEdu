@@ -137,7 +137,7 @@ quadEDT.thrustToMotorcommand        = 1/(quadEDT.w2ToThrust_gain*quadEDT.motorco
 
 
 %% Sensors
-%Noise on all states from simulation
+%Noise on sensor readings
 quadEDT.noiseSensed_var       = diag([0.3 0.3 0.5 0.002 0.002 0.002 0.001 50]);
 
 %Delay (all sensor data)
