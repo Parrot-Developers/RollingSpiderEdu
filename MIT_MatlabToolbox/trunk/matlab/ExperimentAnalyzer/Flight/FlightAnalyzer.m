@@ -113,15 +113,15 @@ figure('Name','Sensors, Orientation & Motors','Position',[100 100 600 700]);
 %accelerometer
 h(1)=subplot(4,1,1);
 plot(RSrun_sensordata(:,1),RSrun_sensordata(:,2:4))
-ylabel({'IMUaccel'},'Interpreter','latex');
-legend({'$\ddot x$' '$\ddot y$' '$\ddot z$'},'Interpreter','latex');
+ylabel({'IMUaccel $[m/s^2]$'},'Interpreter','latex');
+legend({'$\tilde{a}_x$' '$\tilde{a}_y$' '$\tilde{a}_z$'},'Interpreter','latex');
 ylim([-12 12])
 
 
 %gyro
 h(2)=subplot(4,1,2);
 plot(RSrun_sensordata(:,1),RSrun_sensordata(:,5:end-2))
-ylabel({'IMUgyro'},'Interpreter','latex');
+ylabel({'IMUgyro $[rad/s]$'},'Interpreter','latex');
 legend({ '$w_x$' '$w_y$' '$w_z$'},'Interpreter','latex');
 ylim([-1 1])
 
@@ -136,7 +136,7 @@ else
     legend({'yaw' 'pitch' 'roll' 'yaw_{ref}' 'pitch_{ref}' 'roll_{ref}'});
 end;
 
-ylabel({'orientation'},'Interpreter','latex');
+ylabel({'orientation $[rad]$'},'Interpreter','latex');
 
 ylim([-0.3 0.3])
 
@@ -174,7 +174,7 @@ plot(RSrun_pos_ref(:,1),RSrun_pos_ref(:,4),'g','LineWidth',2);
 visUpdatesAvlble = (RSrun_posVIS(:,2)~=-99);
 plot(RSrun_posVIS(visUpdatesAvlble,1),-RSrun_posVIS(visUpdatesAvlble,4),'o','LineWidth',3);
 
-legend({'Pressure $\hat{z}_{prs}$'  'Sonar $\hat{z}_{snr}$' 'Kalman-estimate $\hat z$' 'reference $z_{d}$' 'Vision $\hat{z}_{VIS}$' },'Interpreter','latex');
+legend({'Pressure $\hat{z}_{prs}$'  'Sonar $\hat{z}_{snr}$' 'Kalman-estimate $\hat z$' 'Reference $z_{d}$' 'Vision $\hat{z}_{VIS}$' },'Interpreter','latex');
 ylim([-3.5 1]);
 xlabel({'t[s]'},'Interpreter','latex');
 ylabel({'altitude [m]'},'Interpreter','latex');
