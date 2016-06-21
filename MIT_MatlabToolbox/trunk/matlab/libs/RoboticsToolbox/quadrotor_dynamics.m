@@ -153,7 +153,7 @@ function sys = mdlDerivatives(t,x,u, quad)
     
     if (abs(the)>pi/2) error('|pitch| greater than pi/2!'); end;
     if (abs(psi)>pi/2) error('|roll| greater than pi/2!'); end;
-    if (z(3)>0) error('z greater than 0 (under ground)!'); end;    
+    if (z(3)>0) error('z greater than 0 (below ground)!'); end;    
     
     % rotz(phi)*roty(the)*rotx(psi)
     R_Body2World = [cos(the)*cos(phi) sin(psi)*sin(the)*cos(phi)-cos(psi)*sin(phi) cos(psi)*sin(the)*cos(phi)+sin(psi)*sin(phi);
