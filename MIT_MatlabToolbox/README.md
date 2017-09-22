@@ -15,3 +15,7 @@ To make this toolbox possible, Parrot SA provided a compiler toolchain and a cus
 ### Installing and Getting Started ...
 To install the toolbox, get familiar with the work flow and hit the ground running,
 please read https://github.com/Parrot-Developers/RollingSpiderEdu/blob/master/MIT_MatlabToolbox/media/GettingStarted.pdf
+
+### +++ Update
+We're happy to point interested users to the next evolution of this toolbox: an official Simulink (r) support package created by a collaborative team of Mathworks, Parrot and MIT engineers. Check it out!
+https://de.mathworks.com/hardware-support/parrot-minidrones.html
