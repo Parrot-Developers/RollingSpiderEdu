@@ -1137,8 +1137,17 @@ void RSEDU_control(HAL_acquisition_t* hal_sensors_data, HAL_command_t* hal_senso
         printf("Batterylevel: %f\n", battLevelAvg);
         printf("Sensorcal: %f :: %f :: %f :: %f :: %f :: %f :: %f \n", sensorCal[0], sensorCal[1], sensorCal[2], sensorCal[3], sensorCal[4], sensorCal[5], sensorCal[6]);
 
+        //Normalize acceleration to detect the angle
+        double normAcc[3];
+        double tmpNorm = sqrt(sensorCal[0] * sensorCal[0] + sensorCal[1] * sensorCal[1] + sensorCal[2] * sensorCal[2]);
+        normAcc[0] = sensorCal[0] / tmpNorm * 9.81;
+        normAcc[1] = sensorCal[1] / tmpNorm * 9.81;
+        normAcc[2] = sensorCal[2] / tmpNorm * 9.81;
+
+        printf("NormalizedAcc: %f :: %f :: %f \n", normAcc[0], normAcc[1], normAcc[2]);
+
         //Stop if angled take-off
-        if((!FEAT_NOSAFETY) && fabs(9.81 + sensorCal[2]) > 0.7)
+        if((!FEAT_NOSAFETY) && fabs(9.81 + normAcc[2]) > 0.7)
         {
             run_flag = 0;
             printf("ERROR: Please take off from a level surface! \n");
